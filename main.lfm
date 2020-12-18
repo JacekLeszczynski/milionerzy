@@ -1,7 +1,7 @@
 object FServer: TFServer
-  Left = 296
+  Left = 274
   Height = 646
-  Top = 340
+  Top = 270
   Width = 721
   Caption = 'Panel kontrolny'
   ClientHeight = 646

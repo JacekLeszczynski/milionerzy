@@ -309,6 +309,7 @@
         <Filename Value="client.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FClient"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit5>
     </Units>
