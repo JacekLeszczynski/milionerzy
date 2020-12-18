@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, Presentation, UOSEngine, UOSPlayer, LiveTimer, NetSocket, ZDataset;
+  Buttons, XMLPropStorage, Presentation, UOSEngine, UOSPlayer, LiveTimer,
+  NetSocket, ZDataset;
 
 type
 
@@ -70,6 +71,7 @@ type
     Label8: TLabel;
     Label9: TLabel;
     ser: TNetSocket;
+    ps: TXMLPropStorage;
     zegar: TLiveTimer;
     lTryb: TLabel;
     Panel1: TPanel;
@@ -140,14 +142,16 @@ uses
 
 procedure TFServer.FormCreate(Sender: TObject);
 begin
+  SetConfDir('milionerzy');
   uos.LibDirectory:=MyDir('uos');
   uos.LoadLibrary;
   dm:=Tdm.Create(self);
   fEkran:=TfEkran.Create(self);
-  SetConfDir('milionerzy');
   dm.db.Database:=MyConfDir('db.sqlite');
   dm.db_open;
   ser.Connect;
+  ps.FileName:=MyConfDir('server.xml');
+  ps.Active:=true;
 end;
 
 procedure TFServer.FormDestroy(Sender: TObject);

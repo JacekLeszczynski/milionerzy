@@ -19,6 +19,7 @@ type
     procedure db_open;
     procedure db_close;
     procedure oblicz_wygrana(aPytanie: integer; aWygrana: boolean; var kwota,gwarantowana: integer);
+    function GetGUID: string;
   end;
 
 const
@@ -82,6 +83,20 @@ begin
     end;
     if (aPytanie=2) or (aPytanie=7) or (aPytanie=12) then gwarantowana:=kwota;
   end else kwota:=gwarantowana;
+end;
+
+function Tdm.GetGUID: string;
+var
+  error: integer;
+  a: TGUID;
+  s: string;
+begin
+  error:=CreateGUID(a);
+  if error=0 then
+  begin
+    s:=GUIDToString(a);
+    result:=s;
+  end else result:='';
 end;
 
 end.

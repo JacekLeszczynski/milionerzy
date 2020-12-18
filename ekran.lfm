@@ -8,6 +8,8 @@ object fEkran: TfEkran
   ClientHeight = 720
   ClientWidth = 1280
   Color = clGreen
+  OnCreate = FormCreate
+  SessionProperties = 'Top;Left'
   LCLVersion = '2.0.10.0'
   object Panel5: TPanel
     AnchorSideLeft.Control = Owner
@@ -18544,5 +18546,12 @@ object fEkran: TfEkran
       ParentColor = False
       ParentFont = False
     end
+  end
+  object ps: TXMLPropStorage
+    StoredValues = <>
+    RootNodePath = 'ekran'
+    Active = False
+    Left = 48
+    Top = 120
   end
 end

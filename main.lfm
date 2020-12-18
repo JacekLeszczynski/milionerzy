@@ -3,6 +3,7 @@ object FServer: TFServer
   Height = 646
   Top = 270
   Width = 721
+  BorderStyle = bsSingle
   Caption = 'Panel kontrolny'
   ClientHeight = 646
   ClientWidth = 721
@@ -11,6 +12,7 @@ object FServer: TFServer
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  SessionProperties = 'Left;Top'
   LCLVersion = '2.0.10.0'
   object RadioGroup1: TRadioGroup
     AnchorSideLeft.Control = Panel1
@@ -1073,5 +1075,12 @@ object FServer: TFServer
     SSLMethod = msSSLv2or3
     Left = 440
     Top = 8
+  end
+  object ps: TXMLPropStorage
+    StoredValues = <>
+    RootNodePath = 'server'
+    Active = False
+    Left = 224
+    Top = 80
   end
 end

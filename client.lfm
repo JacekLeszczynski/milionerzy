@@ -1,10 +1,10 @@
 object FClient: TFClient
   Left = 350
-  Height = 305
+  Height = 318
   Top = 124
   Width = 834
   Caption = 'Jahu - Milionerzy (client)'
-  ClientHeight = 305
+  ClientHeight = 318
   ClientWidth = 834
   OnCreate = FormCreate
   SessionProperties = 'eImie.Text;eSkad.Text;Top;Left;Height;Width'
@@ -12,7 +12,7 @@ object FClient: TFClient
   object StatusBar: TStatusBar
     Left = 0
     Height = 20
-    Top = 285
+    Top = 298
     Width = 834
     Panels = <    
       item
@@ -100,7 +100,7 @@ object FClient: TFClient
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar
     Left = 8
-    Height = 213
+    Height = 226
     Top = 68
     Width = 818
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -109,7 +109,7 @@ object FClient: TFClient
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
     BevelOuter = bvNone
-    ClientHeight = 213
+    ClientHeight = 226
     ClientWidth = 818
     TabOrder = 2
     object Label3: TLabel

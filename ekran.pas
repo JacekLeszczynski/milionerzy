@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ZDataset;
+  XMLPropStorage, ZDataset;
 
 type
 
@@ -83,6 +83,8 @@ type
     Shape4: TShape;
     Shape5: TShape;
     Shape6: TShape;
+    ps: TXMLPropStorage;
+    procedure FormCreate(Sender: TObject);
   private
   public
     procedure eOff;
@@ -97,9 +99,18 @@ var
 
 implementation
 
+uses
+  serwis, ecode;
+
 {$R *.lfm}
 
 { TfEkran }
+
+procedure TfEkran.FormCreate(Sender: TObject);
+begin
+  ps.FileName:=MyConfDir('server.xml');
+  ps.Active:=true;
+end;
 
 procedure TfEkran.eOff;
 begin

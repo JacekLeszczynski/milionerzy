@@ -10,7 +10,6 @@ object dm: Tdm
     Properties.Strings = (
       'AutoEncodeStrings=ON'
     )
-    Connected = True
     Port = 0
     Database = '/home/tao/.config/milionerzy/db.sqlite'
     Protocol = 'sqlite-3'
