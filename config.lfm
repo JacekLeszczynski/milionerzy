@@ -1,0 +1,453 @@
+object FKonfiguracja: TFKonfiguracja
+  Left = 348
+  Height = 557
+  Top = 230
+  Width = 1043
+  Caption = 'FKonfiguracja'
+  ClientHeight = 557
+  ClientWidth = 1043
+  OnClose = FormClose
+  OnShow = FormShow
+  LCLVersion = '2.0.10.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 269
+    Top = 288
+    Width = 1043
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 269
+    ClientWidth = 1043
+    TabOrder = 0
+    object DBText1: TDBText
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 4
+      Height = 17
+      Top = 2
+      Width = 74
+      BorderSpacing.Left = 4
+      BorderSpacing.Top = 2
+      DataField = 'id'
+      DataSource = ds_pytania
+      Font.Height = -16
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label1: TLabel
+      Left = 8
+      Height = 17
+      Top = 32
+      Width = 53
+      Caption = 'Pytanie:'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideTop.Control = DBMemo2
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = DBMemo2
+      Left = 14
+      Height = 17
+      Top = 84
+      Width = 47
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 4
+      Caption = 'Odp. A:'
+      ParentColor = False
+    end
+    object DBRadioGroup1: TDBRadioGroup
+      AnchorSideLeft.Control = DBMemo5
+      AnchorSideTop.Control = DBMemo5
+      AnchorSideTop.Side = asrBottom
+      Left = 65
+      Height = 41
+      Top = 222
+      Width = 257
+      AutoFill = True
+      BorderSpacing.Top = 2
+      Caption = 'Właściwa odpowiedź'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 4
+      Columns = 4
+      DataField = 'odpowiedz'
+      DataSource = ds_pytania
+      Items.Strings = (
+        'A'
+        'B'
+        'C'
+        'D'
+      )
+      TabOrder = 0
+      Values.Strings = (
+        '1'
+        '2'
+        '3'
+        '4'
+      )
+    end
+    object BitBtn1: TBitBtn
+      AnchorSideLeft.Control = DBRadioGroup1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn6
+      Left = 338
+      Height = 30
+      Top = 235
+      Width = 75
+      BorderSpacing.Left = 16
+      Caption = 'Dodaj'
+      OnClick = BitBtn1Click
+      TabOrder = 1
+    end
+    object BitBtn2: TBitBtn
+      AnchorSideLeft.Control = BitBtn1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn1
+      Left = 415
+      Height = 30
+      Top = 235
+      Width = 75
+      BorderSpacing.Left = 2
+      Caption = 'Edycja'
+      OnClick = BitBtn2Click
+      TabOrder = 2
+    end
+    object BitBtn3: TBitBtn
+      AnchorSideLeft.Control = BitBtn2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn2
+      Left = 492
+      Height = 30
+      Top = 235
+      Width = 132
+      BorderSpacing.Left = 2
+      Caption = 'Usuń wszystko!'
+      Color = clRed
+      OnClick = BitBtn3Click
+      TabOrder = 3
+    end
+    object BitBtn4: TBitBtn
+      AnchorSideLeft.Control = BitBtn3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn3
+      Left = 626
+      Height = 30
+      Top = 235
+      Width = 95
+      BorderSpacing.Left = 2
+      Caption = 'Zatwierdź'
+      OnClick = BitBtn4Click
+      TabOrder = 4
+    end
+    object BitBtn5: TBitBtn
+      AnchorSideLeft.Control = BitBtn4
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn4
+      Left = 723
+      Height = 30
+      Top = 235
+      Width = 75
+      BorderSpacing.Left = 2
+      Caption = 'Anuluj'
+      OnClick = BitBtn5Click
+      TabOrder = 5
+    end
+    object BitBtn6: TBitBtn
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 964
+      Height = 30
+      Top = 235
+      Width = 75
+      Anchors = [akRight, akBottom]
+      BorderSpacing.Right = 4
+      BorderSpacing.Bottom = 4
+      Caption = 'Wyjście'
+      OnClick = BitBtn6Click
+      TabOrder = 6
+    end
+    object DBMemo1: TDBMemo
+      AnchorSideLeft.Control = Label1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label1
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 65
+      Height = 40
+      Top = 32
+      Width = 974
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      DataField = 'pytanie'
+      DataSource = ds_pytania
+      TabOrder = 7
+    end
+    object DBMemo2: TDBMemo
+      AnchorSideLeft.Control = DBMemo1
+      AnchorSideTop.Control = DBMemo1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = DBMemo1
+      AnchorSideRight.Side = asrBottom
+      Left = 65
+      Height = 33
+      Top = 76
+      Width = 974
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      DataField = 'odp_1'
+      DataSource = ds_pytania
+      TabOrder = 8
+    end
+    object Label3: TLabel
+      AnchorSideTop.Control = DBMemo3
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = DBMemo3
+      Left = 14
+      Height = 17
+      Top = 121
+      Width = 47
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 4
+      Caption = 'Odp. B:'
+      ParentColor = False
+    end
+    object DBMemo3: TDBMemo
+      AnchorSideLeft.Control = DBMemo1
+      AnchorSideTop.Control = DBMemo2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = DBMemo1
+      AnchorSideRight.Side = asrBottom
+      Left = 65
+      Height = 33
+      Top = 113
+      Width = 974
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      DataField = 'odp_2'
+      DataSource = ds_pytania
+      TabOrder = 9
+    end
+    object Label4: TLabel
+      AnchorSideTop.Control = DBMemo4
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = DBMemo4
+      Left = 14
+      Height = 17
+      Top = 158
+      Width = 47
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 4
+      Caption = 'Odp. C:'
+      ParentColor = False
+    end
+    object DBMemo4: TDBMemo
+      AnchorSideLeft.Control = DBMemo1
+      AnchorSideTop.Control = DBMemo3
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = DBMemo1
+      AnchorSideRight.Side = asrBottom
+      Left = 65
+      Height = 33
+      Top = 150
+      Width = 974
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      DataField = 'odp_3'
+      DataSource = ds_pytania
+      TabOrder = 10
+    end
+    object Label5: TLabel
+      AnchorSideTop.Control = DBMemo5
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = DBMemo5
+      Left = 13
+      Height = 17
+      Top = 195
+      Width = 48
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 4
+      Caption = 'Odp. D:'
+      ParentColor = False
+    end
+    object DBMemo5: TDBMemo
+      AnchorSideLeft.Control = DBMemo1
+      AnchorSideTop.Control = DBMemo4
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = DBMemo1
+      AnchorSideRight.Side = asrBottom
+      Left = 65
+      Height = 33
+      Top = 187
+      Width = 974
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 4
+      DataField = 'odp_4'
+      DataSource = ds_pytania
+      TabOrder = 11
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 288
+    Top = 0
+    Width = 1043
+    Align = alClient
+    BevelOuter = bvNone
+    ClientHeight = 288
+    ClientWidth = 1043
+    TabOrder = 1
+    object DBGrid1: TDBGrid
+      Left = 0
+      Height = 288
+      Top = 0
+      Width = 1043
+      Align = alClient
+      AutoFillColumns = True
+      Color = clWindow
+      Columns = <      
+        item
+          MaxSize = 200
+          Title.Caption = 'id'
+          Width = 147
+          FieldName = 'id'
+        end      
+        item
+          Title.Caption = 'pytanie'
+          Width = 147
+          FieldName = 'pytanie'
+        end      
+        item
+          Title.Caption = 'odp_1'
+          Width = 147
+          FieldName = 'odp_1'
+        end      
+        item
+          Title.Caption = 'odp_2'
+          Width = 147
+          FieldName = 'odp_2'
+        end      
+        item
+          Title.Caption = 'odp_3'
+          Width = 147
+          FieldName = 'odp_3'
+        end      
+        item
+          Title.Caption = 'odp_4'
+          Width = 147
+          FieldName = 'odp_4'
+        end      
+        item
+          Title.Caption = 'odpowiedz'
+          Width = 147
+          FieldName = 'odpowiedz'
+        end>
+      DataSource = ds_pytania
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgDisableDelete, dgDisableInsert, dgDisplayMemoText]
+      Scrollbars = ssAutoBoth
+      TabOrder = 0
+    end
+  end
+  object pytania: TZQuery
+    Connection = dm.db
+    SQL.Strings = (
+      'select * from pytania'
+      'order by id'
+    )
+    Params = <>
+    Left = 146
+    Top = 107
+    object pytaniaid: TLargeintField
+      FieldKind = fkData
+      FieldName = 'id'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object pytaniapytanie: TMemoField
+      FieldKind = fkData
+      FieldName = 'pytanie'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object pytaniaodp_1: TMemoField
+      FieldKind = fkData
+      FieldName = 'odp_1'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object pytaniaodp_2: TMemoField
+      FieldKind = fkData
+      FieldName = 'odp_2'
+      Index = 3
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object pytaniaodp_3: TMemoField
+      FieldKind = fkData
+      FieldName = 'odp_3'
+      Index = 4
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object pytaniaodp_4: TMemoField
+      FieldKind = fkData
+      FieldName = 'odp_4'
+      Index = 5
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object pytaniaodpowiedz: TLargeintField
+      FieldKind = fkData
+      FieldName = 'odpowiedz'
+      Index = 6
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+  end
+  object ds_pytania: TDataSource
+    DataSet = pytania
+    OnStateChange = ds_pytaniaStateChange
+    Left = 264
+    Top = 107
+  end
+  object master: TDSMaster
+    DataSource = ds_pytania
+    Left = 48
+    Top = 88
+  end
+end

@@ -1,0 +1,375 @@
+object FClient: TFClient
+  Left = 350
+  Height = 305
+  Top = 124
+  Width = 834
+  Caption = 'Jahu - Milionerzy (client)'
+  ClientHeight = 305
+  ClientWidth = 834
+  OnCreate = FormCreate
+  SessionProperties = 'eImie.Text;eSkad.Text;Top;Left;Height;Width'
+  LCLVersion = '2.0.10.0'
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 20
+    Top = 285
+    Width = 834
+    Panels = <    
+      item
+        Text = 'Connected: OFF'
+        Width = 150
+      end    
+      item
+        Text = 'Różnica czasu: 0 ms.'
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 64
+    Top = 0
+    Width = 834
+    Align = alTop
+    ClientHeight = 64
+    ClientWidth = 834
+    TabOrder = 1
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 9
+      Height = 17
+      Top = 5
+      Width = 33
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 4
+      Caption = 'Imię:'
+      ParentColor = False
+    end
+    object eImie: TEdit
+      AnchorSideLeft.Control = Label1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      Left = 9
+      Height = 30
+      Top = 22
+      Width = 241
+      TabOrder = 0
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = eImie
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label1
+      Left = 258
+      Height = 17
+      Top = 5
+      Width = 153
+      BorderSpacing.Left = 8
+      Caption = 'Skąd (np. miejscowość):'
+      ParentColor = False
+    end
+    object eSkad: TEdit
+      AnchorSideLeft.Control = Label2
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      Left = 258
+      Height = 30
+      Top = 22
+      Width = 241
+      TabOrder = 1
+    end
+    object BitBtn1: TBitBtn
+      AnchorSideLeft.Control = eSkad
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = eSkad
+      Left = 507
+      Height = 30
+      Top = 22
+      Width = 75
+      BorderSpacing.Left = 8
+      Caption = 'Połącz'
+      OnClick = BitBtn1Click
+      TabOrder = 2
+    end
+  end
+  object Panel2: TPanel
+    AnchorSideLeft.Control = Panel1
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Panel1
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = StatusBar
+    Left = 8
+    Height = 213
+    Top = 68
+    Width = 818
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 4
+    BevelOuter = bvNone
+    ClientHeight = 213
+    ClientWidth = 818
+    TabOrder = 2
+    object Label3: TLabel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Panel2
+      Left = 0
+      Height = 17
+      Top = 0
+      Width = 53
+      Caption = 'Pytanie:'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = Label3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label3
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      Left = 57
+      Height = 17
+      Top = 0
+      Width = 761
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 4
+      Constraints.MinHeight = 17
+      Font.Color = clBlue
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      WordWrap = True
+    end
+    object Label5: TLabel
+      AnchorSideTop.Control = Label6
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label6
+      Left = 40
+      Height = 17
+      Top = 27
+      Width = 13
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 2
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 4
+      Caption = 'A:'
+      ParentColor = False
+    end
+    object Label6: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideTop.Control = Label4
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label4
+      AnchorSideRight.Side = asrBottom
+      Left = 57
+      Height = 20
+      Top = 25
+      Width = 761
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 8
+      BorderSpacing.Bottom = 2
+      Constraints.MinHeight = 20
+      Layout = tlCenter
+      ParentColor = False
+      WordWrap = True
+    end
+    object Label7: TLabel
+      AnchorSideTop.Control = Label8
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label8
+      Left = 40
+      Height = 17
+      Top = 49
+      Width = 13
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 2
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 4
+      Caption = 'B:'
+      ParentColor = False
+    end
+    object Label8: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideTop.Control = Label6
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label4
+      AnchorSideRight.Side = asrBottom
+      Left = 57
+      Height = 20
+      Top = 47
+      Width = 761
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 2
+      Constraints.MinHeight = 20
+      Layout = tlCenter
+      ParentColor = False
+      WordWrap = True
+    end
+    object Label9: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideTop.Control = Label8
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label4
+      AnchorSideRight.Side = asrBottom
+      Left = 57
+      Height = 20
+      Top = 69
+      Width = 761
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 2
+      Constraints.MinHeight = 20
+      Layout = tlCenter
+      ParentColor = False
+      WordWrap = True
+    end
+    object Label10: TLabel
+      AnchorSideTop.Control = Label9
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label9
+      Left = 40
+      Height = 17
+      Top = 71
+      Width = 13
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 2
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 4
+      Caption = 'C:'
+      ParentColor = False
+    end
+    object Label11: TLabel
+      AnchorSideTop.Control = Label12
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label12
+      Left = 39
+      Height = 17
+      Top = 92
+      Width = 14
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 2
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 4
+      Caption = 'D:'
+      ParentColor = False
+    end
+    object Label12: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideTop.Control = Label10
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label4
+      AnchorSideRight.Side = asrBottom
+      Left = 57
+      Height = 20
+      Top = 90
+      Width = 761
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 2
+      Constraints.MinHeight = 20
+      Layout = tlCenter
+      ParentColor = False
+      WordWrap = True
+    end
+    object SpeedButton1: TSpeedButton
+      AnchorSideLeft.Control = Label12
+      AnchorSideTop.Control = Label12
+      AnchorSideTop.Side = asrBottom
+      Left = 57
+      Height = 37
+      Top = 114
+      Width = 95
+      BorderSpacing.Top = 4
+      Caption = 'A'
+      Font.Height = -16
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object SpeedButton2: TSpeedButton
+      AnchorSideLeft.Control = SpeedButton1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton1
+      Left = 152
+      Height = 37
+      Top = 114
+      Width = 95
+      Caption = 'B'
+      Font.Height = -16
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object SpeedButton3: TSpeedButton
+      AnchorSideLeft.Control = SpeedButton2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton2
+      Left = 247
+      Height = 37
+      Top = 114
+      Width = 95
+      Caption = 'C'
+      Font.Height = -16
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object SpeedButton4: TSpeedButton
+      AnchorSideLeft.Control = SpeedButton3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton3
+      Left = 342
+      Height = 37
+      Top = 114
+      Width = 95
+      Caption = 'D'
+      Font.Height = -16
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+  end
+  object cli: TNetSocket
+    Mode = smClient
+    Security = ssNone
+    BinaryMode = False
+    Host = 'studiojahu.duckdns.org'
+    Port = 4680
+    ReuseAddress = True
+    Timeout = 0
+    SSLMethod = msSSLv2or3
+    OnConnect = cliConnect
+    OnDisconnect = cliDisconnect
+    OnTimeVector = cliTimeVector
+    Left = 624
+    Top = 8
+  end
+  object mess: TExtMessage
+    Caption = '<Auto>'
+    HelpContext = 0
+    Position = psOwnerFormCenter
+    PosTop = 0
+    PosLeft = 0
+    StringToCR = '^'
+    Left = 664
+    Top = 8
+  end
+  object autorun: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = autorunTimer
+    Left = 752
+    Top = 8
+  end
+  object ps: TXMLPropStorage
+    StoredValues = <>
+    RootNodePath = 'client'
+    Active = False
+    Left = 704
+    Top = 8
+  end
+end

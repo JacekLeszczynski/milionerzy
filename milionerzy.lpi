@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="11"/>
+    <General>
+      <Flags>
+        <MainUnitHasUsesSectionForAllUnits Value="False"/>
+        <MainUnitHasScaledStatement Value="False"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <AutoCreateForms Value="False"/>
+      <Title Value="Milionerzy"/>
+      <Scaled Value="True"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+        <TextName Value="StudioJahu.Milionerzy.MilionerzyClient"/>
+        <TextDesc Value="Client Milionerzy"/>
+      </XPManifest>
+      <Icon Value="0"/>
+      <Resources Count="15">
+        <Resource_0 FileName="sound/beep.mp3" Type="RCDATA" ResourceName="BEEP"/>
+        <Resource_1 FileName="sound/boom.mp3" Type="RCDATA" ResourceName="BOOM"/>
+        <Resource_2 FileName="sound/error.mp3" Type="RCDATA" ResourceName="ERROR"/>
+        <Resource_3 FileName="sound/ok.mp3" Type="RCDATA" ResourceName="OK"/>
+        <Resource_4 FileName="sound/brawa.mp3" Type="RCDATA" ResourceName="BRAWA"/>
+        <Resource_5 FileName="sound/brawa_milion.mp3" Type="RCDATA" ResourceName="BRAWA_MILION"/>
+        <Resource_6 FileName="sound/przegrana.mp3" Type="RCDATA" ResourceName="PRZEGRANA"/>
+        <Resource_7 FileName="sound/zegar.mp3" Type="RCDATA" ResourceName="ZEGAR"/>
+        <Resource_8 FileName="sound/struna.mp3" Type="RCDATA" ResourceName="STRUNA"/>
+        <Resource_9 FileName="music/podstawa.ogg" Type="RCDATA" ResourceName="PODSTAWA"/>
+        <Resource_10 FileName="music/pytanie1.ogg" Type="RCDATA" ResourceName="PYTANIE1"/>
+        <Resource_11 FileName="music/pytanie2.ogg" Type="RCDATA" ResourceName="PYTANIE2"/>
+        <Resource_12 FileName="music/pytanie3.ogg" Type="RCDATA" ResourceName="PYTANIE3"/>
+        <Resource_13 FileName="music/wygrana.ogg" Type="RCDATA" ResourceName="WYGRANA"/>
+        <Resource_14 FileName="music/wygrana2.ogg" Type="RCDATA" ResourceName="WYGRANA2"/>
+      </Resources>
+    </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <AutoIncrementBuild Value="True"/>
+      <MinorVersionNr Value="7"/>
+      <BuildNr Value="1"/>
+      <Language Value="0415"/>
+      <StringTable CompanyName="Studio Jahu" InternalName="milionerzy.exe" LegalCopyright="2020 Krakow" LegalTrademarks="Studio Jahu" OriginalFilename="milionerzy.exe" ProductName="Milionerzy Client Studio Jahu" ProductVersion="1.0"/>
+    </VersionInfo>
+    <BuildModes Count="6">
+      <Item1 Name="Default" Default="True"/>
+      <Item2 Name="Debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="milionerzy"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="../../lib"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <IncludeAssertionCode Value="True"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <VerifyObjMethodCallValidity Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf2Set"/>
+              <UseHeaptrc Value="True"/>
+              <TrashVariables Value="True"/>
+              <UseExternalDbgSyms Value="True"/>
+            </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item2>
+      <Item3 Name="Linux AMD64">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="milionerzy"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="../../lib"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dSERVER"/>
+            <OtherDefines Count="2">
+              <Define0 Value="SERVER"/>
+              <Define1 Value="CLIENT"/>
+            </OtherDefines>
+          </Other>
+        </CompilerOptions>
+      </Item3>
+      <Item4 Name="Linux AMD64 (CLIENT)">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="milionerzy_client"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="../../lib"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="x86_64"/>
+            <TargetOS Value="linux"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dCLIENT"/>
+            <OtherDefines Count="2">
+              <Define0 Value="SERVER"/>
+              <Define1 Value="CLIENT"/>
+            </OtherDefines>
+          </Other>
+        </CompilerOptions>
+      </Item4>
+      <Item5 Name="Windows 32bit">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="milionerzy.exe"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="../../lib"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="win32"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dSERVER"/>
+            <OtherDefines Count="2">
+              <Define0 Value="SERVER"/>
+              <Define1 Value="CLIENT"/>
+            </OtherDefines>
+          </Other>
+        </CompilerOptions>
+      </Item5>
+      <Item6 Name="Windows 32bit (CLIENT)">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="milionerzy_client.exe"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="../../lib"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="win32"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dCLIENT"/>
+            <OtherDefines Count="2">
+              <Define0 Value="SERVER"/>
+              <Define1 Value="CLIENT"/>
+            </OtherDefines>
+          </Other>
+        </CompilerOptions>
+      </Item6>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+      <DestinationDirectory Value="/home/tao/Projekty/public2"/>
+      <CompressFinally Value="False"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0"/>
+    </RunParams>
+    <RequiredPackages Count="5">
+      <Item1>
+        <PackageName Value="uEControls"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="ExtLazarus"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="zcomponent"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
+    </RequiredPackages>
+    <Units Count="6">
+      <Unit0>
+        <Filename Value="milionerzy.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="main.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FServer"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="serwis.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="config.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FKonfiguracja"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="ekran.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fEkran"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="client.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FClient"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit5>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <Target>
+      <Filename Value="milionerzy"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="../../lib"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Linking>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+  </CompilerOptions>
+</CONFIG>

@@ -1,0 +1,1077 @@
+object FServer: TFServer
+  Left = 296
+  Height = 646
+  Top = 340
+  Width = 721
+  Caption = 'Panel kontrolny'
+  ClientHeight = 646
+  ClientWidth = 721
+  KeyPreview = True
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
+  LCLVersion = '2.0.10.0'
+  object RadioGroup1: TRadioGroup
+    AnchorSideLeft.Control = Panel1
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    Left = 4
+    Height = 88
+    Top = 58
+    Width = 280
+    AutoFill = True
+    BorderSpacing.Top = 2
+    Caption = 'Styl ekranu'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 68
+    ClientWidth = 278
+    ItemIndex = 0
+    Items.Strings = (
+      'Pusty ekran'
+      'Ekran informacyjny'
+      'Pytanie z odpowiedziami'
+    )
+    OnClick = RadioGroup1Click
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 4
+    Height = 54
+    Top = 2
+    Width = 713
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 4
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 4
+    BevelOuter = bvNone
+    ClientHeight = 54
+    ClientWidth = 713
+    TabOrder = 1
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      Left = 2
+      Height = 15
+      Top = 2
+      Width = 70
+      BorderSpacing.Left = 2
+      BorderSpacing.Top = 2
+      Caption = 'Włączniki'
+      Font.Height = -13
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object CheckBox1: TCheckBox
+      AnchorSideLeft.Control = Label1
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      Left = 10
+      Height = 23
+      Top = 21
+      Width = 134
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 4
+      Caption = 'Włącznik ekranu'
+      OnChange = CheckBox1Change
+      TabOrder = 0
+    end
+    object CheckBox2: TCheckBox
+      AnchorSideLeft.Control = CheckBox1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = CheckBox1
+      Left = 160
+      Height = 23
+      Top = 21
+      Width = 110
+      BorderSpacing.Left = 16
+      Caption = 'Włącznik gry'
+      OnChange = CheckBox2Change
+      TabOrder = 1
+    end
+    object lTryb: TLabel
+      Left = 659
+      Height = 54
+      Top = 0
+      Width = 54
+      Align = alRight
+      Alignment = taCenter
+      AutoSize = False
+      Caption = '0'
+      Font.Height = -19
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = RadioGroup1
+    AnchorSideTop.Control = RadioGroup1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = RadioGroup1
+    AnchorSideRight.Side = asrBottom
+    Left = 4
+    Height = 466
+    Top = 150
+    Width = 280
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 4
+    Caption = 'Informacja'
+    ClientHeight = 446
+    ClientWidth = 278
+    TabOrder = 2
+    object i0: TLabel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = GroupBox1
+      AnchorSideRight.Control = GroupBox1
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 2
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 8
+      Caption = '1. Pusty ekran'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i1: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i0
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 22
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '2. Ekran informacyjny'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i2: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 42
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - gwarantowane 1000 zł'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i3: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 62
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - gwarantowane 40 000 zł'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i4: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i3
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 82
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - gwarantowany MILION'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i5: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i4
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 102
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - koło "pół na pół"'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i6: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i5
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 122
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - koło "pytanie do publiczności"'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i7: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i6
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 142
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - koło "telefon do przyjaciela"'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i8: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i7
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 162
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '3. Pusty Ekran'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i9: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i8
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 182
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '4. Pytanie'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i10: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i9
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 202
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - pytanie'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i11: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i10
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 222
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - odpowiedź A'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i12: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i11
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 242
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - odpowiedź B'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i13: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i12
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 262
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - odpowiedź C'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i14: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i13
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 282
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - odpowiedź D'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i15: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i14
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 302
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - oczekiwanie na odpowiedź'
+      Constraints.MinHeight = 20
+      Font.Color = clRed
+      ParentColor = False
+      ParentFont = False
+    end
+    object i16: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i15
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 322
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - wyniki'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i17: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i16
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 342
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '     - podsumowanie'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i18: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i17
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 362
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '5. Pusty ekran'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i19: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i18
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 382
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '6. Gramy dalej?'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i20: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i19
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 402
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '7. Podsumowanie.'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+    object i21: TLabel
+      AnchorSideLeft.Control = i0
+      AnchorSideTop.Control = i20
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = i0
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 20
+      Top = 422
+      Width = 258
+      Anchors = [akTop, akLeft, akRight]
+      Caption = '8. Koniec gry.'
+      Constraints.MinHeight = 20
+      ParentColor = False
+    end
+  end
+  object GroupBox2: TGroupBox
+    AnchorSideLeft.Control = RadioGroup1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = RadioGroup1
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 292
+    Height = 175
+    Top = 58
+    Width = 425
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 4
+    Caption = 'Pytanie'
+    ClientHeight = 155
+    ClientWidth = 423
+    TabOrder = 3
+    object Label2: TLabel
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = GroupBox2
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 4
+      Height = 17
+      Top = 0
+      Width = 415
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
+      Caption = '(pytanie)'
+      Constraints.MinHeight = 17
+      Font.Color = clBlue
+      ParentColor = False
+      ParentFont = False
+      WordWrap = True
+    end
+    object Label3: TLabel
+      AnchorSideLeft.Control = Label2
+      AnchorSideTop.Control = Label4
+      AnchorSideBottom.Control = Label4
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 20
+      Top = 21
+      Width = 20
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akBottom]
+      Caption = 'A:'
+      Constraints.MinWidth = 20
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = Label2
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label2
+      AnchorSideRight.Side = asrBottom
+      Left = 24
+      Height = 20
+      Top = 21
+      Width = 395
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 20
+      BorderSpacing.Top = 4
+      Constraints.MinHeight = 20
+      Layout = tlCenter
+      ParentColor = False
+      WordWrap = True
+    end
+    object Label5: TLabel
+      AnchorSideLeft.Control = Label3
+      AnchorSideTop.Control = Label6
+      AnchorSideBottom.Control = Label6
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 20
+      Top = 41
+      Width = 20
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akBottom]
+      Caption = 'B:'
+      Constraints.MinWidth = 20
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object Label6: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideTop.Control = Label4
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label2
+      AnchorSideRight.Side = asrBottom
+      Left = 24
+      Height = 20
+      Top = 41
+      Width = 395
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      Constraints.MinHeight = 20
+      Layout = tlCenter
+      ParentColor = False
+      WordWrap = True
+    end
+    object Label7: TLabel
+      AnchorSideLeft.Control = Label3
+      AnchorSideTop.Control = Label8
+      AnchorSideBottom.Control = Label8
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 20
+      Top = 61
+      Width = 20
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akBottom]
+      Caption = 'C:'
+      Constraints.MinWidth = 20
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object Label8: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideTop.Control = Label6
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label2
+      AnchorSideRight.Side = asrBottom
+      Left = 24
+      Height = 20
+      Top = 61
+      Width = 395
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      Constraints.MinHeight = 20
+      Layout = tlCenter
+      ParentColor = False
+      WordWrap = True
+    end
+    object Label9: TLabel
+      AnchorSideLeft.Control = Label3
+      AnchorSideTop.Control = Label10
+      AnchorSideBottom.Control = Label10
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 20
+      Top = 81
+      Width = 20
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akBottom]
+      Caption = 'D:'
+      Constraints.MinWidth = 20
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object Label10: TLabel
+      AnchorSideLeft.Control = Label4
+      AnchorSideTop.Control = Label8
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label2
+      AnchorSideRight.Side = asrBottom
+      Left = 24
+      Height = 20
+      Top = 81
+      Width = 395
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Bottom = 2
+      Constraints.MinHeight = 20
+      Layout = tlCenter
+      ParentColor = False
+      WordWrap = True
+    end
+    object SpeedButton1: TSpeedButton
+      Tag = 1
+      AnchorSideLeft.Control = Label10
+      AnchorSideTop.Control = Label10
+      AnchorSideTop.Side = asrBottom
+      Left = 24
+      Height = 22
+      Top = 103
+      Width = 98
+      BorderSpacing.Bottom = 2
+      Caption = 'A'
+      Enabled = False
+      OnClick = ButtOdpNow
+    end
+    object SpeedButton2: TSpeedButton
+      Tag = 2
+      AnchorSideLeft.Control = SpeedButton1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton1
+      Left = 122
+      Height = 22
+      Top = 103
+      Width = 98
+      Caption = 'B'
+      Enabled = False
+      OnClick = ButtOdpNow
+    end
+    object SpeedButton3: TSpeedButton
+      Tag = 3
+      AnchorSideLeft.Control = SpeedButton2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton1
+      Left = 220
+      Height = 22
+      Top = 103
+      Width = 98
+      Caption = 'C'
+      Enabled = False
+      OnClick = ButtOdpNow
+    end
+    object SpeedButton4: TSpeedButton
+      Tag = 4
+      AnchorSideLeft.Control = SpeedButton3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton1
+      Left = 318
+      Height = 22
+      Top = 103
+      Width = 98
+      Caption = 'D'
+      Enabled = False
+      OnClick = ButtOdpNow
+    end
+    object SpeedButton5: TSpeedButton
+      AnchorSideLeft.Control = SpeedButton1
+      AnchorSideTop.Control = SpeedButton1
+      AnchorSideTop.Side = asrBottom
+      Left = 71
+      Height = 22
+      Top = 127
+      Width = 98
+      BorderSpacing.Left = 47
+      BorderSpacing.Bottom = 6
+      Caption = '50/50'
+      OnClick = SpeedButton5Click
+    end
+    object SpeedButton6: TSpeedButton
+      AnchorSideLeft.Control = SpeedButton5
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton5
+      Left = 169
+      Height = 22
+      Top = 127
+      Width = 98
+      BorderSpacing.Bottom = 6
+      Caption = 'Publiczność'
+    end
+    object SpeedButton7: TSpeedButton
+      AnchorSideLeft.Control = SpeedButton6
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton6
+      Left = 267
+      Height = 22
+      Top = 127
+      Width = 98
+      BorderSpacing.Bottom = 6
+      Caption = 'Telefon'
+      OnClick = SpeedButton7Click
+    end
+  end
+  object Label11: TLabel
+    AnchorSideLeft.Control = GroupBox2
+    AnchorSideTop.Control = GroupBox2
+    AnchorSideTop.Side = asrBottom
+    Left = 292
+    Height = 17
+    Top = 233
+    Width = 155
+    Caption = 'Zaznaczona odpowiedź:'
+    ParentColor = False
+  end
+  object Label12: TLabel
+    AnchorSideLeft.Control = Label11
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Label11
+    Left = 455
+    Height = 17
+    Top = 233
+    Width = 6
+    BorderSpacing.Left = 8
+    Caption = '-'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object GroupBox3: TGroupBox
+    AnchorSideLeft.Control = GroupBox2
+    AnchorSideRight.Control = GroupBox2
+    AnchorSideRight.Side = asrBottom
+    Left = 292
+    Height = 64
+    Top = 536
+    Width = 425
+    Anchors = [akTop, akLeft, akRight]
+    Caption = 'Wygrana:'
+    ClientHeight = 44
+    ClientWidth = 423
+    TabOrder = 4
+    object Label13: TLabel
+      AnchorSideLeft.Control = GroupBox3
+      AnchorSideTop.Control = GroupBox3
+      Left = 12
+      Height = 17
+      Top = 2
+      Width = 45
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 2
+      Caption = 'Kwota:'
+      ParentColor = False
+    end
+    object Label14: TLabel
+      AnchorSideLeft.Control = Label13
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label13
+      Left = 65
+      Height = 17
+      Top = 2
+      Width = 24
+      BorderSpacing.Left = 8
+      Caption = '0 zł'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label15: TLabel
+      AnchorSideLeft.Control = Label13
+      AnchorSideTop.Control = Label14
+      AnchorSideTop.Side = asrBottom
+      Left = 12
+      Height = 17
+      Top = 21
+      Width = 145
+      BorderSpacing.Top = 2
+      Caption = 'Kwota gwarantowana:'
+      ParentColor = False
+    end
+    object Label16: TLabel
+      AnchorSideLeft.Control = Label15
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label15
+      Left = 165
+      Height = 17
+      Top = 21
+      Width = 24
+      BorderSpacing.Left = 8
+      Caption = '0 zł'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+  object GroupBox4: TGroupBox
+    AnchorSideLeft.Control = Label11
+    AnchorSideTop.Control = Label11
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupBox2
+    AnchorSideRight.Side = asrBottom
+    Left = 292
+    Height = 62
+    Top = 266
+    Width = 425
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 16
+    Caption = 'Rozmowa telefoniczna'
+    ClientHeight = 42
+    ClientWidth = 423
+    Enabled = False
+    TabOrder = 5
+    object BitBtn1: TBitBtn
+      AnchorSideLeft.Control = GroupBox4
+      AnchorSideTop.Control = GroupBox4
+      Left = 8
+      Height = 30
+      Top = 4
+      Width = 112
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 4
+      Caption = 'START'
+      OnClick = BitBtn1Click
+      TabOrder = 0
+    end
+    object BitBtn2: TBitBtn
+      AnchorSideLeft.Control = BitBtn1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn1
+      Left = 120
+      Height = 30
+      Top = 4
+      Width = 112
+      Caption = 'STOP'
+      OnClick = BitBtn2Click
+      TabOrder = 1
+    end
+    object Label17: TLabel
+      AnchorSideLeft.Control = BitBtn2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn2
+      AnchorSideTop.Side = asrCenter
+      Left = 258
+      Height = 20
+      Top = 9
+      Width = 66
+      BorderSpacing.Left = 26
+      Caption = '30 sek'
+      Font.Height = -19
+      Font.Name = 'Liberation Mono'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+  object db_pytanie: TZQuery
+    Connection = dm.db
+    SQL.Strings = (
+      'select * from pytania'
+      'where id=:id'
+    )
+    Params = <    
+      item
+        DataType = ftUnknown
+        Name = 'id'
+        ParamType = ptUnknown
+      end>
+    Left = 512
+    Top = 8
+    ParamData = <    
+      item
+        DataType = ftUnknown
+        Name = 'id'
+        ParamType = ptUnknown
+      end>
+    object db_pytanieid: TLargeintField
+      FieldKind = fkData
+      FieldName = 'id'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object db_pytaniepytanie: TMemoField
+      FieldKind = fkData
+      FieldName = 'pytanie'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object db_pytanieodp_1: TMemoField
+      FieldKind = fkData
+      FieldName = 'odp_1'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object db_pytanieodp_2: TMemoField
+      FieldKind = fkData
+      FieldName = 'odp_2'
+      Index = 3
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object db_pytanieodp_3: TMemoField
+      FieldKind = fkData
+      FieldName = 'odp_3'
+      Index = 4
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object db_pytanieodp_4: TMemoField
+      FieldKind = fkData
+      FieldName = 'odp_4'
+      Index = 5
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
+    object db_pytanieodpowiedz: TLargeintField
+      FieldKind = fkData
+      FieldName = 'odpowiedz'
+      Index = 6
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+  end
+  object ds_pytanie: TDataSource
+    AutoEdit = False
+    DataSet = db_pytanie
+    Left = 592
+    Top = 8
+  end
+  object pilot: TPresentation
+    Device = dvGembird
+    OnClick = pilotClick
+    Left = 376
+    Top = 8
+  end
+  object tGra: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = tGraTimer
+    Left = 576
+    Top = 72
+  end
+  object uos: TUOSEngine
+    LibDirectory = '<auto>'
+    DriversLoad = [dlPortAudio, dlSndAudio, dlMpg123]
+    Left = 336
+    Top = 112
+  end
+  object play1: TUOSPlayer
+    DeviceEngine = uos
+    Mode = moPlay
+    Volume = 1
+    VolumeGlobal = 1
+    Left = 392
+    Top = 112
+  end
+  object play2: TUOSPlayer
+    DeviceEngine = uos
+    Mode = moPlayLoop
+    DeviceIndex = 1
+    Volume = 1
+    VolumeGlobal = 1
+    Left = 448
+    Top = 112
+  end
+  object player: TUOSPlayer
+    DeviceEngine = uos
+    Mode = moPlayLoop
+    DeviceIndex = 2
+    Volume = 0.2
+    VolumeGlobal = 1
+    AutoVolPPS = True
+    Left = 504
+    Top = 112
+  end
+  object tInfo: TTimer
+    Enabled = False
+    Interval = 750
+    OnTimer = tInfoTimer
+    Left = 624
+    Top = 72
+  end
+  object t50: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = t50Timer
+    OnStartTimer = t50StartTimer
+    Left = 560
+    Top = 128
+  end
+  object tPub: TTimer
+    Enabled = False
+    Left = 616
+    Top = 128
+  end
+  object tTel: TTimer
+    Enabled = False
+    Interval = 200
+    OnTimer = tTelTimer
+    OnStartTimer = tTelStartTimer
+    OnStopTimer = tTelStopTimer
+    Left = 672
+    Top = 128
+  end
+  object zegar: TLiveTimer
+    Left = 312
+    Top = 8
+  end
+  object ser: TNetSocket
+    Mode = smServer
+    Security = ssNone
+    BinaryMode = False
+    Host = '127.0.0.1'
+    Port = 4680
+    ReuseAddress = True
+    Timeout = 0
+    SSLMethod = msSSLv2or3
+    Left = 440
+    Top = 8
+  end
+end

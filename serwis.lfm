@@ -1,0 +1,38 @@
+object dm: Tdm
+  OldCreateOrder = False
+  Height = 218
+  HorizontalOffset = 350
+  VerticalOffset = 133
+  Width = 249
+  object db: TZConnection
+    ControlsCodePage = cCP_UTF8
+    AutoEncodeStrings = True
+    Properties.Strings = (
+      'AutoEncodeStrings=ON'
+    )
+    Connected = True
+    Port = 0
+    Database = '/home/tao/.config/milionerzy/db.sqlite'
+    Protocol = 'sqlite-3'
+    Left = 24
+    Top = 16
+  end
+  object cr: TZSQLProcessor
+    Params = <>
+    Script.Strings = (
+      'create table pytania ('
+      '  id integer primary key,'
+      '  pytanie text,'
+      '  odp_1 text,'
+      '  odp_2 text,'
+      '  odp_3 text,'
+      '  odp_4 text,'
+      '  odpowiedz integer'
+      ');'
+    )
+    Connection = db
+    Delimiter = ';'
+    Left = 112
+    Top = 16
+  end
+end
