@@ -1073,6 +1073,7 @@ object FServer: TFServer
     ReuseAddress = True
     Timeout = 0
     SSLMethod = msSSLv2or3
+    OnReceiveString = serReceiveString
     Left = 440
     Top = 8
   end

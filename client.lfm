@@ -14,6 +14,8 @@ object FClient: TFClient
     Height = 20
     Top = 298
     Width = 834
+    Font.Height = -13
+    Font.Name = 'Monospace'
     Panels = <    
       item
         Text = 'Connected: OFF'
@@ -21,8 +23,13 @@ object FClient: TFClient
       end    
       item
         Text = 'Różnica czasu: 0 ms.'
+        Width = 200
+      end    
+      item
+        Text = '--:--:--'
         Width = 50
       end>
+    ParentFont = False
     SimplePanel = False
   end
   object Panel1: TPanel
@@ -344,8 +351,9 @@ object FClient: TFClient
     SSLMethod = msSSLv2or3
     OnConnect = cliConnect
     OnDisconnect = cliDisconnect
+    OnReceiveString = cliReceiveString
     OnTimeVector = cliTimeVector
-    Left = 624
+    Left = 720
     Top = 8
   end
   object mess: TExtMessage
@@ -355,21 +363,29 @@ object FClient: TFClient
     PosTop = 0
     PosLeft = 0
     StringToCR = '^'
-    Left = 664
+    Left = 680
     Top = 8
   end
   object autorun: TTimer
     Enabled = False
     Interval = 1
     OnTimer = autorunTimer
-    Left = 752
+    Left = 632
     Top = 8
   end
   object ps: TXMLPropStorage
     StoredValues = <>
     RootNodePath = 'client'
     Active = False
-    Left = 704
+    Left = 592
     Top = 8
+  end
+  object tCzas: TTimer
+    Enabled = False
+    Interval = 250
+    OnTimer = tCzasTimer
+    OnStopTimer = tCzasStopTimer
+    Left = 496
+    Top = 104
   end
 end

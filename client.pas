@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
-  StdCtrls, Buttons, XMLPropStorage, NetSocket, ExtMessage, lNet;
+  StdCtrls, Buttons, XMLPropStorage, NetSocket, ExtMessage, LiveTimer, lNet;
 
 type
 
@@ -27,6 +27,7 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    tCzas: TTimer;
     mess: TExtMessage;
     Label1: TLabel;
     Label2: TLabel;
@@ -43,8 +44,11 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure cliConnect(aSocket: TLSocket);
     procedure cliDisconnect(aSocket: TLSocket);
+    procedure cliReceiveString(aMsg: string; aSocket: TLSocket);
     procedure cliTimeVector(aTimeVector: integer);
     procedure FormCreate(Sender: TObject);
+    procedure tCzasStopTimer(Sender: TObject);
+    procedure tCzasTimer(Sender: TObject);
   private
     function connect: boolean;
   public
@@ -85,6 +89,7 @@ begin
   BitBtn1.Visible:=false;
   StatusBar.Panels[0].Text:='Connected: OK';
   cli.GetTimeVector;
+  tCzas.Enabled:=true;
 end;
 
 procedure TFClient.BitBtn1Click(Sender: TObject);
@@ -100,8 +105,14 @@ end;
 
 procedure TFClient.cliDisconnect(aSocket: TLSocket);
 begin
+  tCzas.Enabled:=false;
   StatusBar.Panels[1].Text:='Różnica czasu: 0 ms.';
   StatusBar.Panels[0].Text:='Connected: OFF';
+end;
+
+procedure TFClient.cliReceiveString(aMsg: string; aSocket: TLSocket);
+begin
+  {}
 end;
 
 procedure TFClient.cliTimeVector(aTimeVector: integer);
@@ -116,6 +127,16 @@ begin
   ps.FileName:=MyConfDir('client.xml');
   ps.Active:=true;
   autorun.Enabled:=true;
+end;
+
+procedure TFClient.tCzasStopTimer(Sender: TObject);
+begin
+  StatusBar.Panels[2].Text:='--:--:--';
+end;
+
+procedure TFClient.tCzasTimer(Sender: TObject);
+begin
+  StatusBar.Panels[2].Text:=FormatDateTime('hh:nn:ss',ecode.IntegerToTime(TimeToInteger+vczas));
 end;
 
 end.

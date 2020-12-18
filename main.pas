@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, XMLPropStorage, Presentation, UOSEngine, UOSPlayer, LiveTimer,
-  NetSocket, ZDataset;
+  NetSocket, ZDataset, lNet;
 
 type
 
@@ -104,6 +104,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure pilotClick(aButton: integer; var aTestDblClick: boolean);
     procedure RadioGroup1Click(Sender: TObject);
+    procedure serReceiveString(aMsg: string; aSocket: TLSocket);
     procedure SpeedButton5Click(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
     procedure t50StartTimer(Sender: TObject);
@@ -227,6 +228,11 @@ begin
     1: fEkran.eTabInfo;
     2: fEkran.ePytanie;
   end;
+end;
+
+procedure TFServer.serReceiveString(aMsg: string; aSocket: TLSocket);
+begin
+  {}
 end;
 
 procedure TFServer.SpeedButton5Click(Sender: TObject);
