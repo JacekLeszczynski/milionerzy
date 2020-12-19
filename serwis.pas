@@ -27,7 +27,7 @@ type
   end;
 
 const
-  CL_ZAZNACZENIE = clLime;
+  CL_ZAZNACZENIE = clGray;
 
 var (* program *)
   dm: Tdm;
@@ -44,6 +44,8 @@ var (* program *)
   g_kolo_1: boolean = true;
   g_kolo_2: boolean = true;
   g_kolo_3: boolean = true;
+  g_blokada_glosowania: boolean = false;
+  g_wylaczenie_odpowiedzi: string = '';
   pytanie: integer = 1;
 
 var
@@ -145,7 +147,7 @@ end;
 
 function Tdm.DecryptString(aStr: string): string;
 begin
-  result:=ecode.DecryptString(aStr,'6273627^&#^7276376276327',true);
+  result:=ecode.DecryptString(aStr,'6273627^&#^7276376276327');
 end;
 
 end.

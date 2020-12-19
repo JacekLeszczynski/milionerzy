@@ -62,6 +62,7 @@ type
     function connect: boolean;
     procedure odp_przyciski(aOn: boolean);
     procedure odp_activate(aOn: boolean);
+    procedure offkey(aStr: string);
     procedure clear;
     procedure send(aStr: string; aOdpowiedz: boolean = false);
   public
@@ -75,7 +76,7 @@ var
 implementation
 
 uses
-  ecode, serwis;
+  ecode, serwis, cverinfo;
 
 {$R *.lfm}
 
@@ -123,6 +124,38 @@ begin
   if not aOn then Label14.Caption:='';
 end;
 
+procedure TFClient.offkey(aStr: string);
+begin
+  if pos('a',aStr)>0 then
+  begin
+    SpeedButton1.Enabled:=false;
+    SpeedButton1.Caption:='';
+    Label6.Caption:='';
+    if Label14.Caption='A' then Label14.Caption:='';
+  end;
+  if pos('b',aStr)>0 then
+  begin
+    SpeedButton2.Enabled:=false;
+    SpeedButton2.Caption:='';
+    Label8.Caption:='';
+    if Label14.Caption='B' then Label14.Caption:='';
+  end;
+  if pos('c',aStr)>0 then
+  begin
+    SpeedButton3.Enabled:=false;
+    SpeedButton3.Caption:='';
+    Label9.Caption:='';
+    if Label14.Caption='C' then Label14.Caption:='';
+  end;
+  if pos('d',aStr)>0 then
+  begin
+    SpeedButton4.Enabled:=false;
+    SpeedButton4.Caption:='';
+    Label12.Caption:='';
+    if Label14.Caption='D' then Label14.Caption:='';
+  end;
+end;
+
 procedure TFClient.clear;
 begin
   Label4.Caption:='';
@@ -145,12 +178,6 @@ begin
   eSkad.Enabled:=false;
   StatusBar.Panels[0].Text:='Connected: OK';
   cli.GetTimeVector;
-  tCzas.Enabled:=true;
-  if (key='') or (key='new') then
-  begin
-    key:='new';
-    send('register');
-  end else send('login');
 end;
 
 procedure TFClient.cliCryptString(var aText: string);
@@ -183,6 +210,7 @@ begin
   BitBtn1.Visible:=true;
   eImie.Enabled:=true;
   eSkad.Enabled:=true;
+  clear;
 end;
 
 procedure TFClient.cliReceiveString(aMsg: string; aSocket: TLSocket);
@@ -220,11 +248,10 @@ begin
     Label12.Caption:=GetLineToStr(s,8,'$');
     if GetLineToStr(s,9,'$')='1' then odp_activate(true) else odp_activate(false);
     w:=GetLineToStr(s,10,'$');
-    if w<>'' then
-    begin
-      Label14.Caption:=w;
-      odp_przyciski(false);
-    end;
+    if w<>'' then Label14.Caption:=upcase(w);
+    if GetLineToStr(s,11,'$')='1' then odp_przyciski(false);
+    w:=GetLineToStr(s,12,'$');
+    if w<>'' then offkey(w);
   end else
   if odp='title' then Label4.Caption:=GetLineToStr(s,4,'$') else
   if odp='odpa' then Label6.Caption:=GetLineToStr(s,4,'$') else
@@ -233,6 +260,8 @@ begin
   if odp='odpd' then Label12.Caption:=GetLineToStr(s,4,'$') else
   if odp='goactive' then odp_activate(true) else
   if odp='godeactive' then odp_activate(false) else
+  if odp='goblock' then odp_przyciski(false) else
+  if odp='offkey' then offkey(GetLineToStr(s,4,'$')) else
   if odp='clear' then clear else
   if odp='zaznacz' then Label14.Caption:=GetLineToStr(s,4,'$');
 end;
@@ -241,40 +270,49 @@ procedure TFClient.cliTimeVector(aTimeVector: integer);
 begin
   vczas:=aTimeVector;
   StatusBar.Panels[1].Text:='Różnica czasu: '+IntToStr(aTimeVector)+' ms.';
+  tCzas.Enabled:=true;
+  if (key='') or (key='new') then
+  begin
+    key:='new';
+    send('register');
+  end else send('login');
 end;
 
 procedure TFClient.FormCreate(Sender: TObject);
+var
+  v1,v2,v3,v4: integer;
 begin
   SetConfDir('milionerzy');
   ps.FileName:=MyConfDir('client.xml');
   ps.Active:=true;
+  (* ver *)
+  GetProgramVersion(v1,v2,v3,v4);
+  if v4>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+'.'+IntToStr(v3)+'-'+IntToStr(v4)+')' else
+  if v3>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+'.'+IntToStr(v3)+')' else
+  if v2>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+')' else Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+')';
   autorun.Enabled:=true;
 end;
 
 procedure TFClient.SpeedButton1Click(Sender: TObject);
 begin
-  odp_przyciski(false);
   Label14.Caption:='A';
   if cli.Active then send('zaznacz$a');
 end;
 
 procedure TFClient.SpeedButton2Click(Sender: TObject);
 begin
-  odp_przyciski(false);
   Label14.Caption:='B';
   if cli.Active then send('zaznacz$b');
 end;
 
 procedure TFClient.SpeedButton3Click(Sender: TObject);
 begin
-  odp_przyciski(false);
   Label14.Caption:='C';
   if cli.Active then send('zaznacz$c');
 end;
 
 procedure TFClient.SpeedButton4Click(Sender: TObject);
 begin
-  odp_przyciski(false);
   Label14.Caption:='D';
   if cli.Active then send('zaznacz$d');
 end;

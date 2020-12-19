@@ -502,7 +502,6 @@ object FServer: TFServer
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
       BorderSpacing.Right = 4
-      Caption = '(pytanie)'
       Constraints.MinHeight = 17
       Font.Color = clBlue
       ParentColor = False
@@ -720,6 +719,7 @@ object FServer: TFServer
       Width = 98
       BorderSpacing.Bottom = 6
       Caption = 'Publiczność'
+      OnClick = SpeedButton6Click
     end
     object SpeedButton7: TSpeedButton
       AnchorSideLeft.Control = SpeedButton6
@@ -837,7 +837,7 @@ object FServer: TFServer
     Width = 425
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Top = 16
-    Caption = 'Rozmowa telefoniczna'
+    Caption = 'Rozmowa telefoniczna/Pomoc publiczności'
     ClientHeight = 42
     ClientWidth = 423
     Enabled = False
@@ -904,14 +904,14 @@ object FServer: TFServer
     AnchorSideRight.Control = GroupBox4
     AnchorSideRight.Side = asrBottom
     Left = 292
-    Height = 147
+    Height = 127
     Top = 330
     Width = 425
     Anchors = [akTop, akLeft, akRight]
     AutoSize = True
     BorderSpacing.Top = 2
     Caption = 'Głosowanie'
-    ClientHeight = 127
+    ClientHeight = 107
     ClientWidth = 423
     TabOrder = 7
     object gl1: TplGauge
@@ -921,10 +921,10 @@ object FServer: TFServer
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = GroupBox5
       AnchorSideRight.Side = asrBottom
-      Left = 25
+      Left = 21
       Height = 25
       Top = 7
-      Width = 390
+      Width = 402
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -949,10 +949,10 @@ object FServer: TFServer
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = gl1
       AnchorSideRight.Side = asrBottom
-      Left = 25
+      Left = 21
       Height = 25
-      Top = 36
-      Width = 390
+      Top = 32
+      Width = 402
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -963,9 +963,9 @@ object FServer: TFServer
       AnchorSideTop.Control = gl2
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = gl2
-      Left = 8
+      Left = 4
       Height = 17
-      Top = 40
+      Top = 36
       Width = 13
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
@@ -980,10 +980,10 @@ object FServer: TFServer
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = gl1
       AnchorSideRight.Side = asrBottom
-      Left = 25
+      Left = 21
       Height = 25
-      Top = 65
-      Width = 390
+      Top = 57
+      Width = 402
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -994,9 +994,9 @@ object FServer: TFServer
       AnchorSideTop.Control = gl3
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = gl3
-      Left = 8
+      Left = 4
       Height = 17
-      Top = 69
+      Top = 61
       Width = 13
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
@@ -1011,10 +1011,10 @@ object FServer: TFServer
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = gl1
       AnchorSideRight.Side = asrBottom
-      Left = 25
+      Left = 21
       Height = 25
-      Top = 94
-      Width = 390
+      Top = 82
+      Width = 402
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -1025,9 +1025,9 @@ object FServer: TFServer
       AnchorSideTop.Control = gl4
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = gl4
-      Left = 7
+      Left = 3
       Height = 17
-      Top = 98
+      Top = 86
       Width = 14
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 8
@@ -1140,6 +1140,7 @@ object FServer: TFServer
   object pilot: TPresentation
     Device = dvGembird
     OnClick = pilotClick
+    OnClickLong = pilotClickLong
     Left = 376
     Top = 8
   end
@@ -1195,12 +1196,7 @@ object FServer: TFServer
     Interval = 5000
     OnTimer = t50Timer
     OnStartTimer = t50StartTimer
-    Left = 560
-    Top = 128
-  end
-  object tPub: TTimer
-    Enabled = False
-    Left = 616
+    Left = 576
     Top = 128
   end
   object tTel: TTimer
@@ -1209,7 +1205,7 @@ object FServer: TFServer
     OnTimer = tTelTimer
     OnStartTimer = tTelStartTimer
     OnStopTimer = tTelStopTimer
-    Left = 672
+    Left = 624
     Top = 128
   end
   object zegar: TLiveTimer

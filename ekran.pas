@@ -6,13 +6,17 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  XMLPropStorage, ZDataset;
+  XMLPropStorage, TplGaugeUnit, ZDataset;
 
 type
 
   { TfEkran }
 
   TfEkran = class(TForm)
+    gl1: TplGauge;
+    gl2: TplGauge;
+    gl3: TplGauge;
+    gl4: TplGauge;
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
@@ -38,6 +42,12 @@ type
     Label27: TLabel;
     Label28: TLabel;
     Label29: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    Label32: TLabel;
+    Label33: TLabel;
+    Panel10: TPanel;
+    Panel11: TPanel;
     Panel9: TPanel;
     x1: TLabel;
     x2: TLabel;
@@ -92,6 +102,7 @@ type
     procedure eTabInfo;
     procedure ePodsumowanie(aKwota: integer; aKoniec: boolean = false);
     procedure eCzas30(aPokaz: boolean = true);
+    procedure ePub(aPokaz: boolean = true);
   end;
 
 var
@@ -117,6 +128,7 @@ begin
   Panel5.Visible:=false;
   Panel6.Visible:=false;
   Panel7.Visible:=false;
+  Panel10.Visible:=false;
 end;
 
 procedure TfEkran.ePytanie;
@@ -171,6 +183,11 @@ end;
 procedure TfEkran.eCzas30(aPokaz: boolean);
 begin
   Panel9.Visible:=aPokaz;
+end;
+
+procedure TfEkran.ePub(aPokaz: boolean);
+begin
+  Panel10.Visible:=aPokaz;
 end;
 
 end.

@@ -99,7 +99,6 @@ type
     SpeedButton7: TSpeedButton;
     tGra: TTimer;
     t50: TTimer;
-    tPub: TTimer;
     tTel: TTimer;
     tInfo: TTimer;
     uos: TUOSEngine;
@@ -114,11 +113,13 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure pilotClick(aButton: integer; var aTestDblClick: boolean);
+    procedure pilotClickLong(aButton: integer; aDblClick: boolean);
     procedure RadioGroup1Click(Sender: TObject);
     procedure serCryptString(var aText: string);
     procedure serDecryptString(var aText: string);
     procedure serReceiveString(aMsg: string; aSocket: TLSocket);
     procedure SpeedButton5Click(Sender: TObject);
+    procedure SpeedButton6Click(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
     procedure t50StartTimer(Sender: TObject);
     procedure t50Timer(Sender: TObject);
@@ -138,7 +139,7 @@ type
     procedure ekran_info(aLp: integer = 0);
     procedure ekran_pytanie(aNr: integer; aLp: integer = -1);
     procedure okno_config;
-    procedure aktywacja_odpowiedzi(b: boolean);
+    procedure aktywacja_odpowiedzi(b: boolean; aIgnoreServ: boolean = false);
     procedure zaznacz_odpowiedz(aNr: integer);
     procedure glosy_wyniki(var a,b,c,d: integer);
     procedure glosy_aktualizacja;
@@ -207,7 +208,9 @@ end;
 procedure TFServer.pilotClick(aButton: integer; var aTestDblClick: boolean);
 var
   litera: integer;
+
 begin
+  if (aButton=2) or (aButton=3) then aTestDblClick:=true;
   if ON_pause then exit;
   case aButton of
     1: litera:=1;
@@ -249,6 +252,18 @@ begin
   end;
 end;
 
+procedure TFServer.pilotClickLong(aButton: integer; aDblClick: boolean);
+begin
+  if aButton=2 then
+  begin
+    if aDblClick then pilot.SendKey(ord('6')) else pilot.SendKey(ord('5'));
+  end else
+  if aButton=3 then
+  begin
+    if aDblClick then pilot.SendKey(ord('8')) else pilot.SendKey(ord('7'));
+  end;
+end;
+
 procedure TFServer.RadioGroup1Click(Sender: TObject);
 begin
   case RadioGroup1.ItemIndex of
@@ -270,7 +285,7 @@ end;
 
 procedure TFServer.serReceiveString(aMsg: string; aSocket: TLSocket);
 var
-  s,s1,key,nkey,kom,w: string;
+  s,s1,key,nkey,kom,w,pom: string;
   b: boolean;
   i: integer;
 begin
@@ -302,6 +317,7 @@ begin
       nkey:=dm.GetGUID;
       sesje.Add(nkey);
       ser.SendString('o$'+key+'$register$'+nkey,aSocket);
+      key:=nkey;
     end;
     synchronizuj(key,aSocket);
   end else
@@ -309,31 +325,50 @@ begin
   begin
     w:=GetLineToStr(s,4,'$');
     b:=glosy.Find(key,i);
-    if b and (i>-1) then ser.SendString('o$'+key+'$zaznacz$'+GetLineToStr(glosy2[i],2,';'),aSocket) else
+    if b and (i>-1) then
     begin
-      glosy.Add(key);
-      glosy2.Add(key+';'+w);
-      if w='a' then inc(glosowanie_a) else
-      if w='b' then inc(glosowanie_b) else
-      if w='c' then inc(glosowanie_c) else
-      if w='d' then inc(glosowanie_d);
-      ser.SendString('o$'+key+'$zaznaczono$'+w,aSocket);
-      glosy_aktualizacja;
+      pom:=GetLineToStr(glosy2[i],2,';');
+      glosy.Delete(i);
+      glosy2.Delete(i);
+      if pom='a' then dec(glosowanie_a) else
+      if pom='b' then dec(glosowanie_b) else
+      if pom='c' then dec(glosowanie_c) else
+      if pom='d' then dec(glosowanie_d);
     end;
+    glosy.Add(key);
+    glosy2.Add(key+';'+w);
+    if w='a' then inc(glosowanie_a) else
+    if w='b' then inc(glosowanie_b) else
+    if w='c' then inc(glosowanie_c) else
+    if w='d' then inc(glosowanie_d);
+    ser.SendString('o$'+key+'$zaznaczono$'+w,aSocket);
+    glosy_aktualizacja;
   end;
 end;
 
 procedure TFServer.SpeedButton5Click(Sender: TObject);
 begin
+  fEkran.ePub(false);
   g_kolo_1:=false;
-  aktywacja_odpowiedzi(false);
+  aktywacja_odpowiedzi(false,true);
   t50.Enabled:=true;
+end;
+
+procedure TFServer.SpeedButton6Click(Sender: TObject);
+begin
+  g_kolo_2:=false;
+  aktywacja_odpowiedzi(false,true);
+  GroupBox4.Enabled:=true;
+  BitBtn1.Enabled:=false;
+  BitBtn2.Enabled:=true;
+  fEkran.ePub(true);
 end;
 
 procedure TFServer.SpeedButton7Click(Sender: TObject);
 begin
+  fEkran.ePub(false);
   g_kolo_3:=false;
-  aktywacja_odpowiedzi(false);
+  aktywacja_odpowiedzi(false,true);
   GroupBox4.Enabled:=true;
   BitBtn1.Enabled:=true;
   BitBtn2.Enabled:=false;
@@ -349,10 +384,12 @@ end;
 procedure TFServer.t50Timer(Sender: TObject);
 var
   i,a,x: integer;
+  s,pom: string;
 begin
   t50.Enabled:=false;
   sound(1);
   x:=0;
+  s:='';
   for i:=0 to 1 do
   begin
     a:=random(3-i)+1;
@@ -363,27 +400,48 @@ begin
       SpeedButton1.Enabled:=false;
       fEkran.Label_a.Visible:=false;
       fEkran.odp_a.Visible:=false;
+      s:=s+'a';
     end else
     if a=2 then
     begin
       SpeedButton2.Enabled:=false;
       fEkran.Label_b.Visible:=false;
       fEkran.odp_b.Visible:=false;
+      s:=s+'b';
     end else
     if a=3 then
     begin
       SpeedButton3.Enabled:=false;
       fEkran.Label_c.Visible:=false;
       fEkran.odp_c.Visible:=false;
+      s:=s+'c';
     end else
     if a=4 then
     begin
       SpeedButton4.Enabled:=false;
       fEkran.Label_d.Visible:=false;
       fEkran.odp_d.Visible:=false;
+      s:=s+'d';
     end;
   end;
-  aktywacja_odpowiedzi(true);
+  aktywacja_odpowiedzi(true,true);
+  g_wylaczenie_odpowiedzi:=s;
+  ser.SendString('o$all$offkey$'+s);
+  (* wywalenie wszystkich niepasujących zaznaczeń *)
+  for i:=glosy2.Count-1 downto 0 do
+  begin
+    pom:=GetLineToStr(glosy2[i],2,';');
+    if pos(pom,s)>0 then
+    begin
+      glosy.Delete(i);
+      glosy2.Delete(i);
+      if pom='a' then dec(glosowanie_a) else
+      if pom='b' then dec(glosowanie_b) else
+      if pom='c' then dec(glosowanie_c) else
+      if pom='d' then dec(glosowanie_d);
+      glosy_aktualizacja;
+    end;
+  end;
 end;
 
 procedure TFServer.tGraTimer(Sender: TObject);
@@ -434,7 +492,7 @@ begin
   begin
     tTel.Enabled:=false;
     sound(1);
-    aktywacja_odpowiedzi(true);
+    aktywacja_odpowiedzi(true,true);
   end;
 end;
 
@@ -577,6 +635,8 @@ begin
     end;
     //if g_stop then ON_pause:=false else TRYB:=17;
     if g_stop then TRYB:=20 else TRYB:=17;
+    g_blokada_glosowania:=false;
+    g_wylaczenie_odpowiedzi:='';
     glosy_clear;
     ser.SendString('o$all$clear');
   end;
@@ -687,8 +747,17 @@ end;
 
 procedure TFServer.BitBtn2Click(Sender: TObject);
 begin
-  tTel.Enabled:=false;
-  aktywacja_odpowiedzi(true);
+  if tTel.Enabled then tTel.Enabled:=false else
+  begin
+    sound(1);
+    g_blokada_glosowania:=true;
+    ser.SendString('o$all$goblock');
+    fEkran.gl1.Progress:=gl1.Progress;
+    fEkran.gl2.Progress:=gl2.Progress;
+    fEkran.gl3.Progress:=gl3.Progress;
+    fEkran.gl4.Progress:=gl4.Progress;
+  end;
+  aktywacja_odpowiedzi(true,true);
 end;
 
 procedure TFServer.CheckBox2Change(Sender: TObject);
@@ -792,7 +861,7 @@ begin
   FKonfiguracja.ShowModal;
 end;
 
-procedure TFServer.aktywacja_odpowiedzi(b: boolean);
+procedure TFServer.aktywacja_odpowiedzi(b: boolean; aIgnoreServ: boolean);
 begin
   ON_pause:=b;
   SpeedButton1.Enabled:=b and fEkran.odp_a.Visible;
@@ -802,7 +871,7 @@ begin
   SpeedButton5.Enabled:=b and g_kolo_1;
   SpeedButton6.Enabled:=b and g_kolo_2;
   SpeedButton7.Enabled:=b and g_kolo_3;
-  ser.SendString('o$all$goactive');
+  if b and (not aIgnoreServ) then ser.SendString('o$all$goactive');
 end;
 
 procedure TFServer.zaznacz_odpowiedz(aNr: integer);
@@ -878,7 +947,7 @@ end;
 procedure TFServer.synchronizuj(aKey: string; aSocket: TLSocket);
 var
   s: string;
-  t,a,b,c,d,p,z: string;
+  t,a,b,c,d,p,z,bg: string;
   bb: boolean;
   ii: integer;
 begin
@@ -920,7 +989,8 @@ begin
     bb:=glosy.Find(aKey,ii);
     if bb and (ii>-1) then z:=GetLineToStr(glosy2[ii],2,';');
   end;
-  s:=t+'$'+a+'$'+b+'$'+c+'$'+d+'$'+p+'$'+z;
+  if g_blokada_glosowania then bg:='1' else bg:='0';
+  s:=t+'$'+a+'$'+b+'$'+c+'$'+d+'$'+p+'$'+z+'$'+bg+'$'+g_wylaczenie_odpowiedzi;
   ser.SendString('o$'+aKey+'$synchronizacja$'+s,aSocket);
 end;
 

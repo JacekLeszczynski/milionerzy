@@ -4,295 +4,13 @@ object fEkran: TfEkran
   Top = 9
   Width = 1280
   BorderStyle = bsSingle
-  Caption = 'Ekran'
+  Caption = 'Milionerzy - Ekran'
   ClientHeight = 720
   ClientWidth = 1280
   Color = clGreen
   OnCreate = FormCreate
   SessionProperties = 'Top;Left'
   LCLVersion = '2.0.10.0'
-  object Panel5: TPanel
-    AnchorSideLeft.Control = Owner
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 0
-    Height = 272
-    Top = 448
-    Width = 1280
-    Anchors = [akLeft, akBottom]
-    BevelOuter = bvNone
-    ClientHeight = 272
-    ClientWidth = 1280
-    Color = clGreen
-    Font.Color = 6335917
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-    Visible = False
-    object Panel0: TPanel
-      AnchorSideLeft.Control = Panel5
-      AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = Panel5
-      Left = 74
-      Height = 76
-      Top = 20
-      Width = 1133
-      BorderSpacing.Top = 20
-      ClientHeight = 76
-      ClientWidth = 1133
-      Color = clBlue
-      Font.Color = clWhite
-      Font.Height = -27
-      Font.Name = 'Sans'
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 0
-      object pytanie: TLabel
-        Left = 11
-        Height = 74
-        Top = 1
-        Width = 1111
-        Align = alClient
-        Alignment = taCenter
-        BorderSpacing.Left = 10
-        BorderSpacing.Right = 10
-        Caption = 'Pytanie'
-        Layout = tlCenter
-        ParentColor = False
-        WordWrap = True
-      end
-    end
-    object Panel1: TPanel
-      AnchorSideLeft.Control = Panel0
-      AnchorSideTop.Control = Panel0
-      AnchorSideTop.Side = asrBottom
-      Left = 74
-      Height = 60
-      Top = 116
-      Width = 555
-      BorderSpacing.Top = 20
-      ClientHeight = 60
-      ClientWidth = 555
-      Color = clBlue
-      Font.Color = clWhite
-      Font.Height = -27
-      Font.Name = 'Sans'
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 1
-      object Label_a: TLabel
-        AnchorSideLeft.Control = Panel1
-        AnchorSideTop.Control = Panel1
-        AnchorSideTop.Side = asrCenter
-        Left = 11
-        Height = 31
-        Top = 15
-        Width = 32
-        BorderSpacing.Left = 10
-        Caption = 'A:'
-        Font.Color = clYellow
-        Font.Height = -27
-        Font.Name = 'Sans'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-      end
-      object odp_a: TLabel
-        AnchorSideLeft.Control = Label_a
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = Panel1
-        AnchorSideRight.Control = Panel1
-        AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = Panel1
-        AnchorSideBottom.Side = asrBottom
-        Left = 48
-        Height = 58
-        Top = 1
-        Width = 496
-        Alignment = taCenter
-        Anchors = [akTop, akLeft, akRight, akBottom]
-        BorderSpacing.Left = 5
-        BorderSpacing.Right = 10
-        Caption = 'Pytanie pierwsze.'
-        Layout = tlCenter
-        ParentColor = False
-        WordWrap = True
-      end
-    end
-    object Panel2: TPanel
-      AnchorSideTop.Control = Panel0
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = Panel0
-      AnchorSideRight.Side = asrBottom
-      Left = 652
-      Height = 60
-      Top = 116
-      Width = 555
-      Anchors = [akTop, akRight]
-      BorderSpacing.Top = 20
-      ClientHeight = 60
-      ClientWidth = 555
-      Color = clBlue
-      Font.Color = clWhite
-      Font.Height = -27
-      Font.Name = 'Sans'
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 2
-      object Label_b: TLabel
-        AnchorSideLeft.Control = Panel2
-        AnchorSideTop.Control = Panel2
-        AnchorSideTop.Side = asrCenter
-        Left = 11
-        Height = 31
-        Top = 15
-        Width = 32
-        BorderSpacing.Left = 10
-        Caption = 'B:'
-        Font.Color = clYellow
-        Font.Height = -27
-        Font.Name = 'Sans'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-      end
-      object odp_b: TLabel
-        AnchorSideLeft.Control = Label_b
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = Panel2
-        AnchorSideRight.Control = Panel2
-        AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = Panel2
-        AnchorSideBottom.Side = asrBottom
-        Left = 48
-        Height = 58
-        Top = 1
-        Width = 496
-        Alignment = taCenter
-        Anchors = [akTop, akLeft, akRight, akBottom]
-        BorderSpacing.Left = 5
-        BorderSpacing.Right = 10
-        Caption = 'Pytanie pierwsze.'
-        Layout = tlCenter
-        ParentColor = False
-        WordWrap = True
-      end
-    end
-    object Panel3: TPanel
-      AnchorSideLeft.Control = Panel1
-      AnchorSideTop.Control = Panel1
-      AnchorSideTop.Side = asrBottom
-      Left = 74
-      Height = 60
-      Top = 196
-      Width = 555
-      BorderSpacing.Top = 20
-      ClientHeight = 60
-      ClientWidth = 555
-      Color = clBlue
-      Font.Color = clWhite
-      Font.Height = -27
-      Font.Name = 'Sans'
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 3
-      object Label_c: TLabel
-        AnchorSideLeft.Control = Panel3
-        AnchorSideTop.Control = Panel3
-        AnchorSideTop.Side = asrCenter
-        Left = 11
-        Height = 31
-        Top = 15
-        Width = 31
-        BorderSpacing.Left = 10
-        Caption = 'C:'
-        Font.Color = clYellow
-        Font.Height = -27
-        Font.Name = 'Sans'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-      end
-      object odp_c: TLabel
-        AnchorSideLeft.Control = Label_c
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = Panel3
-        AnchorSideRight.Control = Panel3
-        AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = Panel3
-        AnchorSideBottom.Side = asrBottom
-        Left = 47
-        Height = 58
-        Top = 1
-        Width = 497
-        Alignment = taCenter
-        Anchors = [akTop, akLeft, akRight, akBottom]
-        BorderSpacing.Left = 5
-        BorderSpacing.Right = 10
-        Caption = 'Pytanie pierwsze.'
-        Layout = tlCenter
-        ParentColor = False
-        WordWrap = True
-      end
-    end
-    object Panel4: TPanel
-      AnchorSideLeft.Control = Panel2
-      AnchorSideTop.Control = Panel1
-      AnchorSideTop.Side = asrBottom
-      Left = 652
-      Height = 60
-      Top = 196
-      Width = 555
-      BorderSpacing.Top = 20
-      ClientHeight = 60
-      ClientWidth = 555
-      Color = clBlue
-      Font.Color = clWhite
-      Font.Height = -27
-      Font.Name = 'Sans'
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 4
-      object Label_d: TLabel
-        AnchorSideLeft.Control = Panel4
-        AnchorSideTop.Control = Panel4
-        AnchorSideTop.Side = asrCenter
-        Left = 11
-        Height = 31
-        Top = 15
-        Width = 33
-        BorderSpacing.Left = 10
-        Caption = 'D:'
-        Font.Color = clYellow
-        Font.Height = -27
-        Font.Name = 'Sans'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-      end
-      object odp_d: TLabel
-        AnchorSideLeft.Control = Label_d
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = Panel4
-        AnchorSideRight.Control = Panel4
-        AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = Panel4
-        AnchorSideBottom.Side = asrBottom
-        Left = 49
-        Height = 58
-        Top = 1
-        Width = 495
-        Alignment = taCenter
-        Anchors = [akTop, akLeft, akRight, akBottom]
-        BorderSpacing.Left = 5
-        BorderSpacing.Right = 10
-        Caption = 'Pytanie pierwsze.'
-        Layout = tlCenter
-        ParentColor = False
-        WordWrap = True
-      end
-    end
-  end
   object Panel7: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideBottom.Control = Owner
@@ -18547,11 +18265,460 @@ object fEkran: TfEkran
       ParentFont = False
     end
   end
+  object Panel10: TPanel
+    Left = 32
+    Height = 128
+    Top = 24
+    Width = 322
+    BevelOuter = bvNone
+    ClientHeight = 128
+    ClientWidth = 322
+    TabOrder = 4
+    Visible = False
+    object Panel11: TPanel
+      AnchorSideLeft.Control = Panel10
+      AnchorSideTop.Control = Panel10
+      AnchorSideRight.Control = Panel10
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel10
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 120
+      Top = 4
+      Width = 314
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Around = 4
+      BevelOuter = bvNone
+      ClientHeight = 120
+      ClientWidth = 314
+      Color = clBlue
+      ParentColor = False
+      TabOrder = 0
+      object gl1: TplGauge
+        AnchorSideLeft.Control = Label30
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Label30
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Panel11
+        AnchorSideRight.Side = asrBottom
+        Left = 46
+        Height = 25
+        Top = 9
+        Width = 258
+        Color = clSkyBlue
+        BarColor = clYellow
+        Progress = 0
+        ParentColor = False
+        Anchors = [akTop, akLeft, akRight]
+      end
+      object Label30: TLabel
+        AnchorSideLeft.Control = Panel11
+        AnchorSideTop.Control = Panel11
+        Left = 8
+        Height = 31
+        Top = 6
+        Width = 32
+        BorderSpacing.Left = 8
+        BorderSpacing.Top = 6
+        Caption = 'A:'
+        Font.Color = clYellow
+        Font.Height = -27
+        Font.Name = 'Droid Sans Mono'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object gl2: TplGauge
+        AnchorSideLeft.Control = gl1
+        AnchorSideTop.Control = gl1
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = gl1
+        AnchorSideRight.Side = asrBottom
+        Left = 46
+        Height = 25
+        Top = 34
+        Width = 258
+        Color = clSkyBlue
+        BarColor = clYellow
+        Progress = 0
+        ParentColor = False
+        Anchors = [akTop, akLeft, akRight]
+      end
+      object Label31: TLabel
+        AnchorSideTop.Control = gl2
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Label30
+        AnchorSideRight.Side = asrBottom
+        Left = 8
+        Height = 31
+        Top = 31
+        Width = 32
+        Anchors = [akTop, akRight]
+        Caption = 'B:'
+        Font.Color = clYellow
+        Font.Height = -27
+        Font.Name = 'Droid Sans Mono'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label32: TLabel
+        AnchorSideTop.Control = gl3
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Label30
+        AnchorSideRight.Side = asrBottom
+        Left = 8
+        Height = 31
+        Top = 56
+        Width = 32
+        Anchors = [akTop, akRight]
+        Caption = 'C:'
+        Font.Color = clYellow
+        Font.Height = -27
+        Font.Name = 'Droid Sans Mono'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object gl3: TplGauge
+        AnchorSideLeft.Control = gl2
+        AnchorSideTop.Control = gl2
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = gl2
+        AnchorSideRight.Side = asrBottom
+        Left = 46
+        Height = 25
+        Top = 59
+        Width = 258
+        Color = clSkyBlue
+        BarColor = clYellow
+        Progress = 0
+        ParentColor = False
+        Anchors = [akTop, akLeft, akRight]
+      end
+      object Label33: TLabel
+        AnchorSideTop.Control = gl4
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = Label30
+        AnchorSideRight.Side = asrBottom
+        Left = 8
+        Height = 31
+        Top = 81
+        Width = 32
+        Anchors = [akTop, akRight]
+        Caption = 'D:'
+        Font.Color = clYellow
+        Font.Height = -27
+        Font.Name = 'Droid Sans Mono'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object gl4: TplGauge
+        AnchorSideLeft.Control = gl3
+        AnchorSideTop.Control = gl3
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = gl3
+        AnchorSideRight.Side = asrBottom
+        Left = 46
+        Height = 25
+        Top = 84
+        Width = 258
+        Color = clSkyBlue
+        BarColor = clYellow
+        Progress = 0
+        ParentColor = False
+        Anchors = [akTop, akLeft, akRight]
+      end
+    end
+  end
+  object Panel5: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 272
+    Top = 448
+    Width = 1280
+    Anchors = [akLeft, akBottom]
+    BevelOuter = bvNone
+    ClientHeight = 272
+    ClientWidth = 1280
+    Color = clGreen
+    Font.Color = 6335917
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 0
+    Visible = False
+    object Panel0: TPanel
+      AnchorSideLeft.Control = Panel5
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel5
+      Left = 74
+      Height = 76
+      Top = 20
+      Width = 1133
+      BorderSpacing.Top = 20
+      ClientHeight = 76
+      ClientWidth = 1133
+      Color = clBlue
+      Font.Color = clWhite
+      Font.Height = -27
+      Font.Name = 'Sans'
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 0
+      object pytanie: TLabel
+        Left = 11
+        Height = 74
+        Top = 1
+        Width = 1111
+        Align = alClient
+        Alignment = taCenter
+        BorderSpacing.Left = 10
+        BorderSpacing.Right = 10
+        Caption = 'Pytanie'
+        Layout = tlCenter
+        ParentColor = False
+        WordWrap = True
+      end
+    end
+    object Panel1: TPanel
+      AnchorSideLeft.Control = Panel0
+      AnchorSideTop.Control = Panel0
+      AnchorSideTop.Side = asrBottom
+      Left = 74
+      Height = 60
+      Top = 116
+      Width = 555
+      BorderSpacing.Top = 20
+      ClientHeight = 60
+      ClientWidth = 555
+      Color = clBlue
+      Font.Color = clWhite
+      Font.Height = -27
+      Font.Name = 'Sans'
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 1
+      object Label_a: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = Panel1
+        AnchorSideTop.Side = asrCenter
+        Left = 11
+        Height = 31
+        Top = 15
+        Width = 32
+        BorderSpacing.Left = 10
+        Caption = 'A:'
+        Font.Color = clYellow
+        Font.Height = -27
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object odp_a: TLabel
+        AnchorSideLeft.Control = Label_a
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel1
+        AnchorSideRight.Control = Panel1
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel1
+        AnchorSideBottom.Side = asrBottom
+        Left = 48
+        Height = 58
+        Top = 1
+        Width = 496
+        Alignment = taCenter
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 5
+        BorderSpacing.Right = 10
+        Caption = 'Pytanie pierwsze.'
+        Layout = tlCenter
+        ParentColor = False
+        WordWrap = True
+      end
+    end
+    object Panel2: TPanel
+      AnchorSideTop.Control = Panel0
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel0
+      AnchorSideRight.Side = asrBottom
+      Left = 652
+      Height = 60
+      Top = 116
+      Width = 555
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 20
+      ClientHeight = 60
+      ClientWidth = 555
+      Color = clBlue
+      Font.Color = clWhite
+      Font.Height = -27
+      Font.Name = 'Sans'
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 2
+      object Label_b: TLabel
+        AnchorSideLeft.Control = Panel2
+        AnchorSideTop.Control = Panel2
+        AnchorSideTop.Side = asrCenter
+        Left = 11
+        Height = 31
+        Top = 15
+        Width = 32
+        BorderSpacing.Left = 10
+        Caption = 'B:'
+        Font.Color = clYellow
+        Font.Height = -27
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object odp_b: TLabel
+        AnchorSideLeft.Control = Label_b
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel2
+        AnchorSideRight.Control = Panel2
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel2
+        AnchorSideBottom.Side = asrBottom
+        Left = 48
+        Height = 58
+        Top = 1
+        Width = 496
+        Alignment = taCenter
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 5
+        BorderSpacing.Right = 10
+        Caption = 'Pytanie pierwsze.'
+        Layout = tlCenter
+        ParentColor = False
+        WordWrap = True
+      end
+    end
+    object Panel3: TPanel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrBottom
+      Left = 74
+      Height = 60
+      Top = 196
+      Width = 555
+      BorderSpacing.Top = 20
+      ClientHeight = 60
+      ClientWidth = 555
+      Color = clBlue
+      Font.Color = clWhite
+      Font.Height = -27
+      Font.Name = 'Sans'
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 3
+      object Label_c: TLabel
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = Panel3
+        AnchorSideTop.Side = asrCenter
+        Left = 11
+        Height = 31
+        Top = 15
+        Width = 31
+        BorderSpacing.Left = 10
+        Caption = 'C:'
+        Font.Color = clYellow
+        Font.Height = -27
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object odp_c: TLabel
+        AnchorSideLeft.Control = Label_c
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel3
+        AnchorSideRight.Control = Panel3
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel3
+        AnchorSideBottom.Side = asrBottom
+        Left = 47
+        Height = 58
+        Top = 1
+        Width = 497
+        Alignment = taCenter
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 5
+        BorderSpacing.Right = 10
+        Caption = 'Pytanie pierwsze.'
+        Layout = tlCenter
+        ParentColor = False
+        WordWrap = True
+      end
+    end
+    object Panel4: TPanel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrBottom
+      Left = 652
+      Height = 60
+      Top = 196
+      Width = 555
+      BorderSpacing.Top = 20
+      ClientHeight = 60
+      ClientWidth = 555
+      Color = clBlue
+      Font.Color = clWhite
+      Font.Height = -27
+      Font.Name = 'Sans'
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 4
+      object Label_d: TLabel
+        AnchorSideLeft.Control = Panel4
+        AnchorSideTop.Control = Panel4
+        AnchorSideTop.Side = asrCenter
+        Left = 11
+        Height = 31
+        Top = 15
+        Width = 33
+        BorderSpacing.Left = 10
+        Caption = 'D:'
+        Font.Color = clYellow
+        Font.Height = -27
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object odp_d: TLabel
+        AnchorSideLeft.Control = Label_d
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Panel4
+        AnchorSideRight.Control = Panel4
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = Panel4
+        AnchorSideBottom.Side = asrBottom
+        Left = 49
+        Height = 58
+        Top = 1
+        Width = 495
+        Alignment = taCenter
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Left = 5
+        BorderSpacing.Right = 10
+        Caption = 'Pytanie pierwsze.'
+        Layout = tlCenter
+        ParentColor = False
+        WordWrap = True
+      end
+    end
+  end
   object ps: TXMLPropStorage
     StoredValues = <>
     RootNodePath = 'ekran'
     Active = False
     Left = 48
-    Top = 120
+    Top = 232
   end
 end
