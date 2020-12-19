@@ -2,10 +2,10 @@ object FClient: TFClient
   Left = 350
   Height = 318
   Top = 124
-  Width = 834
+  Width = 766
   Caption = 'Jahu - Milionerzy (client)'
   ClientHeight = 318
-  ClientWidth = 834
+  ClientWidth = 766
   OnCreate = FormCreate
   SessionProperties = 'eImie.Text;eSkad.Text;Top;Left;Height;Width'
   LCLVersion = '2.0.10.0'
@@ -13,7 +13,7 @@ object FClient: TFClient
     Left = 0
     Height = 20
     Top = 298
-    Width = 834
+    Width = 766
     Font.Height = -13
     Font.Name = 'Monospace'
     Panels = <    
@@ -36,10 +36,10 @@ object FClient: TFClient
     Left = 0
     Height = 64
     Top = 0
-    Width = 834
+    Width = 766
     Align = alTop
     ClientHeight = 64
-    ClientWidth = 834
+    ClientWidth = 766
     TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
@@ -109,7 +109,7 @@ object FClient: TFClient
     Left = 8
     Height = 226
     Top = 68
-    Width = 818
+    Width = 750
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 4
@@ -117,7 +117,7 @@ object FClient: TFClient
     BorderSpacing.Bottom = 4
     BevelOuter = bvNone
     ClientHeight = 226
-    ClientWidth = 818
+    ClientWidth = 750
     TabOrder = 2
     object Label3: TLabel
       AnchorSideLeft.Control = Panel2
@@ -138,7 +138,7 @@ object FClient: TFClient
       Left = 57
       Height = 17
       Top = 0
-      Width = 761
+      Width = 693
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
@@ -173,7 +173,7 @@ object FClient: TFClient
       Left = 57
       Height = 20
       Top = 25
-      Width = 761
+      Width = 693
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 8
@@ -207,7 +207,7 @@ object FClient: TFClient
       Left = 57
       Height = 20
       Top = 47
-      Width = 761
+      Width = 693
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 2
@@ -225,7 +225,7 @@ object FClient: TFClient
       Left = 57
       Height = 20
       Top = 69
-      Width = 761
+      Width = 693
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 2
@@ -273,7 +273,7 @@ object FClient: TFClient
       Left = 57
       Height = 20
       Top = 90
-      Width = 761
+      Width = 693
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 2
@@ -289,60 +289,97 @@ object FClient: TFClient
       Left = 57
       Height = 37
       Top = 114
-      Width = 95
+      Width = 60
       BorderSpacing.Top = 4
-      Caption = 'A'
+      Enabled = False
       Font.Height = -16
       Font.Name = 'Sans'
       Font.Style = [fsBold]
+      OnClick = SpeedButton1Click
       ParentFont = False
     end
     object SpeedButton2: TSpeedButton
       AnchorSideLeft.Control = SpeedButton1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton1
-      Left = 152
+      Left = 117
       Height = 37
       Top = 114
-      Width = 95
-      Caption = 'B'
+      Width = 60
+      Enabled = False
       Font.Height = -16
       Font.Name = 'Sans'
       Font.Style = [fsBold]
+      OnClick = SpeedButton2Click
       ParentFont = False
     end
     object SpeedButton3: TSpeedButton
       AnchorSideLeft.Control = SpeedButton2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton2
-      Left = 247
+      Left = 177
       Height = 37
       Top = 114
-      Width = 95
-      Caption = 'C'
+      Width = 60
+      Enabled = False
       Font.Height = -16
       Font.Name = 'Sans'
       Font.Style = [fsBold]
+      OnClick = SpeedButton3Click
       ParentFont = False
     end
     object SpeedButton4: TSpeedButton
       AnchorSideLeft.Control = SpeedButton3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton3
-      Left = 342
+      Left = 237
       Height = 37
       Top = 114
-      Width = 95
-      Caption = 'D'
+      Width = 60
+      Enabled = False
       Font.Height = -16
       Font.Name = 'Sans'
       Font.Style = [fsBold]
+      OnClick = SpeedButton4Click
+      ParentFont = False
+    end
+    object Label13: TLabel
+      AnchorSideLeft.Control = SpeedButton4
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = SpeedButton4
+      AnchorSideTop.Side = asrCenter
+      Left = 305
+      Height = 22
+      Top = 121
+      Width = 242
+      BorderSpacing.Left = 8
+      Caption = 'Zaznaczyłeś odpowiedź:'
+      Font.Height = -20
+      Font.Name = 'Sans'
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label14: TLabel
+      AnchorSideLeft.Control = Label13
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label13
+      Left = 555
+      Height = 22
+      Top = 121
+      Width = 15
+      BorderSpacing.Left = 8
+      Constraints.MinHeight = 22
+      Constraints.MinWidth = 15
+      Font.Height = -20
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentColor = False
       ParentFont = False
     end
   end
   object cli: TNetSocket
     Mode = smClient
-    Security = ssNone
+    Security = ssCrypt
     BinaryMode = False
     Host = 'studiojahu.duckdns.org'
     Port = 4680
@@ -352,6 +389,8 @@ object FClient: TFClient
     OnConnect = cliConnect
     OnDisconnect = cliDisconnect
     OnReceiveString = cliReceiveString
+    OnCryptString = cliCryptString
+    OnDecryptString = cliDecryptString
     OnTimeVector = cliTimeVector
     Left = 720
     Top = 8

@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, XMLPropStorage, Presentation, UOSEngine, UOSPlayer, LiveTimer,
-  NetSocket, ZDataset, lNet;
+  Buttons, XMLPropStorage, ComCtrls, TplGaugeUnit, Presentation, UOSEngine,
+  UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet;
 
 type
 
@@ -27,10 +27,14 @@ type
     db_pytaniepytanie: TMemoField;
     ds_pytanie: TDataSource;
     db_pytanie: TZQuery;
+    gl2: TplGauge;
+    gl3: TplGauge;
+    gl4: TplGauge;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
     i10: TLabel;
     i11: TLabel;
     i12: TLabel;
@@ -62,7 +66,11 @@ type
     Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
     Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -70,8 +78,11 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    gl1: TplGauge;
     ser: TNetSocket;
     ps: TXMLPropStorage;
+    StatusBar: TStatusBar;
+    tSer: TTimer;
     zegar: TLiveTimer;
     lTryb: TLabel;
     Panel1: TPanel;
@@ -104,17 +115,21 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure pilotClick(aButton: integer; var aTestDblClick: boolean);
     procedure RadioGroup1Click(Sender: TObject);
+    procedure serCryptString(var aText: string);
+    procedure serDecryptString(var aText: string);
     procedure serReceiveString(aMsg: string; aSocket: TLSocket);
     procedure SpeedButton5Click(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
     procedure t50StartTimer(Sender: TObject);
     procedure t50Timer(Sender: TObject);
     procedure tGraTimer(Sender: TObject);
+    procedure tSerTimer(Sender: TObject);
     procedure tInfoTimer(Sender: TObject);
     procedure tTelStartTimer(Sender: TObject);
     procedure tTelStopTimer(Sender: TObject);
     procedure tTelTimer(Sender: TObject);
   private
+    sesje,glosy,glosy2: TStringList;
     procedure music(aNr: integer = 0);
     procedure nomusic;
     procedure sound(aNr: integer = 0; aLoop: boolean = false; aVolume: integer = 100);
@@ -125,6 +140,10 @@ type
     procedure okno_config;
     procedure aktywacja_odpowiedzi(b: boolean);
     procedure zaznacz_odpowiedz(aNr: integer);
+    procedure glosy_wyniki(var a,b,c,d: integer);
+    procedure glosy_aktualizacja;
+    procedure glosy_clear;
+    procedure synchronizuj(aKey: string; aSocket: TLSocket);
   public
 
   end;
@@ -143,6 +162,12 @@ uses
 
 procedure TFServer.FormCreate(Sender: TObject);
 begin
+  sesje:=TStringList.Create;
+  sesje.Sorted:=true;
+  glosy:=TStringList.Create;
+  glosy.Sorted:=true;
+  glosy2:=TStringList.Create;
+  glosy2.Sorted:=true;
   SetConfDir('milionerzy');
   uos.LibDirectory:=MyDir('uos');
   uos.LoadLibrary;
@@ -157,6 +182,9 @@ end;
 
 procedure TFServer.FormDestroy(Sender: TObject);
 begin
+  sesje.Free;
+  glosy.Free;
+  glosy2.Free;
   dm.Free;
   fEkran.Free;
   uos.UnLoadLibrary;
@@ -230,9 +258,69 @@ begin
   end;
 end;
 
-procedure TFServer.serReceiveString(aMsg: string; aSocket: TLSocket);
+procedure TFServer.serCryptString(var aText: string);
 begin
-  {}
+  aText:=dm.CryptString(aText);
+end;
+
+procedure TFServer.serDecryptString(var aText: string);
+begin
+  aText:=dm.DecryptString(aText);
+end;
+
+procedure TFServer.serReceiveString(aMsg: string; aSocket: TLSocket);
+var
+  s,s1,key,nkey,kom,w: string;
+  b: boolean;
+  i: integer;
+begin
+  { RAMKA: (dużymi literami określam definicje)      Pierwszy pakiet clienta:
+    c$KEY$KOMENDA$PARAMETRY - komenda             1. rejestruję się lub loguję
+    o$KEY$ODPOWIEDŹ$DANE    - odpowiedź           c$new$register lub c$KEY$login
+                                                  2. odpowiadam:
+                                                  o$new$register$KEY lub
+                                                  o$KEY$login$ok lub o$KEY$register$NEW_KEY
+  }
+  s:=aMsg;
+  s1:=GetLineToStr(s,1,'$');
+  if s1<>'c' then exit;
+  key:=GetLineToStr(s,2,'$');
+  kom:=GetLineToStr(s,3,'$');
+  (* rejestracja lub logowanie *)
+  if (key='new') and (kom='register') then
+  begin
+    key:=dm.GetGUID;
+    sesje.Add(key);
+    ser.SendString('o$new$register$'+key,aSocket);
+    synchronizuj(key,aSocket);
+  end else
+  if kom='login' then
+  begin
+    b:=sesje.Find(key,i);
+    if b and (i>-1) then ser.SendString('o$'+key+'$ok',aSocket) else
+    begin
+      nkey:=dm.GetGUID;
+      sesje.Add(nkey);
+      ser.SendString('o$'+key+'$register$'+nkey,aSocket);
+    end;
+    synchronizuj(key,aSocket);
+  end else
+  if kom='zaznacz' then
+  begin
+    w:=GetLineToStr(s,4,'$');
+    b:=glosy.Find(key,i);
+    if b and (i>-1) then ser.SendString('o$'+key+'$zaznacz$'+GetLineToStr(glosy2[i],2,';'),aSocket) else
+    begin
+      glosy.Add(key);
+      glosy2.Add(key+';'+w);
+      if w='a' then inc(glosowanie_a) else
+      if w='b' then inc(glosowanie_b) else
+      if w='c' then inc(glosowanie_c) else
+      if w='d' then inc(glosowanie_d);
+      ser.SendString('o$'+key+'$zaznaczono$'+w,aSocket);
+      glosy_aktualizacja;
+    end;
+  end;
 end;
 
 procedure TFServer.SpeedButton5Click(Sender: TObject);
@@ -300,7 +388,13 @@ end;
 
 procedure TFServer.tGraTimer(Sender: TObject);
 begin
-  lTryb.Caption:=IntToStr(g_pytanie);
+  lTryb.Caption:=IntToStr(TRYB);
+  //lTryb.Caption:=IntToStr(g_pytanie);
+end;
+
+procedure TFServer.tSerTimer(Sender: TObject);
+begin
+  StatusBar.Panels[0].Text:='Ilość podłączonych klientów: '+IntToStr(ser.Count);
 end;
 
 procedure TFServer.tInfoTimer(Sender: TObject);
@@ -450,6 +544,7 @@ begin
   end;
   if TRYB=16 then
   begin
+    ser.SendString('o$all$godeactive');
     ON_pause:=true;
     if g_udzielona_odpowiedz=g_odpowiedz then
     begin
@@ -482,6 +577,8 @@ begin
     end;
     //if g_stop then ON_pause:=false else TRYB:=17;
     if g_stop then TRYB:=20 else TRYB:=17;
+    glosy_clear;
+    ser.SendString('o$all$clear');
   end;
   if TRYB=17 then
   begin
@@ -677,6 +774,14 @@ begin
       3: Label8.Caption:=fEkran.odp_c.Caption;
       4: Label10.Caption:=fEkran.odp_d.Caption;
     end;
+    (* wysłanie do klientów sieciowych *)
+    case aLp of
+      0: ser.SendString('o$all$title$'+fEkran.pytanie.Caption);
+      1: ser.SendString('o$all$odpa$'+fEkran.odp_a.Caption);
+      2: ser.SendString('o$all$odpb$'+fEkran.odp_b.Caption);
+      3: ser.SendString('o$all$odpc$'+fEkran.odp_c.Caption);
+      4: ser.SendString('o$all$odpd$'+fEkran.odp_d.Caption);
+    end;
     ON_pause:=false;
   end;
 end;
@@ -697,6 +802,7 @@ begin
   SpeedButton5.Enabled:=b and g_kolo_1;
   SpeedButton6.Enabled:=b and g_kolo_2;
   SpeedButton7.Enabled:=b and g_kolo_3;
+  ser.SendString('o$all$goactive');
 end;
 
 procedure TFServer.zaznacz_odpowiedz(aNr: integer);
@@ -731,6 +837,91 @@ begin
     3: fEkran.odp_c.Font.Color:=clBlack;
     4: fEkran.odp_d.Font.Color:=clBlack;
   end;
+end;
+
+procedure TFServer.glosy_wyniki(var a, b, c, d: integer);
+var
+  w: integer;
+begin
+  w:=glosowanie_a+glosowanie_b+glosowanie_c+glosowanie_d;
+  a:=round(100*glosowanie_a/w);
+  b:=round(100*glosowanie_b/w);
+  c:=round(100*glosowanie_c/w);
+  d:=round(100*glosowanie_d/w);
+end;
+
+procedure TFServer.glosy_aktualizacja;
+var
+  a,b,c,d: integer;
+begin
+  glosy_wyniki(a,b,c,d);
+  gl1.Progress:=a;
+  gl2.Progress:=b;
+  gl3.Progress:=c;
+  gl4.Progress:=d;
+end;
+
+procedure TFServer.glosy_clear;
+begin
+  glosy.Clear;
+  glosy2.Clear;
+  glosowanie_a:=0;
+  glosowanie_b:=0;
+  glosowanie_c:=0;
+  glosowanie_d:=0;
+  gl1.Progress:=0;
+  gl2.Progress:=0;
+  gl3.Progress:=0;
+  gl4.Progress:=0;
+end;
+
+procedure TFServer.synchronizuj(aKey: string; aSocket: TLSocket);
+var
+  s: string;
+  t,a,b,c,d,p,z: string;
+  bb: boolean;
+  ii: integer;
+begin
+  z:='';
+  t:='';
+  a:='';
+  b:='';
+  c:='';
+  d:='';
+  p:='0';
+  case TRYB of
+    10: t:=fEkran.pytanie.Caption;
+    11: begin
+          t:=fEkran.pytanie.Caption;
+          a:=fEkran.odp_a.Caption;
+        end;
+    12: begin
+          t:=fEkran.pytanie.Caption;
+          a:=fEkran.odp_a.Caption;
+          b:=fEkran.odp_b.Caption;
+        end;
+    13: begin
+          t:=fEkran.pytanie.Caption;
+          a:=fEkran.odp_a.Caption;
+          b:=fEkran.odp_b.Caption;
+          c:=fEkran.odp_c.Caption;
+        end;
+    14,15: begin
+             t:=fEkran.pytanie.Caption;
+             a:=fEkran.odp_a.Caption;
+             b:=fEkran.odp_b.Caption;
+             c:=fEkran.odp_c.Caption;
+             d:=fEkran.odp_d.Caption;
+             p:='1'
+           end;
+  end;
+  if (TRYB>=14) and (TRYB<=15) then
+  begin
+    bb:=glosy.Find(aKey,ii);
+    if bb and (ii>-1) then z:=GetLineToStr(glosy2[ii],2,';');
+  end;
+  s:=t+'$'+a+'$'+b+'$'+c+'$'+d+'$'+p+'$'+z;
+  ser.SendString('o$'+aKey+'$synchronizacja$'+s,aSocket);
 end;
 
 end.

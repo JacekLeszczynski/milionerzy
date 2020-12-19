@@ -20,12 +20,16 @@ type
     procedure db_close;
     procedure oblicz_wygrana(aPytanie: integer; aWygrana: boolean; var kwota,gwarantowana: integer);
     function GetGUID: string;
+    procedure KeySave(aKey: string);
+    function KeyLoad: string;
+    function CryptString(aStr: string): string;
+    function DecryptString(aStr: string): string;
   end;
 
 const
   CL_ZAZNACZENIE = clLime;
 
-var
+var (* program *)
   dm: Tdm;
   ON_ekran: boolean = false;
   ON_gra: boolean = false;
@@ -42,7 +46,16 @@ var
   g_kolo_3: boolean = true;
   pytanie: integer = 1;
 
+var
+  glosowanie_a: integer = 0;
+  glosowanie_b: integer = 0;
+  glosowanie_c: integer = 0;
+  glosowanie_d: integer = 0;
+
 implementation
+
+uses
+  ecode;
 
 {$R *.lfm}
 
@@ -97,6 +110,42 @@ begin
     s:=GUIDToString(a);
     result:=s;
   end else result:='';
+end;
+
+procedure Tdm.KeySave(aKey: string);
+var
+  f: text;
+begin
+  assignfile(f,MyConfDir('key.txt'));
+  rewrite(f);
+  writeln(f,aKey);
+  closefile(f);
+end;
+
+function Tdm.KeyLoad: string;
+var
+  f: text;
+  plik,s: string;
+begin
+  plik:=MyConfDir('key.txt');
+  if not FileExists(plik) then result:='' else
+  begin
+    assignfile(f,plik);
+    reset(f);
+    readln(f,s);
+    closefile(f);
+    result:=s;
+  end;
+end;
+
+function Tdm.CryptString(aStr: string): string;
+begin
+  result:=EncryptString(aStr,'6273627^&#^7276376276327');
+end;
+
+function Tdm.DecryptString(aStr: string): string;
+begin
+  result:=ecode.DecryptString(aStr,'6273627^&#^7276376276327',true);
 end;
 
 end.
