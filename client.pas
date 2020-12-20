@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
-  StdCtrls, Buttons, XMLPropStorage, NetSocket, ExtMessage, LiveTimer, lNet;
+  StdCtrls, Buttons, XMLPropStorage, Menus, NetSocket, ExtMessage, LiveTimer,
+  lNet;
 
 type
 
@@ -29,6 +30,16 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    MainMenu1: TMainMenu;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
+    MenuItem9: TMenuItem;
     tCzas: TTimer;
     mess: TExtMessage;
     Label1: TLabel;
@@ -51,6 +62,7 @@ type
     procedure cliReceiveString(aMsg: string; aSocket: TLSocket);
     procedure cliTimeVector(aTimeVector: integer);
     procedure FormCreate(Sender: TObject);
+    procedure MenuItem5Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
@@ -93,6 +105,7 @@ begin
       result:=false;
       exit;
     end;
+    BitBtn1.Visible:=false;
     cli.Connect;
     application.ProcessMessages;
   end;
@@ -291,6 +304,11 @@ begin
   if v3>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+'.'+IntToStr(v3)+')' else
   if v2>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+')' else Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+')';
   autorun.Enabled:=true;
+end;
+
+procedure TFClient.MenuItem5Click(Sender: TObject);
+begin
+  close;
 end;
 
 procedure TFClient.SpeedButton1Click(Sender: TObject);

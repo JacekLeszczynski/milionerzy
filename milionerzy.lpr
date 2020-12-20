@@ -11,8 +11,9 @@ uses
   {$IFDEF SERVER} main; {$ENDIF}
   {$IFDEF CLIENT} client; {$ENDIF}
 
-{$IFDEF SERVER}
 {$R milionerzy.res}
+{$IFDEF SERVER}
+{$R media.res}
 {$ENDIF}
 
 type

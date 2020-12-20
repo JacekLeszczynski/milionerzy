@@ -19,6 +19,7 @@ type
     procedure db_open;
     procedure db_close;
     procedure oblicz_wygrana(aPytanie: integer; aWygrana: boolean; var kwota,gwarantowana: integer);
+    procedure zysk_i_strata(aPytanie: integer; var gra_o,zysk,strata: integer);
     function GetGUID: string;
     procedure KeySave(aKey: string);
     function KeyLoad: string;
@@ -54,12 +55,19 @@ var
   glosowanie_c: integer = 0;
   glosowanie_d: integer = 0;
 
+function SpacesToPoints(s: string): string;
+
 implementation
 
 uses
   ecode;
 
 {$R *.lfm}
+
+function SpacesToPoints(s: string): string;
+begin
+  result:=StringReplace(trim(s),' ','.',[rfReplaceAll]);
+end;
 
 { Tdm }
 
@@ -84,12 +92,12 @@ begin
   begin
     case aPytanie of
       1: kwota:=500;
-      2: kwota:=1000;
+      2: kwota:=1000; //gwarantowane
       3: kwota:=2000;
       4: kwota:=5000;
       5: kwota:=10000;
       6: kwota:=20000;
-      7: kwota:=40000;
+      7: kwota:=40000; //gwarantowane
       8: kwota:=75000;
       9: kwota:=125000;
       10: kwota:=250000;
@@ -98,6 +106,25 @@ begin
     end;
     if (aPytanie=2) or (aPytanie=7) or (aPytanie=12) then gwarantowana:=kwota;
   end else kwota:=gwarantowana;
+end;
+
+procedure Tdm.zysk_i_strata(aPytanie: integer; var gra_o, zysk, strata: integer
+  );
+begin
+  case aPytanie of
+     1: begin gra_o:=500; zysk:=500; strata:=0; end;
+     2: begin gra_o:=1000; zysk:=500; strata:=500; end;
+     3: begin gra_o:=2000; zysk:=1000; strata:=0; end;
+     4: begin gra_o:=5000; zysk:=3000; strata:=1000; end;
+     5: begin gra_o:=10000; zysk:=5000; strata:=4000; end;
+     6: begin gra_o:=20000; zysk:=10000; strata:=9000; end;
+     7: begin gra_o:=40000; zysk:=20000; strata:=19000; end;
+     8: begin gra_o:=75000; zysk:=35000; strata:=0; end;
+     9: begin gra_o:=125000; zysk:=50000; strata:=35000; end;
+    10: begin gra_o:=250000; zysk:=125000; strata:=85000; end;
+    11: begin gra_o:=500000; zysk:=250000; strata:=210000; end;
+    12: begin gra_o:=1000000; zysk:=500000; strata:=460000; end;
+  end;
 end;
 
 function Tdm.GetGUID: string;

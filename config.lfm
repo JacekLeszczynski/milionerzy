@@ -1,46 +1,33 @@
 object FKonfiguracja: TFKonfiguracja
-  Left = 348
-  Height = 557
-  Top = 230
-  Width = 1043
+  Left = 381
+  Height = 545
+  Top = 297
+  Width = 1070
   Caption = 'FKonfiguracja'
-  ClientHeight = 557
-  ClientWidth = 1043
+  ClientHeight = 545
+  ClientWidth = 1070
   OnClose = FormClose
   OnShow = FormShow
   LCLVersion = '2.0.10.0'
   object Panel1: TPanel
     Left = 0
-    Height = 269
-    Top = 288
-    Width = 1043
+    Height = 291
+    Top = 254
+    Width = 1070
     Align = alBottom
     BevelOuter = bvNone
-    ClientHeight = 269
-    ClientWidth = 1043
+    ClientHeight = 291
+    ClientWidth = 1070
     TabOrder = 0
-    object DBText1: TDBText
+    object Label1: TLabel
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Panel1
-      Left = 4
-      Height = 17
-      Top = 2
-      Width = 74
-      BorderSpacing.Left = 4
-      BorderSpacing.Top = 2
-      DataField = 'id'
-      DataSource = ds_pytania
-      Font.Height = -16
-      Font.Name = 'Sans'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label1: TLabel
       Left = 8
       Height = 17
-      Top = 32
+      Top = 8
       Width = 53
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 8
       Caption = 'Pytanie:'
       ParentColor = False
     end
@@ -50,7 +37,7 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Control = DBMemo2
       Left = 14
       Height = 17
-      Top = 84
+      Top = 60
       Width = 47
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 4
@@ -63,7 +50,7 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideTop.Side = asrBottom
       Left = 65
       Height = 41
-      Top = 222
+      Top = 198
       Width = 257
       AutoFill = True
       BorderSpacing.Top = 2
@@ -93,14 +80,16 @@ object FKonfiguracja: TFKonfiguracja
       )
     end
     object BitBtn1: TBitBtn
-      AnchorSideLeft.Control = DBRadioGroup1
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = BitBtn6
-      Left = 338
+      AnchorSideLeft.Control = Panel1
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 8
       Height = 30
-      Top = 235
+      Top = 253
       Width = 75
-      BorderSpacing.Left = 16
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 8
+      BorderSpacing.Bottom = 8
       Caption = 'Dodaj'
       OnClick = BitBtn1Click
       TabOrder = 1
@@ -109,9 +98,9 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideLeft.Control = BitBtn1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = BitBtn1
-      Left = 415
+      Left = 85
       Height = 30
-      Top = 235
+      Top = 253
       Width = 75
       BorderSpacing.Left = 2
       Caption = 'Edycja'
@@ -122,12 +111,12 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideLeft.Control = BitBtn2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = BitBtn2
-      Left = 492
+      Left = 162
       Height = 30
-      Top = 235
+      Top = 253
       Width = 132
       BorderSpacing.Left = 2
-      Caption = 'Usuń wszystko!'
+      Caption = 'Skasuj użycie!'
       Color = clRed
       OnClick = BitBtn3Click
       TabOrder = 3
@@ -136,9 +125,9 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideLeft.Control = BitBtn3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = BitBtn3
-      Left = 626
+      Left = 296
       Height = 30
-      Top = 235
+      Top = 253
       Width = 95
       BorderSpacing.Left = 2
       Caption = 'Zatwierdź'
@@ -149,9 +138,9 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideLeft.Control = BitBtn4
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = BitBtn4
-      Left = 723
+      Left = 393
       Height = 30
-      Top = 235
+      Top = 253
       Width = 75
       BorderSpacing.Left = 2
       Caption = 'Anuluj'
@@ -163,13 +152,13 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
-      Left = 964
+      Left = 987
       Height = 30
-      Top = 235
+      Top = 253
       Width = 75
       Anchors = [akRight, akBottom]
-      BorderSpacing.Right = 4
-      BorderSpacing.Bottom = 4
+      BorderSpacing.Right = 8
+      BorderSpacing.Bottom = 8
       Caption = 'Wyjście'
       OnClick = BitBtn6Click
       TabOrder = 6
@@ -182,11 +171,11 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Side = asrBottom
       Left = 65
       Height = 40
-      Top = 32
-      Width = 974
+      Top = 8
+      Width = 997
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
-      BorderSpacing.Right = 4
+      BorderSpacing.Right = 8
       DataField = 'pytanie'
       DataSource = ds_pytania
       TabOrder = 7
@@ -199,8 +188,8 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Side = asrBottom
       Left = 65
       Height = 33
-      Top = 76
-      Width = 974
+      Top = 52
+      Width = 997
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_1'
@@ -213,7 +202,7 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Control = DBMemo3
       Left = 14
       Height = 17
-      Top = 121
+      Top = 97
       Width = 47
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 4
@@ -228,8 +217,8 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Side = asrBottom
       Left = 65
       Height = 33
-      Top = 113
-      Width = 974
+      Top = 89
+      Width = 997
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_2'
@@ -242,7 +231,7 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Control = DBMemo4
       Left = 14
       Height = 17
-      Top = 158
+      Top = 134
       Width = 47
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 4
@@ -257,8 +246,8 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Side = asrBottom
       Left = 65
       Height = 33
-      Top = 150
-      Width = 974
+      Top = 126
+      Width = 997
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_3'
@@ -271,7 +260,7 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Control = DBMemo5
       Left = 13
       Height = 17
-      Top = 195
+      Top = 171
       Width = 48
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 4
@@ -286,69 +275,111 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Side = asrBottom
       Left = 65
       Height = 33
-      Top = 187
-      Width = 974
+      Top = 163
+      Width = 997
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_4'
       DataSource = ds_pytania
       TabOrder = 11
     end
+    object DBRadioGroup2: TDBRadioGroup
+      AnchorSideLeft.Control = DBRadioGroup1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = DBRadioGroup1
+      Left = 330
+      Height = 41
+      Top = 198
+      Width = 270
+      AutoFill = True
+      BorderSpacing.Left = 8
+      Caption = 'Trudność pytania'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 3
+      Columns = 3
+      DataField = 'trudnosc'
+      DataSource = ds_pytania
+      Items.Strings = (
+        'Łatwe'
+        'Średnie'
+        'Trudne'
+      )
+      TabOrder = 12
+      Values.Strings = (
+        '1'
+        '2'
+        '3'
+      )
+    end
   end
   object Panel2: TPanel
     Left = 0
-    Height = 288
+    Height = 254
     Top = 0
-    Width = 1043
+    Width = 1070
     Align = alClient
     BevelOuter = bvNone
-    ClientHeight = 288
-    ClientWidth = 1043
+    ClientHeight = 254
+    ClientWidth = 1070
     TabOrder = 1
     object DBGrid1: TDBGrid
       Left = 0
-      Height = 288
+      Height = 254
       Top = 0
-      Width = 1043
+      Width = 1070
       Align = alClient
       AutoFillColumns = True
       Color = clWindow
       Columns = <      
         item
-          MaxSize = 200
           Title.Caption = 'id'
-          Width = 147
+          Width = 117
           FieldName = 'id'
         end      
         item
           Title.Caption = 'pytanie'
-          Width = 147
+          Width = 117
           FieldName = 'pytanie'
         end      
         item
           Title.Caption = 'odp_1'
-          Width = 147
+          Width = 117
           FieldName = 'odp_1'
         end      
         item
           Title.Caption = 'odp_2'
-          Width = 147
+          Width = 117
           FieldName = 'odp_2'
         end      
         item
           Title.Caption = 'odp_3'
-          Width = 147
+          Width = 117
           FieldName = 'odp_3'
         end      
         item
           Title.Caption = 'odp_4'
-          Width = 147
+          Width = 117
           FieldName = 'odp_4'
         end      
         item
           Title.Caption = 'odpowiedz'
-          Width = 147
+          Width = 117
           FieldName = 'odpowiedz'
+        end      
+        item
+          Title.Caption = 'trudnosc'
+          Width = 117
+          FieldName = 'trudnosc'
+        end      
+        item
+          Title.Caption = 'uzyte'
+          Width = 120
+          FieldName = 'uzyte'
         end>
       DataSource = ds_pytania
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgDisableDelete, dgDisableInsert, dgDisplayMemoText]
@@ -437,6 +468,26 @@ object FKonfiguracja: TFKonfiguracja
       ProviderFlags = [pfInUpdate, pfInWhere]
       ReadOnly = False
       Required = False
+    end
+    object pytaniatrudnosc: TLargeintField
+      FieldKind = fkData
+      FieldName = 'trudnosc'
+      Index = 7
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object pytaniauzyte: TMemoField
+      FieldKind = fkData
+      FieldName = 'uzyte'
+      Index = 8
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
     end
   end
   object ds_pytania: TDataSource

@@ -25,7 +25,7 @@ type
     DBMemo4: TDBMemo;
     DBMemo5: TDBMemo;
     DBRadioGroup1: TDBRadioGroup;
-    DBText1: TDBText;
+    DBRadioGroup2: TDBRadioGroup;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -44,6 +44,8 @@ type
     pytaniaodp_3: TMemoField;
     pytaniaodp_4: TMemoField;
     pytaniapytanie: TMemoField;
+    pytaniatrudnosc: TLargeintField;
+    pytaniauzyte: TMemoField;
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
@@ -98,7 +100,9 @@ end;
 
 procedure TFKonfiguracja.BitBtn3Click(Sender: TObject);
 begin
-  while not pytania.IsEmpty do pytania.Delete;
+  pytania.Edit;
+  pytaniauzyte.Clear;
+  pytania.Post;
 end;
 
 procedure TFKonfiguracja.BitBtn4Click(Sender: TObject);

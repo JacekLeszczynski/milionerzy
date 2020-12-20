@@ -26,8 +26,12 @@ object dm: Tdm
       '  odp_2 text,'
       '  odp_3 text,'
       '  odp_4 text,'
-      '  odpowiedz integer'
+      '  odpowiedz integer,'
+      '  trudnosc integer,'
+      '  uzyte text'
       ');'
+      'CREATE INDEX idx_pytania_trudnosc ON pytania (trudnosc);'
+      'CREATE INDEX idx_pytania_uzyte ON pytania (uzyte);'
     )
     Connection = db
     Delimiter = ';'

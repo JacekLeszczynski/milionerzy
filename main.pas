@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, XMLPropStorage, ComCtrls, TplGaugeUnit, Presentation, UOSEngine,
-  UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet;
+  UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled;
 
 type
 
@@ -18,6 +18,20 @@ type
     BitBtn2: TBitBtn;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
+    db_pytanietrudnosc: TLargeintField;
+    db_pytanieuzyte: TMemoField;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    Label29: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    PublicGame: TCheckBox;
+    GameLastModePlay: TCheckBox;
     db_pytanieid: TLargeintField;
     db_pytanieodpowiedz: TLargeintField;
     db_pytanieodp_1: TMemoField;
@@ -71,6 +85,7 @@ type
     Label2: TLabel;
     Label20: TLabel;
     Label21: TLabel;
+    Label22: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -83,13 +98,13 @@ type
     ps: TXMLPropStorage;
     StatusBar: TStatusBar;
     tSer: TTimer;
+    uELED1: TuELED;
     zegar: TLiveTimer;
-    lTryb: TLabel;
+    lInfo: TLabel;
     Panel1: TPanel;
     pilot: TPresentation;
     play2: TUOSPlayer;
     player: TUOSPlayer;
-    RadioGroup1: TRadioGroup;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
@@ -114,10 +129,10 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure pilotClick(aButton: integer; var aTestDblClick: boolean);
     procedure pilotClickLong(aButton: integer; aDblClick: boolean);
-    procedure RadioGroup1Click(Sender: TObject);
     procedure serCryptString(var aText: string);
     procedure serDecryptString(var aText: string);
     procedure serReceiveString(aMsg: string; aSocket: TLSocket);
+    procedure serStatus(aActive, aCrypt: boolean);
     procedure SpeedButton5Click(Sender: TObject);
     procedure SpeedButton6Click(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
@@ -129,6 +144,7 @@ type
     procedure tTelStartTimer(Sender: TObject);
     procedure tTelStopTimer(Sender: TObject);
     procedure tTelTimer(Sender: TObject);
+    procedure uELED1Click(Sender: TObject);
   private
     sesje,glosy,glosy2: TStringList;
     procedure music(aNr: integer = 0);
@@ -139,6 +155,7 @@ type
     procedure ekran_info(aLp: integer = 0);
     procedure ekran_pytanie(aNr: integer; aLp: integer = -1);
     procedure okno_config;
+    procedure zysk_i_strata;
     procedure aktywacja_odpowiedzi(b: boolean; aIgnoreServ: boolean = false);
     procedure zaznacz_odpowiedz(aNr: integer);
     procedure glosy_wyniki(var a,b,c,d: integer);
@@ -176,7 +193,6 @@ begin
   fEkran:=TfEkran.Create(self);
   dm.db.Database:=MyConfDir('db.sqlite');
   dm.db_open;
-  ser.Connect;
   ps.FileName:=MyConfDir('server.xml');
   ps.Active:=true;
 end;
@@ -202,6 +218,7 @@ begin
     case Key of
       VK_F9: okno_config;
     end;
+    Key:=0;
   end;
 end;
 
@@ -210,8 +227,6 @@ var
   litera: integer;
 
 begin
-  if (aButton=2) or (aButton=3) then aTestDblClick:=true;
-  if ON_pause then exit;
   case aButton of
     1: litera:=1;
     2: litera:=2;
@@ -219,6 +234,9 @@ begin
     4: litera:=4;
     5: litera:=4;
   end;
+  if (aButton=2) or (aButton=3) then aTestDblClick:=true;
+  if (TRYB=15) and (litera=4) then test(20);
+  if ON_pause then exit;
   case TRYB of
     (* PUSTY EKRAN *)
     0: if litera=1 then test(1);
@@ -239,7 +257,7 @@ begin
     12: if litera=1 then test(13);
     13: if litera=1 then test(14);
     14: if litera=1 then test(15);
-    15: if litera=1 then test(16);
+    15: if litera=1 then test(16) else if litera=4 then test(20);
     16: if litera=1 then if g_stop then test(20) else test(17);
     17: if litera=1 then test(18);
     18: if litera=1 then test(19);
@@ -261,15 +279,6 @@ begin
   if aButton=3 then
   begin
     if aDblClick then pilot.SendKey(ord('8')) else pilot.SendKey(ord('7'));
-  end;
-end;
-
-procedure TFServer.RadioGroup1Click(Sender: TObject);
-begin
-  case RadioGroup1.ItemIndex of
-    0: fEkran.eOff;
-    1: fEkran.eTabInfo;
-    2: fEkran.ePytanie;
   end;
 end;
 
@@ -344,6 +353,12 @@ begin
     ser.SendString('o$'+key+'$zaznaczono$'+w,aSocket);
     glosy_aktualizacja;
   end;
+end;
+
+procedure TFServer.serStatus(aActive, aCrypt: boolean);
+begin
+  if aCrypt then uELED1.Color:=clRed else uELED1.Color:=clGreen;
+  uELED1.Active:=aActive;
 end;
 
 procedure TFServer.SpeedButton5Click(Sender: TObject);
@@ -446,8 +461,8 @@ end;
 
 procedure TFServer.tGraTimer(Sender: TObject);
 begin
-  lTryb.Caption:=IntToStr(TRYB);
-  //lTryb.Caption:=IntToStr(g_pytanie);
+  //lInfo.Caption:=IntToStr(TRYB);
+  lInfo.Caption:=IntToStr(g_pytanie);
 end;
 
 procedure TFServer.tSerTimer(Sender: TObject);
@@ -494,6 +509,12 @@ begin
     sound(1);
     aktywacja_odpowiedzi(true,true);
   end;
+end;
+
+procedure TFServer.uELED1Click(Sender: TObject);
+begin
+  if ser.Active then exit;
+  ser.Connect;
 end;
 
 procedure TFServer.music(aNr: integer);
@@ -587,6 +608,7 @@ begin
       10..12: music(3);
     end;
   end;
+  if TRYB=10 then zysk_i_strata;
   if (TRYB>=10) and (TRYB<=14) then ekran_pytanie(g_pytanie,TRYB-10);
   if TRYB=14 then TRYB:=15;
   if TRYB=15 then
@@ -610,8 +632,8 @@ begin
       sound(2);
       music;
     end else begin
-      g_stop:=true;
-      dm.oblicz_wygrana(g_pytanie,false,g_wygrana,g_wygrana_gwarantowana);
+      g_stop:=not GameLastModePlay.Checked;
+      dm.oblicz_wygrana(g_pytanie,GameLastModePlay.Checked,g_wygrana,g_wygrana_gwarantowana);
       case g_udzielona_odpowiedz of
         1: fEkran.Panel1.Color:=clRed;
         2: fEkran.Panel2.Color:=clRed;
@@ -642,8 +664,8 @@ begin
   end;
   if TRYB=17 then
   begin
-    Label14.Caption:=FormatFloat('### ### ##0',g_wygrana)+' zł.';
-    Label16.Caption:=FormatFloat('### ### ##0',g_wygrana_gwarantowana)+' zł.';
+    Label14.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana))+' zł';
+    Label16.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana_gwarantowana))+' zł';
     fEkran.ePodsumowanie(g_wygrana);
     ON_pause:=false;
   end;
@@ -671,8 +693,8 @@ begin
   end;
   if TRYB=20 then
   begin
-    Label14.Caption:=FormatFloat('### ### ##0',g_wygrana)+' zł.';
-    Label16.Caption:=FormatFloat('### ### ##0',g_wygrana_gwarantowana)+' zł.';
+    Label14.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana))+' zł';
+    Label16.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana_gwarantowana))+' zł';
     fEkran.ePodsumowanie(g_wygrana,true);
     if g_wygrana=1000000 then sound(5) else
     if g_wygrana=0 then sound(6) else sound(4);
@@ -756,6 +778,7 @@ begin
     fEkran.gl2.Progress:=gl2.Progress;
     fEkran.gl3.Progress:=gl3.Progress;
     fEkran.gl4.Progress:=gl4.Progress;
+    GroupBox4.Enabled:=false;
   end;
   aktywacja_odpowiedzi(true,true);
 end;
@@ -779,6 +802,8 @@ begin
 end;
 
 procedure TFServer.ekran_pytanie(aNr: integer; aLp: integer);
+var
+  a,b,i: integer;
 begin
   if aLp=-1 then
   begin
@@ -791,14 +816,32 @@ begin
     fEkran.odp_b.Visible:=false;
     fEkran.odp_c.Visible:=false;
     fEkran.odp_d.Visible:=false;
-    db_pytanie.ParamByName('id').AsInteger:=aNr;
+    case aNr of
+        1..3: begin a:=1; b:=1; end;
+        4..6: begin a:=1; b:=2; end;
+       7..10: begin a:=2; b:=2; end;
+      11..12: begin a:=2; b:=3; end;
+    end;
+    db_pytanie.ParamByName('t1').AsInteger:=a;
+    db_pytanie.ParamByName('t2').AsInteger:=b;
     db_pytanie.Open;
+    a:=db_pytanie.RecordCount;
+    b:=random(a);
+    //writeln(a,' -> ',b);
+    for i:=1 to b do if not db_pytanie.EOF then db_pytanie.Next;
+    //writeln('po petli');
     fEkran.pytanie.Caption:=db_pytaniepytanie.AsString;
     fEkran.odp_a.Caption:=db_pytanieodp_1.AsString;
     fEkran.odp_b.Caption:=db_pytanieodp_2.AsString;
     fEkran.odp_c.Caption:=db_pytanieodp_3.AsString;
     fEkran.odp_d.Caption:=db_pytanieodp_4.AsString;
     g_odpowiedz:=db_pytanieodpowiedz.AsInteger;
+    if CheckBox3.Checked then
+    begin
+      db_pytanie.Edit;
+      db_pytanieuzyte.AsString:=FormatDateTime('yyyy-mm-dd hh:nn:ss',now);
+      db_pytanie.Post;
+    end;
     db_pytanie.Close;
     fEkran.odp_a.Font.Color:=clWhite;
     fEkran.odp_b.Font.Color:=clWhite;
@@ -859,6 +902,17 @@ procedure TFServer.okno_config;
 begin
   FKonfiguracja:=TFKonfiguracja.Create(self);
   FKonfiguracja.ShowModal;
+end;
+
+procedure TFServer.zysk_i_strata;
+var
+  a,b,c: integer;
+begin
+  dm.zysk_i_strata(g_pytanie,a,b,c);
+  Label29.Caption:=IntToStr(g_pytanie)+'/12';
+  Label30.Caption:=SpacesToPoints(FormatFloat('### ### ##0',a))+' zł';
+  Label25.Caption:=SpacesToPoints(FormatFloat('### ### ##0',b))+' zł';
+  Label26.Caption:=SpacesToPoints(FormatFloat('### ### ##0',c))+' zł';
 end;
 
 procedure TFServer.aktywacja_odpowiedzi(b: boolean; aIgnoreServ: boolean);

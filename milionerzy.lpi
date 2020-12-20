@@ -20,29 +20,12 @@
         <TextDesc Value="Client Milionerzy"/>
       </XPManifest>
       <Icon Value="0"/>
-      <Resources Count="15">
-        <Resource_0 FileName="sound/beep.mp3" Type="RCDATA" ResourceName="BEEP"/>
-        <Resource_1 FileName="sound/boom.mp3" Type="RCDATA" ResourceName="BOOM"/>
-        <Resource_2 FileName="sound/error.mp3" Type="RCDATA" ResourceName="ERROR"/>
-        <Resource_3 FileName="sound/ok.mp3" Type="RCDATA" ResourceName="OK"/>
-        <Resource_4 FileName="sound/brawa.mp3" Type="RCDATA" ResourceName="BRAWA"/>
-        <Resource_5 FileName="sound/brawa_milion.mp3" Type="RCDATA" ResourceName="BRAWA_MILION"/>
-        <Resource_6 FileName="sound/przegrana.mp3" Type="RCDATA" ResourceName="PRZEGRANA"/>
-        <Resource_7 FileName="sound/zegar.mp3" Type="RCDATA" ResourceName="ZEGAR"/>
-        <Resource_8 FileName="sound/struna.mp3" Type="RCDATA" ResourceName="STRUNA"/>
-        <Resource_9 FileName="music/podstawa.ogg" Type="RCDATA" ResourceName="PODSTAWA"/>
-        <Resource_10 FileName="music/pytanie1.ogg" Type="RCDATA" ResourceName="PYTANIE1"/>
-        <Resource_11 FileName="music/pytanie2.ogg" Type="RCDATA" ResourceName="PYTANIE2"/>
-        <Resource_12 FileName="music/pytanie3.ogg" Type="RCDATA" ResourceName="PYTANIE3"/>
-        <Resource_13 FileName="music/wygrana.ogg" Type="RCDATA" ResourceName="WYGRANA"/>
-        <Resource_14 FileName="music/wygrana2.ogg" Type="RCDATA" ResourceName="WYGRANA2"/>
-      </Resources>
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="8"/>
-      <RevisionNr Value="2"/>
+      <RevisionNr Value="4"/>
       <Language Value="0415"/>
       <StringTable CompanyName="Studio Jahu" InternalName="milionerzy.exe" LegalCopyright="2020 Krakow" LegalTrademarks="Studio Jahu" OriginalFilename="milionerzy.exe" ProductName="Milionerzy Client Studio Jahu" ProductVersion="1.0"/>
     </VersionInfo>

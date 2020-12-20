@@ -1,48 +1,19 @@
 object FServer: TFServer
-  Left = 274
-  Height = 646
-  Top = 270
+  Left = 349
+  Height = 571
+  Top = 341
   Width = 721
   BorderStyle = bsSingle
   Caption = 'Panel kontrolny'
-  ClientHeight = 646
+  ClientHeight = 571
   ClientWidth = 721
   KeyPreview = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
-  SessionProperties = 'Left;Top'
+  SessionProperties = 'GameLastModePlay.Checked;Left;Top;PublicGame.Checked'
   LCLVersion = '2.0.10.0'
-  object RadioGroup1: TRadioGroup
-    AnchorSideLeft.Control = Panel1
-    AnchorSideTop.Control = Panel1
-    AnchorSideTop.Side = asrBottom
-    Left = 4
-    Height = 88
-    Top = 58
-    Width = 280
-    AutoFill = True
-    BorderSpacing.Top = 2
-    Caption = 'Styl ekranu'
-    ChildSizing.LeftRightSpacing = 6
-    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-    ChildSizing.EnlargeVertical = crsHomogenousChildResize
-    ChildSizing.ShrinkHorizontal = crsScaleChilds
-    ChildSizing.ShrinkVertical = crsScaleChilds
-    ChildSizing.Layout = cclLeftToRightThenTopToBottom
-    ChildSizing.ControlsPerLine = 1
-    ClientHeight = 68
-    ClientWidth = 278
-    ItemIndex = 0
-    Items.Strings = (
-      'Pusty ekran'
-      'Ekran informacyjny'
-      'Pytanie z odpowiedziami'
-    )
-    OnClick = RadioGroup1Click
-    TabOrder = 0
-  end
   object Panel1: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -59,7 +30,7 @@ object FServer: TFServer
     BevelOuter = bvNone
     ClientHeight = 54
     ClientWidth = 713
-    TabOrder = 1
+    TabOrder = 0
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Panel1
@@ -77,10 +48,10 @@ object FServer: TFServer
       ParentFont = False
     end
     object CheckBox1: TCheckBox
-      AnchorSideLeft.Control = Label1
+      AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
-      Left = 10
+      Left = 8
       Height = 23
       Top = 21
       Width = 134
@@ -91,19 +62,19 @@ object FServer: TFServer
       TabOrder = 0
     end
     object CheckBox2: TCheckBox
-      AnchorSideLeft.Control = CheckBox1
+      AnchorSideLeft.Control = CheckBox3
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = CheckBox1
-      Left = 160
+      AnchorSideTop.Control = CheckBox3
+      Left = 263
       Height = 23
       Top = 21
       Width = 110
-      BorderSpacing.Left = 16
+      BorderSpacing.Left = 8
       Caption = 'Włącznik gry'
       OnChange = CheckBox2Change
-      TabOrder = 1
+      TabOrder = 2
     end
-    object lTryb: TLabel
+    object lInfo: TLabel
       Left = 659
       Height = 54
       Top = 0
@@ -119,23 +90,70 @@ object FServer: TFServer
       ParentColor = False
       ParentFont = False
     end
+    object uELED1: TuELED
+      AnchorSideTop.Control = lInfo
+      AnchorSideRight.Control = lInfo
+      Left = 635
+      Height = 24
+      Top = 0
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledSquare
+      Bright = True
+      Reflection = True
+      Anchors = [akTop, akRight]
+      Color = clGreen
+      ParentColor = False
+      OnClick = uELED1Click
+    end
+    object Label31: TLabel
+      AnchorSideTop.Control = uELED1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = uELED1
+      Left = 585
+      Height = 12
+      Top = 6
+      Width = 46
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 4
+      Caption = 'Serwer:'
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Sans'
+      Font.Style = [fsBold, fsItalic]
+      ParentColor = False
+      ParentFont = False
+    end
+    object CheckBox3: TCheckBox
+      AnchorSideLeft.Control = CheckBox1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = CheckBox1
+      Left = 150
+      Height = 23
+      Top = 21
+      Width = 105
+      BorderSpacing.Left = 8
+      Caption = 'Gra na żywo'
+      TabOrder = 1
+    end
   end
   object GroupBox1: TGroupBox
-    AnchorSideLeft.Control = RadioGroup1
-    AnchorSideTop.Control = RadioGroup1
+    AnchorSideLeft.Control = Panel1
+    AnchorSideTop.Control = Panel1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = RadioGroup1
     AnchorSideRight.Side = asrBottom
-    Left = 4
+    Left = 6
     Height = 466
-    Top = 150
-    Width = 280
+    Top = 58
+    Width = 282
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 4
+    BorderSpacing.Left = 2
+    BorderSpacing.Top = 2
     Caption = 'Informacja'
     ClientHeight = 446
-    ClientWidth = 278
-    TabOrder = 2
+    ClientWidth = 280
+    TabOrder = 1
     object i0: TLabel
       AnchorSideLeft.Control = GroupBox1
       AnchorSideTop.Control = GroupBox1
@@ -144,7 +162,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 2
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 12
       BorderSpacing.Top = 2
@@ -162,7 +180,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 22
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '2. Ekran informacyjny'
       Constraints.MinHeight = 20
@@ -177,7 +195,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 42
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - gwarantowane 1000 zł'
       Constraints.MinHeight = 20
@@ -192,7 +210,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 62
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - gwarantowane 40 000 zł'
       Constraints.MinHeight = 20
@@ -207,7 +225,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 82
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - gwarantowany MILION'
       Constraints.MinHeight = 20
@@ -222,7 +240,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 102
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - koło "pół na pół"'
       Constraints.MinHeight = 20
@@ -237,7 +255,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 122
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - koło "pytanie do publiczności"'
       Constraints.MinHeight = 20
@@ -252,7 +270,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 142
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - koło "telefon do przyjaciela"'
       Constraints.MinHeight = 20
@@ -267,7 +285,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 162
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '3. Pusty Ekran'
       Constraints.MinHeight = 20
@@ -282,7 +300,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 182
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '4. Pytanie'
       Constraints.MinHeight = 20
@@ -297,7 +315,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 202
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - pytanie'
       Constraints.MinHeight = 20
@@ -312,7 +330,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 222
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - odpowiedź A'
       Constraints.MinHeight = 20
@@ -327,7 +345,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 242
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - odpowiedź B'
       Constraints.MinHeight = 20
@@ -342,7 +360,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 262
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - odpowiedź C'
       Constraints.MinHeight = 20
@@ -357,7 +375,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 282
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - odpowiedź D'
       Constraints.MinHeight = 20
@@ -372,11 +390,10 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 302
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - oczekiwanie na odpowiedź'
       Constraints.MinHeight = 20
-      Font.Color = clRed
       ParentColor = False
       ParentFont = False
     end
@@ -389,7 +406,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 322
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - wyniki'
       Constraints.MinHeight = 20
@@ -404,7 +421,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 342
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '     - podsumowanie'
       Constraints.MinHeight = 20
@@ -419,7 +436,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 362
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '5. Pusty ekran'
       Constraints.MinHeight = 20
@@ -434,7 +451,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 382
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '6. Gramy dalej?'
       Constraints.MinHeight = 20
@@ -449,7 +466,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 402
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '7. Podsumowanie.'
       Constraints.MinHeight = 20
@@ -464,7 +481,7 @@ object FServer: TFServer
       Left = 12
       Height = 20
       Top = 422
-      Width = 258
+      Width = 260
       Anchors = [akTop, akLeft, akRight]
       Caption = '8. Koniec gry.'
       Constraints.MinHeight = 20
@@ -472,9 +489,7 @@ object FServer: TFServer
     end
   end
   object GroupBox2: TGroupBox
-    AnchorSideLeft.Control = RadioGroup1
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = RadioGroup1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 292
@@ -488,7 +503,7 @@ object FServer: TFServer
     Caption = 'Pytanie'
     ClientHeight = 155
     ClientWidth = 423
-    TabOrder = 3
+    TabOrder = 2
     object Label2: TLabel
       AnchorSideLeft.Control = GroupBox2
       AnchorSideTop.Control = GroupBox2
@@ -760,69 +775,220 @@ object FServer: TFServer
     ParentFont = False
   end
   object GroupBox3: TGroupBox
-    AnchorSideLeft.Control = GroupBox2
-    AnchorSideRight.Control = GroupBox2
+    AnchorSideLeft.Control = GroupBox5
+    AnchorSideTop.Control = GroupBox5
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = GroupBox5
     AnchorSideRight.Side = asrBottom
     Left = 292
-    Height = 64
-    Top = 536
+    Height = 60
+    Top = 464
     Width = 425
     Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 19
     Caption = 'Wygrana:'
     ClientHeight = 44
     ClientWidth = 423
-    TabOrder = 4
+    Color = clCream
+    Font.Height = -12
+    Font.Name = 'Sans'
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 3
     object Label13: TLabel
       AnchorSideLeft.Control = GroupBox3
       AnchorSideTop.Control = GroupBox3
       Left = 12
-      Height = 17
+      Height = 19
       Top = 2
-      Width = 45
+      Width = 41
       BorderSpacing.Left = 12
       BorderSpacing.Top = 2
       Caption = 'Kwota:'
+      Constraints.MinHeight = 19
+      Layout = tlCenter
       ParentColor = False
     end
     object Label14: TLabel
       AnchorSideLeft.Control = Label13
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Label13
-      Left = 65
-      Height = 17
+      Left = 61
+      Height = 19
       Top = 2
-      Width = 24
+      Width = 23
       BorderSpacing.Left = 8
       Caption = '0 zł'
+      Constraints.MinHeight = 19
+      Font.Height = -12
+      Font.Name = 'Sans'
       Font.Style = [fsBold]
+      Layout = tlCenter
       ParentColor = False
       ParentFont = False
     end
     object Label15: TLabel
-      AnchorSideLeft.Control = Label13
       AnchorSideTop.Control = Label14
       AnchorSideTop.Side = asrBottom
-      Left = 12
-      Height = 17
+      AnchorSideRight.Control = Label13
+      AnchorSideRight.Side = asrBottom
+      Left = 15
+      Height = 19
       Top = 21
-      Width = 145
-      BorderSpacing.Top = 2
-      Caption = 'Kwota gwarantowana:'
+      Width = 38
+      Anchors = [akTop, akRight]
+      BorderSpacing.Bottom = 4
+      Caption = 'Gwar.:'
+      Constraints.MinHeight = 19
+      Layout = tlCenter
       ParentColor = False
     end
     object Label16: TLabel
       AnchorSideLeft.Control = Label15
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Label15
-      Left = 165
-      Height = 17
+      Left = 61
+      Height = 19
       Top = 21
-      Width = 24
+      Width = 23
       BorderSpacing.Left = 8
       Caption = '0 zł'
+      Constraints.MinHeight = 19
+      Font.Height = -12
+      Font.Name = 'Sans'
       Font.Style = [fsBold]
+      Layout = tlCenter
       ParentColor = False
       ParentFont = False
+    end
+    object Label23: TLabel
+      AnchorSideTop.Control = Label13
+      Left = 296
+      Height = 19
+      Top = 2
+      Width = 32
+      Caption = 'Zysk:'
+      Constraints.MinHeight = 19
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object Label24: TLabel
+      AnchorSideTop.Control = Label23
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label23
+      AnchorSideRight.Side = asrBottom
+      Left = 287
+      Height = 19
+      Top = 21
+      Width = 41
+      Anchors = [akTop, akRight]
+      Caption = 'Strata:'
+      Constraints.MinHeight = 19
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object Label25: TLabel
+      AnchorSideLeft.Control = Label23
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label13
+      Left = 336
+      Height = 19
+      Top = 2
+      Width = 23
+      BorderSpacing.Left = 8
+      Caption = '0 zł'
+      Constraints.MinHeight = 19
+      Font.Color = clGreen
+      Font.Height = -12
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label26: TLabel
+      AnchorSideLeft.Control = Label24
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label15
+      Left = 336
+      Height = 19
+      Top = 21
+      Width = 23
+      BorderSpacing.Left = 8
+      Caption = '0 zł'
+      Constraints.MinHeight = 19
+      Font.Color = clRed
+      Font.Height = -12
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label27: TLabel
+      AnchorSideTop.Control = Label13
+      Left = 152
+      Height = 19
+      Top = 2
+      Width = 25
+      Caption = 'Gra:'
+      Constraints.MinHeight = 19
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object Label28: TLabel
+      AnchorSideTop.Control = Label27
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label27
+      AnchorSideRight.Side = asrBottom
+      Left = 164
+      Height = 19
+      Top = 21
+      Width = 13
+      Anchors = [akTop, akRight]
+      Caption = 'O:'
+      Constraints.MinHeight = 19
+      Layout = tlCenter
+      ParentColor = False
+    end
+    object Label29: TLabel
+      AnchorSideLeft.Control = Label27
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label13
+      Left = 185
+      Height = 19
+      Top = 2
+      Width = 28
+      BorderSpacing.Left = 8
+      Caption = '1/12'
+      Constraints.MinHeight = 19
+      Font.Height = -12
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label30: TLabel
+      AnchorSideLeft.Control = Label28
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label15
+      Left = 185
+      Height = 19
+      Top = 21
+      Width = 81
+      BorderSpacing.Left = 8
+      Caption = '0 zł'
+      Color = clYellow
+      Constraints.MinHeight = 19
+      Constraints.MinWidth = 81
+      Font.Height = -12
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      Layout = tlCenter
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
     end
   end
   object GroupBox4: TGroupBox
@@ -833,15 +999,15 @@ object FServer: TFServer
     AnchorSideRight.Side = asrBottom
     Left = 292
     Height = 62
-    Top = 266
+    Top = 262
     Width = 425
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 16
+    BorderSpacing.Top = 12
     Caption = 'Rozmowa telefoniczna/Pomoc publiczności'
     ClientHeight = 42
     ClientWidth = 423
     Enabled = False
-    TabOrder = 5
+    TabOrder = 4
     object BitBtn1: TBitBtn
       AnchorSideLeft.Control = GroupBox4
       AnchorSideTop.Control = GroupBox4
@@ -888,7 +1054,7 @@ object FServer: TFServer
   object StatusBar: TStatusBar
     Left = 0
     Height = 20
-    Top = 626
+    Top = 551
     Width = 721
     Panels = <    
       item
@@ -904,27 +1070,27 @@ object FServer: TFServer
     AnchorSideRight.Control = GroupBox4
     AnchorSideRight.Side = asrBottom
     Left = 292
-    Height = 127
-    Top = 330
+    Height = 119
+    Top = 326
     Width = 425
     Anchors = [akTop, akLeft, akRight]
     AutoSize = True
     BorderSpacing.Top = 2
     Caption = 'Głosowanie'
-    ClientHeight = 107
+    ClientHeight = 99
     ClientWidth = 423
-    TabOrder = 7
+    TabOrder = 6
     object gl1: TplGauge
       AnchorSideLeft.Control = Label18
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Label18
       AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = GroupBox5
+      AnchorSideRight.Control = Label22
       AnchorSideRight.Side = asrBottom
-      Left = 21
-      Height = 25
-      Top = 7
-      Width = 402
+      Left = 28
+      Height = 18
+      Top = 5
+      Width = 387
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -935,24 +1101,29 @@ object FServer: TFServer
       AnchorSideLeft.Control = GroupBox5
       AnchorSideTop.Control = GroupBox5
       Left = 8
-      Height = 17
-      Top = 11
-      Width = 13
+      Height = 15
+      Top = 7
+      Width = 16
       BorderSpacing.Left = 8
-      BorderSpacing.Top = 11
+      BorderSpacing.Top = 7
+      BorderSpacing.Right = 4
       Caption = 'A:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
       ParentColor = False
+      ParentFont = False
     end
     object gl2: TplGauge
-      AnchorSideLeft.Control = gl1
-      AnchorSideTop.Control = gl1
-      AnchorSideTop.Side = asrBottom
+      AnchorSideLeft.Control = Label19
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label19
+      AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = gl1
       AnchorSideRight.Side = asrBottom
-      Left = 21
-      Height = 25
-      Top = 32
-      Width = 402
+      Left = 28
+      Height = 18
+      Top = 28
+      Width = 387
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -960,30 +1131,32 @@ object FServer: TFServer
       Anchors = [akTop, akLeft, akRight]
     end
     object Label19: TLabel
-      AnchorSideTop.Control = gl2
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = gl2
-      Left = 4
-      Height = 17
-      Top = 36
-      Width = 13
-      Anchors = [akTop, akRight]
-      BorderSpacing.Left = 8
-      BorderSpacing.Top = 11
+      AnchorSideLeft.Control = Label18
+      AnchorSideTop.Control = Label18
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 15
+      Top = 30
+      Width = 16
+      BorderSpacing.Top = 8
       BorderSpacing.Right = 4
       Caption = 'B:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
       ParentColor = False
+      ParentFont = False
     end
     object gl3: TplGauge
-      AnchorSideLeft.Control = gl1
-      AnchorSideTop.Control = gl2
-      AnchorSideTop.Side = asrBottom
+      AnchorSideLeft.Control = Label20
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label20
+      AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = gl1
       AnchorSideRight.Side = asrBottom
-      Left = 21
-      Height = 25
-      Top = 57
-      Width = 402
+      Left = 28
+      Height = 18
+      Top = 51
+      Width = 387
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -991,30 +1164,32 @@ object FServer: TFServer
       Anchors = [akTop, akLeft, akRight]
     end
     object Label20: TLabel
-      AnchorSideTop.Control = gl3
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = gl3
-      Left = 4
-      Height = 17
-      Top = 61
-      Width = 13
-      Anchors = [akTop, akRight]
-      BorderSpacing.Left = 8
-      BorderSpacing.Top = 11
+      AnchorSideLeft.Control = Label19
+      AnchorSideTop.Control = Label19
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 15
+      Top = 53
+      Width = 16
+      BorderSpacing.Top = 8
       BorderSpacing.Right = 4
       Caption = 'C:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
       ParentColor = False
+      ParentFont = False
     end
     object gl4: TplGauge
-      AnchorSideLeft.Control = gl1
-      AnchorSideTop.Control = gl3
-      AnchorSideTop.Side = asrBottom
+      AnchorSideLeft.Control = Label21
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label21
+      AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = gl1
       AnchorSideRight.Side = asrBottom
-      Left = 21
-      Height = 25
-      Top = 82
-      Width = 402
+      Left = 28
+      Height = 18
+      Top = 74
+      Width = 387
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -1022,39 +1197,93 @@ object FServer: TFServer
       Anchors = [akTop, akLeft, akRight]
     end
     object Label21: TLabel
-      AnchorSideTop.Control = gl4
-      AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = gl4
-      Left = 3
-      Height = 17
-      Top = 86
-      Width = 14
-      Anchors = [akTop, akRight]
-      BorderSpacing.Left = 8
-      BorderSpacing.Top = 11
+      AnchorSideLeft.Control = Label20
+      AnchorSideTop.Control = Label20
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 15
+      Top = 76
+      Width = 16
+      BorderSpacing.Top = 8
       BorderSpacing.Right = 4
+      BorderSpacing.Bottom = 8
       Caption = 'D:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label22: TLabel
+      AnchorSideTop.Control = GroupBox5
+      AnchorSideRight.Control = GroupBox5
+      AnchorSideRight.Side = asrBottom
+      Left = 414
+      Height = 1
+      Top = 0
+      Width = 1
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
       ParentColor = False
     end
+  end
+  object GameLastModePlay: TCheckBox
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideTop.Control = GroupBox1
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 23
+    Top = 524
+    Width = 238
+    Caption = 'Przegrana nie oznacza końca gry'
+    Color = clDefault
+    Font.Color = clRed
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 7
+  end
+  object PublicGame: TCheckBox
+    AnchorSideLeft.Control = GroupBox3
+    AnchorSideTop.Control = GroupBox3
+    AnchorSideTop.Side = asrBottom
+    Left = 292
+    Height = 23
+    Top = 524
+    Width = 151
+    Caption = 'Gra z publicznością'
+    Font.Color = clRed
+    ParentFont = False
+    TabOrder = 8
+    Visible = False
   end
   object db_pytanie: TZQuery
     Connection = dm.db
     SQL.Strings = (
       'select * from pytania'
-      'where id=:id'
+      'where uzyte is null'
+      '  and trudnosc>=:t1 and trudnosc<=:t2'
     )
     Params = <    
       item
         DataType = ftUnknown
-        Name = 'id'
+        Name = 't1'
+        ParamType = ptUnknown
+      end    
+      item
+        DataType = ftUnknown
+        Name = 't2'
         ParamType = ptUnknown
       end>
-    Left = 440
-    Top = 8
+    Left = 224
+    Top = 400
     ParamData = <    
       item
         DataType = ftUnknown
-        Name = 'id'
+        Name = 't1'
+        ParamType = ptUnknown
+      end    
+      item
+        DataType = ftUnknown
+        Name = 't2'
         ParamType = ptUnknown
       end>
     object db_pytanieid: TLargeintField
@@ -1130,19 +1359,39 @@ object FServer: TFServer
       ReadOnly = False
       Required = False
     end
+    object db_pytanietrudnosc: TLargeintField
+      FieldKind = fkData
+      FieldName = 'trudnosc'
+      Index = 7
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object db_pytanieuzyte: TMemoField
+      FieldKind = fkData
+      FieldName = 'uzyte'
+      Index = 8
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      BlobType = ftMemo
+      Transliterate = False
+    end
   end
   object ds_pytanie: TDataSource
     AutoEdit = False
     DataSet = db_pytanie
-    Left = 520
-    Top = 8
+    Left = 224
+    Top = 456
   end
   object pilot: TPresentation
     Device = dvGembird
     OnClick = pilotClick
     OnClickLong = pilotClickLong
-    Left = 376
-    Top = 8
+    Left = 240
+    Top = 136
   end
   object tGra: TTimer
     Enabled = False
@@ -1209,8 +1458,8 @@ object FServer: TFServer
     Top = 128
   end
   object zegar: TLiveTimer
-    Left = 312
-    Top = 8
+    Left = 240
+    Top = 80
   end
   object ser: TNetSocket
     Mode = smServer
@@ -1223,6 +1472,7 @@ object FServer: TFServer
     SSLMethod = msSSLv2or3
     AutoRegister = True
     OnReceiveString = serReceiveString
+    OnStatus = serStatus
     OnCryptString = serCryptString
     OnDecryptString = serDecryptString
     Left = 368
@@ -1232,8 +1482,8 @@ object FServer: TFServer
     StoredValues = <>
     RootNodePath = 'server'
     Active = False
-    Left = 224
-    Top = 80
+    Left = 240
+    Top = 216
   end
   object tSer: TTimer
     OnTimer = tSerTimer
