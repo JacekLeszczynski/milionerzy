@@ -1,7 +1,7 @@
 object fEkran: TfEkran
-  Left = 636
+  Left = 637
   Height = 720
-  Top = 5
+  Top = 4
   Width = 1280
   BorderStyle = bsSingle
   Caption = 'Milionerzy - Ekran'
@@ -11,59 +11,10 @@ object fEkran: TfEkran
   OnCreate = FormCreate
   SessionProperties = 'Top;Left'
   LCLVersion = '2.0.10.0'
-  object Panel7: TPanel
-    AnchorSideLeft.Control = Owner
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 0
-    Height = 224
-    Top = 496
-    Width = 1280
-    Anchors = [akLeft, akBottom]
-    BevelOuter = bvNone
-    ClientHeight = 224
-    ClientWidth = 1280
-    TabOrder = 2
-    Visible = False
-    object Panel8: TPanel
-      AnchorSideLeft.Control = Panel7
-      AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = Panel7
-      AnchorSideTop.Side = asrCenter
-      Left = 74
-      Height = 76
-      Top = 74
-      Width = 1133
-      BorderSpacing.Top = 20
-      ClientHeight = 76
-      ClientWidth = 1133
-      Color = clBlue
-      Font.Color = clWhite
-      Font.Height = -27
-      Font.Name = 'Sans'
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 0
-      object podsumowanie: TLabel
-        Left = 11
-        Height = 74
-        Top = 1
-        Width = 1111
-        Align = alClient
-        Alignment = taCenter
-        BorderSpacing.Left = 10
-        BorderSpacing.Right = 10
-        Caption = '---'
-        Layout = tlCenter
-        ParentColor = False
-        WordWrap = True
-      end
-    end
-  end
   object Panel9: TPanel
-    Left = 24
+    Left = 40
     Height = 98
-    Top = 16
+    Top = 32
     Width = 106
     BevelOuter = bvNone
     ClientHeight = 98
@@ -147,12 +98,11 @@ object fEkran: TfEkran
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Label30
         AnchorSideTop.Side = asrCenter
-        AnchorSideRight.Control = Panel11
-        AnchorSideRight.Side = asrBottom
+        AnchorSideRight.Control = Label34
         Left = 40
         Height = 25
         Top = 9
-        Width = 274
+        Width = 265
         Color = clSkyBlue
         BarColor = clYellow
         Progress = 0
@@ -185,7 +135,7 @@ object fEkran: TfEkran
         Left = 40
         Height = 25
         Top = 34
-        Width = 274
+        Width = 265
         Color = clSkyBlue
         BarColor = clYellow
         Progress = 0
@@ -237,7 +187,7 @@ object fEkran: TfEkran
         Left = 40
         Height = 25
         Top = 59
-        Width = 274
+        Width = 265
         Color = clSkyBlue
         BarColor = clYellow
         Progress = 0
@@ -271,12 +221,24 @@ object fEkran: TfEkran
         Left = 40
         Height = 25
         Top = 84
-        Width = 274
+        Width = 265
         Color = clSkyBlue
         BarColor = clYellow
         Progress = 0
         ParentColor = False
         Anchors = [akTop, akLeft, akRight]
+      end
+      object Label34: TLabel
+        AnchorSideTop.Control = Panel11
+        AnchorSideRight.Control = Panel11
+        AnchorSideRight.Side = asrBottom
+        Left = 305
+        Height = 1
+        Top = 0
+        Width = 1
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 8
+        ParentColor = False
       end
     end
   end
@@ -556,6 +518,55 @@ object fEkran: TfEkran
         BorderSpacing.Left = 5
         BorderSpacing.Right = 10
         Caption = 'Pytanie pierwsze.'
+        Layout = tlCenter
+        ParentColor = False
+        WordWrap = True
+      end
+    end
+  end
+  object Panel7: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 224
+    Top = 496
+    Width = 1280
+    Anchors = [akLeft, akBottom]
+    BevelOuter = bvNone
+    ClientHeight = 224
+    ClientWidth = 1280
+    TabOrder = 2
+    Visible = False
+    object Panel8: TPanel
+      AnchorSideLeft.Control = Panel7
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel7
+      AnchorSideTop.Side = asrCenter
+      Left = 74
+      Height = 76
+      Top = 74
+      Width = 1133
+      BorderSpacing.Top = 20
+      ClientHeight = 76
+      ClientWidth = 1133
+      Color = clBlue
+      Font.Color = clWhite
+      Font.Height = -27
+      Font.Name = 'Sans'
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 0
+      object podsumowanie: TLabel
+        Left = 11
+        Height = 74
+        Top = 1
+        Width = 1111
+        Align = alClient
+        Alignment = taCenter
+        BorderSpacing.Left = 10
+        BorderSpacing.Right = 10
+        Caption = '---'
         Layout = tlCenter
         ParentColor = False
         WordWrap = True

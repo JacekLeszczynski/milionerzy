@@ -19,8 +19,15 @@ type
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
-    db_pytanietrudnosc: TLargeintField;
-    db_pytanieuzyte: TMemoField;
+    dbpyttrudnosc: TLargeintField;
+    dbpytuzyte: TMemoField;
+    gl5: TplGauge;
+    gl6: TplGauge;
+    gl7: TplGauge;
+    gl8: TplGauge;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
     Label23: TLabel;
     Label24: TLabel;
     Label25: TLabel;
@@ -30,17 +37,87 @@ type
     Label29: TLabel;
     Label30: TLabel;
     Label31: TLabel;
+    Label32: TLabel;
+    Label33: TLabel;
+    Label34: TLabel;
+    Label35: TLabel;
+    Label36: TLabel;
+    Label37: TLabel;
+    Label38: TLabel;
+    Label39: TLabel;
+    Label40: TLabel;
+    Label41: TLabel;
+    Label42: TLabel;
+    Label43: TLabel;
+    Label44: TLabel;
+    Label45: TLabel;
+    Label46: TLabel;
+    Label47: TLabel;
+    Label48: TLabel;
+    Label49: TLabel;
+    Label50: TLabel;
+    Label51: TLabel;
+    Label52: TLabel;
+    Label53: TLabel;
+    Label54: TLabel;
+    Label55: TLabel;
+    Label56: TLabel;
+    Label57: TLabel;
+    Label58: TLabel;
+    Label59: TLabel;
+    Label60: TLabel;
+    Label61: TLabel;
+    Label62: TLabel;
+    Label63: TLabel;
+    Label64: TLabel;
+    Label65: TLabel;
+    Label66: TLabel;
+    Label67: TLabel;
+    Label68: TLabel;
+    Label69: TLabel;
+    Label70: TLabel;
+    Label71: TLabel;
+    Label72: TLabel;
+    Label73: TLabel;
+    Label74: TLabel;
+    Label75: TLabel;
+    Label76: TLabel;
+    Label77: TLabel;
+    Panel12: TPanel;
+    Panel13: TPanel;
+    Panel14: TPanel;
+    Panel15: TPanel;
+    ppodsumowanie: TLabel;
+    Label_a: TLabel;
+    Label_b: TLabel;
+    Label_c: TLabel;
+    Label_d: TLabel;
+    odp_b: TLabel;
+    odp_c: TLabel;
+    odp_d: TLabel;
+    Panel10: TPanel;
+    Panel11: TPanel;
+    ppytanie: TLabel;
+    odp_a: TLabel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    Panel7: TPanel;
+    Panel8: TPanel;
+    Panel9: TPanel;
     PublicGame: TCheckBox;
     GameLastModePlay: TCheckBox;
-    db_pytanieid: TLargeintField;
-    db_pytanieodpowiedz: TLargeintField;
-    db_pytanieodp_1: TMemoField;
-    db_pytanieodp_2: TMemoField;
-    db_pytanieodp_3: TMemoField;
-    db_pytanieodp_4: TMemoField;
-    db_pytaniepytanie: TMemoField;
-    ds_pytanie: TDataSource;
-    db_pytanie: TZQuery;
+    dbpytid: TLargeintField;
+    dbpytodpowiedz: TLargeintField;
+    dbpytodp_1: TMemoField;
+    dbpytodp_2: TMemoField;
+    dbpytodp_3: TMemoField;
+    dbpytodp_4: TMemoField;
+    dbpytpytanie: TMemoField;
+    dspyt: TDataSource;
+    dbpyt: TZQuery;
     gl2: TplGauge;
     gl3: TplGauge;
     gl4: TplGauge;
@@ -96,9 +173,27 @@ type
     gl1: TplGauge;
     ser: TNetSocket;
     ps: TXMLPropStorage;
+    Shape1: TShape;
+    Shape10: TShape;
+    Shape11: TShape;
+    Shape12: TShape;
+    Shape2: TShape;
+    Shape21: TShape;
+    Shape22: TShape;
+    Shape23: TShape;
+    Shape3: TShape;
+    Shape4: TShape;
+    Shape5: TShape;
+    Shape6: TShape;
+    Shape7: TShape;
+    Shape8: TShape;
+    Shape9: TShape;
     StatusBar: TStatusBar;
     tSer: TTimer;
     uELED1: TuELED;
+    x1: TLabel;
+    x2: TLabel;
+    x3: TLabel;
     zegar: TLiveTimer;
     lInfo: TLabel;
     Panel1: TPanel;
@@ -144,7 +239,14 @@ type
     procedure uELED1Click(Sender: TObject);
   private
     sesje,glosy,glosy2: TStringList;
+    procedure eOff;
+    procedure ePytanie;
+    procedure eTabInfo;
+    procedure ePodsumowanie(aKwota: integer; aKoniec: boolean = false);
+    procedure eCzas30(aPokaz: boolean = true);
+    procedure ePub(aPokaz: boolean = true);
     procedure _get_var_1(var aTryb,aGPytanie: integer; var aOnPause,aGStop: boolean);
+    procedure _set_g_pytanie(aGPytanie: integer);
     procedure music(aNr: integer = 0);
     procedure nomusic;
     procedure sound(aNr: integer = 0; aLoop: boolean = false; aVolume: integer = 100);
@@ -194,6 +296,7 @@ begin
   uu:=Tuu.Create(self);
   uu.OnMilionerzyTest:=@test;
   uu.OnMilionerzyVar:=@_get_var_1;
+  uu.OnMilionerzySetGPytanie:=@_set_g_pytanie;
   ps.FileName:=MyConfDir('server.xml');
   ps.Active:=true;
 end;
@@ -319,17 +422,20 @@ begin
   GroupBox4.Enabled:=true;
   BitBtn1.Enabled:=false;
   BitBtn2.Enabled:=true;
+  ePub(true);
   fEkran.ePub(true);
 end;
 
 procedure TFServer.SpeedButton7Click(Sender: TObject);
 begin
+  ePub(false);
   fEkran.ePub(false);
   g_kolo_3:=false;
   aktywacja_odpowiedzi(false,true);
   GroupBox4.Enabled:=true;
   BitBtn1.Enabled:=true;
   BitBtn2.Enabled:=false;
+  eCzas30;
   fEkran.eCzas30;
 end;
 
@@ -356,29 +462,29 @@ begin
     if a=1 then
     begin
       SpeedButton1.Enabled:=false;
-      fEkran.Label_a.Visible:=false;
-      fEkran.odp_a.Visible:=false;
+      Label_a.Visible:=false; fEkran.Label_a.Visible:=false;
+      odp_a.Visible:=false; fEkran.odp_a.Visible:=false;
       s:=s+'a';
     end else
     if a=2 then
     begin
       SpeedButton2.Enabled:=false;
-      fEkran.Label_b.Visible:=false;
-      fEkran.odp_b.Visible:=false;
+      Label_b.Visible:=false; fEkran.Label_b.Visible:=false;
+      odp_b.Visible:=false; fEkran.odp_b.Visible:=false;
       s:=s+'b';
     end else
     if a=3 then
     begin
       SpeedButton3.Enabled:=false;
-      fEkran.Label_c.Visible:=false;
-      fEkran.odp_c.Visible:=false;
+      Label_c.Visible:=false; fEkran.Label_c.Visible:=false;
+      odp_c.Visible:=false; fEkran.odp_c.Visible:=false;
       s:=s+'c';
     end else
     if a=4 then
     begin
       SpeedButton4.Enabled:=false;
-      fEkran.Label_d.Visible:=false;
-      fEkran.odp_d.Visible:=false;
+      Label_d.Visible:=false; fEkran.Label_d.Visible:=false;
+      odp_d.Visible:=false; fEkran.odp_d.Visible:=false;
       s:=s+'d';
     end;
   end;
@@ -430,6 +536,7 @@ begin
   zegar.Stop;
   zegar.tag:=0;
   GroupBox4.Enabled:=false;
+  eCzas30(false);
   fEkran.eCzas30(false);
 end;
 
@@ -440,6 +547,7 @@ begin
   a:=zegar.GetIndexTime;
   b:=abs(30-(a div 1000));
   Label17.Caption:=IntToStr(b)+' sek.';
+  Label77.Caption:=IntToStr(b);
   fEkran.Label28.Caption:=IntToStr(b);
   if (a>25000) and (zegar.Tag=0) then
   begin
@@ -460,6 +568,73 @@ begin
   ser.Connect;
 end;
 
+procedure TFServer.eOff;
+begin
+  Panel4.Visible:=false;
+  Panel3.Visible:=false;
+  Panel10.Visible:=false;
+  Panel12.Visible:=false;
+end;
+
+procedure TFServer.ePytanie;
+begin
+  eOff;
+  Panel4.Visible:=true;
+  ppytanie.Visible:=false;
+  Label_a.Visible:=false;
+  Label_b.Visible:=false;
+  Label_c.Visible:=false;
+  Label_d.Visible:=false;
+  odp_a.Visible:=false;
+  odp_b.Visible:=false;
+  odp_c.Visible:=false;
+  odp_d.Visible:=false;
+end;
+
+procedure TFServer.eTabInfo;
+begin
+  eOff;
+  Panel3.Visible:=true;
+  Shape1.Visible:=false;
+  Shape2.Visible:=false;
+  Shape3.Visible:=false;
+  Shape4.Visible:=false;
+  Shape5.Visible:=false;
+  Shape6.Visible:=false;
+  Shape7.Visible:=false;
+  Shape8.Visible:=false;
+  Shape9.Visible:=false;
+  Shape10.Visible:=false;
+  Shape11.Visible:=false;
+  Shape12.Visible:=false;
+  Shape21.Visible:=false;
+  Shape22.Visible:=false;
+  Shape23.Visible:=false;
+  x1.Visible:=false;
+  x2.Visible:=false;
+  x3.Visible:=false;
+end;
+
+procedure TFServer.ePodsumowanie(aKwota: integer; aKoniec: boolean);
+var
+  s: string;
+begin
+  eOff;
+  if aKoniec then s:='Na koncie: ' else s:='';
+  Panel10.Visible:=true;
+  ppodsumowanie.Caption:=s+SpacesToPoints(FormatFloat('### ### ##0',aKwota))+' '+CL_DIAMENT;
+end;
+
+procedure TFServer.eCzas30(aPokaz: boolean);
+begin
+  Panel14.Visible:=aPokaz;
+end;
+
+procedure TFServer.ePub(aPokaz: boolean);
+begin
+  Panel12.Visible:=aPokaz;
+end;
+
 procedure TFServer._get_var_1(var aTryb, aGPytanie: integer; var aOnPause,
   aGStop: boolean);
 begin
@@ -467,6 +642,11 @@ begin
   aGPytanie:=g_pytanie;
   aOnPause:=ON_pause;
   aGStop:=g_stop;
+end;
+
+procedure TFServer._set_g_pytanie(aGPytanie: integer);
+begin
+  g_pytanie:=aGPytanie;
 end;
 
 procedure TFServer.music(aNr: integer);
@@ -544,13 +724,18 @@ end;
 procedure TFServer.test(aTryb: integer);
 begin
   TRYB:=aTryb;
-  if TRYB=1 then fEkran.eTabInfo;
+  if TRYB=1 then
+  begin
+    eTabInfo;
+    fEkran.eTabInfo;
+  end;
   if (TRYB>=1) and (TRYB<=7) then ekran_info(TRYB-1);
-  if TRYB=8 then begin tInfo.Enabled:=false; fEkran.eOff; end;
+  if TRYB=8 then begin tInfo.Enabled:=false; eOff; fEkran.eOff; end;
   (* PYTANIE *)
   if TRYB=9 then
   begin
     ON_pause:=true;
+    ePytanie;
     fEkran.ePytanie;
     ekran_pytanie(g_pytanie);
     TRYB:=10;
@@ -587,22 +772,22 @@ begin
       g_stop:=not GameLastModePlay.Checked;
       dm.oblicz_wygrana(g_pytanie,GameLastModePlay.Checked,g_wygrana,g_wygrana_gwarantowana);
       case g_udzielona_odpowiedz of
-        1: fEkran.Panel1.Color:=clRed;
-        2: fEkran.Panel2.Color:=clRed;
-        3: fEkran.Panel3.Color:=clRed;
-        4: fEkran.Panel4.Color:=clRed;
+        1: begin Panel6.Color:=clRed; fEkran.Panel1.Color:=clRed; end;
+        2: begin Panel7.Color:=clRed; fEkran.Panel2.Color:=clRed; end;
+        3: begin Panel8.Color:=clRed; fEkran.Panel3.Color:=clRed; end;
+        4: begin Panel9.Color:=clRed; fEkran.Panel4.Color:=clRed; end;
       end;
       case g_odpowiedz of
-        1: fEkran.Panel1.Color:=CL_ZAZNACZENIE;
-        2: fEkran.Panel2.Color:=CL_ZAZNACZENIE;
-        3: fEkran.Panel3.Color:=CL_ZAZNACZENIE;
-        4: fEkran.Panel4.Color:=CL_ZAZNACZENIE;
+        1: begin Panel6.Color:=CL_ZAZNACZENIE; fEkran.Panel1.Color:=CL_ZAZNACZENIE; end;
+        2: begin Panel7.Color:=CL_ZAZNACZENIE; fEkran.Panel2.Color:=CL_ZAZNACZENIE; end;
+        3: begin Panel8.Color:=CL_ZAZNACZENIE; fEkran.Panel3.Color:=CL_ZAZNACZENIE; end;
+        4: begin Panel9.Color:=CL_ZAZNACZENIE; fEkran.Panel4.Color:=CL_ZAZNACZENIE; end;
       end;
       case g_odpowiedz of
-        1: fEkran.odp_a.Font.Color:=clBlack;
-        2: fEkran.odp_b.Font.Color:=clBlack;
-        3: fEkran.odp_c.Font.Color:=clBlack;
-        4: fEkran.odp_d.Font.Color:=clBlack;
+        1: begin odp_a.Font.Color:=clBlack; fEkran.odp_a.Font.Color:=clBlack; end;
+        2: begin odp_b.Font.Color:=clBlack; fEkran.odp_b.Font.Color:=clBlack; end;
+        3: begin odp_c.Font.Color:=clBlack; fEkran.odp_c.Font.Color:=clBlack; end;
+        4: begin odp_d.Font.Color:=clBlack; fEkran.odp_d.Font.Color:=clBlack; end;
       end;
       sound(3);
       music;
@@ -618,42 +803,52 @@ begin
   begin
     Label14.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana))+' '+CL_DIAMENT;
     Label16.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana_gwarantowana))+' '+CL_DIAMENT;
+    ePodsumowanie(g_wygrana);
     fEkran.ePodsumowanie(g_wygrana);
     ON_pause:=false;
   end;
-  if TRYB=18 then fEkran.eOff;
+  if TRYB=18 then begin eOff; fEkran.eOff; end;
   if TRYB=19 then
   begin
+    eTabInfo;
     fEkran.eTabInfo;
     case g_pytanie of
-       1: fEkran.Shape1.Visible:=true;
-       2: fEkran.Shape2.Visible:=true;
-       3: fEkran.Shape3.Visible:=true;
-       4: fEkran.Shape4.Visible:=true;
-       5: fEkran.Shape5.Visible:=true;
-       6: fEkran.Shape6.Visible:=true;
-       7: fEkran.Shape7.Visible:=true;
-       8: fEkran.Shape8.Visible:=true;
-       9: fEkran.Shape9.Visible:=true;
-      10: fEkran.Shape10.Visible:=true;
-      11: fEkran.Shape11.Visible:=true;
-      12: fEkran.Shape12.Visible:=true;
+       1: begin fEkran.Shape1.Visible:=true; Shape1.Visible:=true; end;
+       2: begin fEkran.Shape2.Visible:=true; Shape2.Visible:=true; end;
+       3: begin fEkran.Shape3.Visible:=true; Shape3.Visible:=true; end;
+       4: begin fEkran.Shape4.Visible:=true; Shape4.Visible:=true; end;
+       5: begin fEkran.Shape5.Visible:=true; Shape5.Visible:=true; end;
+       6: begin fEkran.Shape6.Visible:=true; Shape6.Visible:=true; end;
+       7: begin fEkran.Shape7.Visible:=true; Shape7.Visible:=true; end;
+       8: begin fEkran.Shape8.Visible:=true; Shape8.Visible:=true; end;
+       9: begin fEkran.Shape9.Visible:=true; Shape9.Visible:=true; end;
+      10: begin fEkran.Shape10.Visible:=true; Shape10.Visible:=true; end;
+      11: begin fEkran.Shape11.Visible:=true; Shape11.Visible:=true; end;
+      12: begin fEkran.Shape12.Visible:=true; Shape12.Visible:=true; end;
     end;
-    fEkran.x1.Visible:=not g_kolo_1;
-    fEkran.x2.Visible:=not g_kolo_2;
-    fEkran.x3.Visible:=not g_kolo_3;
+    x1.Visible:=not g_kolo_1;
+    x2.Visible:=not g_kolo_2;
+    x3.Visible:=not g_kolo_3;
+    fEkran.x1.Visible:=x1.Visible;
+    fEkran.x2.Visible:=x2.Visible;
+    fEkran.x3.Visible:=x3.Visible;
   end;
   if TRYB=20 then
   begin
     Label14.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana))+' '+CL_DIAMENT;
     Label16.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana_gwarantowana))+' '+CL_DIAMENT;
+    ePodsumowanie(g_wygrana,true);
     fEkran.ePodsumowanie(g_wygrana,true);
     if g_wygrana=1000000 then sound(5) else
     if g_wygrana=0 then sound(6) else sound(4);
     if g_wygrana=1000000 then music(5) else music(4);
     ON_pause:=false;
   end;
-  if TRYB=21 then fEkran.eOff;
+  if TRYB=21 then
+  begin
+    eOff;
+    fEkran.eOff;
+  end;
   (* informacja *)
   i0.Font.Bold:=TRYB=0;
   i1.Font.Bold:=TRYB=1;
@@ -681,11 +876,17 @@ end;
 
 procedure TFServer.ekran_info(aLp: integer);
 begin
+  Shape2.Visible:=aLp=1;
   fEkran.Shape2.Visible:=aLp=1;
+  Shape7.Visible:=aLp=2;
   fEkran.Shape7.Visible:=aLp=2;
+  Shape12.Visible:=aLp=3;
   fEkran.Shape12.Visible:=aLp=3;
+  Shape21.Visible:=aLp=4;
   fEkran.Shape21.Visible:=aLp=4;
+  Shape22.Visible:=aLp=5;
   fEkran.Shape22.Visible:=aLp=5;
+  Shape23.Visible:=aLp=6;
   fEkran.Shape23.Visible:=aLp=6;
   tInfo.Enabled:=false;
   tInfo.Enabled:=true;
@@ -726,6 +927,10 @@ begin
     sound(1);
     g_blokada_glosowania:=true;
     ser.SendString('o$all$goblock');
+    gl5.Progress:=gl1.Progress;
+    gl6.Progress:=gl2.Progress;
+    gl7.Progress:=gl3.Progress;
+    gl8.Progress:=gl4.Progress;
     fEkran.gl1.Progress:=gl1.Progress;
     fEkran.gl2.Progress:=gl2.Progress;
     fEkran.gl3.Progress:=gl3.Progress;
@@ -759,50 +964,52 @@ var
 begin
   if aLp=-1 then
   begin
-    fEkran.pytanie.Visible:=false;
-    fEkran.Label_a.Visible:=false;
-    fEkran.Label_b.Visible:=false;
-    fEkran.Label_c.Visible:=false;
-    fEkran.Label_d.Visible:=false;
-    fEkran.odp_a.Visible:=false;
-    fEkran.odp_b.Visible:=false;
-    fEkran.odp_c.Visible:=false;
-    fEkran.odp_d.Visible:=false;
+    ppytanie.Visible:=false; fEkran.pytanie.Visible:=false;
+    Label_a.Visible:=false;  fEkran.Label_a.Visible:=false;
+    Label_b.Visible:=false;  fEkran.Label_b.Visible:=false;
+    Label_c.Visible:=false;  fEkran.Label_c.Visible:=false;
+    Label_d.Visible:=false;  fEkran.Label_d.Visible:=false;
+    odp_a.Visible:=false;    fEkran.odp_a.Visible:=false;
+    odp_b.Visible:=false;    fEkran.odp_b.Visible:=false;
+    odp_c.Visible:=false;    fEkran.odp_c.Visible:=false;
+    odp_d.Visible:=false;    fEkran.odp_d.Visible:=false;
+
     case aNr of
         1..3: begin a:=1; b:=1; end;
         4..6: begin a:=1; b:=2; end;
        7..10: begin a:=2; b:=2; end;
       11..12: begin a:=2; b:=3; end;
     end;
-    db_pytanie.ParamByName('t1').AsInteger:=a;
-    db_pytanie.ParamByName('t2').AsInteger:=b;
-    db_pytanie.Open;
-    a:=db_pytanie.RecordCount;
+    dbpyt.ParamByName('t1').AsInteger:=a;
+    dbpyt.ParamByName('t2').AsInteger:=b;
+    dbpyt.Open;
+
+    a:=dbpyt.RecordCount;
     b:=random(a);
-    //writeln(a,' -> ',b);
-    for i:=1 to b do if not db_pytanie.EOF then db_pytanie.Next;
-    //writeln('po petli');
-    fEkran.pytanie.Caption:=db_pytaniepytanie.AsString;
-    fEkran.odp_a.Caption:=db_pytanieodp_1.AsString;
-    fEkran.odp_b.Caption:=db_pytanieodp_2.AsString;
-    fEkran.odp_c.Caption:=db_pytanieodp_3.AsString;
-    fEkran.odp_d.Caption:=db_pytanieodp_4.AsString;
-    g_odpowiedz:=db_pytanieodpowiedz.AsInteger;
+    for i:=1 to b do if not dbpyt.EOF then dbpyt.Next;
+    ppytanie.Caption:=dbpytpytanie.AsString; fEkran.pytanie.Caption:=dbpytpytanie.AsString;
+    odp_a.Caption:=dbpytodp_1.AsString;      fEkran.odp_a.Caption:=dbpytodp_1.AsString;
+    odp_b.Caption:=dbpytodp_2.AsString;      fEkran.odp_b.Caption:=dbpytodp_2.AsString;
+    odp_c.Caption:=dbpytodp_3.AsString;      fEkran.odp_c.Caption:=dbpytodp_3.AsString;
+    odp_d.Caption:=dbpytodp_4.AsString;      fEkran.odp_d.Caption:=dbpytodp_4.AsString;
+    g_odpowiedz:=dbpytodpowiedz.AsInteger;
     if CheckBox3.Checked then
     begin
-      db_pytanie.Edit;
-      db_pytanieuzyte.AsString:=FormatDateTime('yyyy-mm-dd hh:nn:ss',now);
-      db_pytanie.Post;
+      dbpyt.Edit;
+      dbpytuzyte.AsString:=FormatDateTime('yyyy-mm-dd hh:nn:ss',now);
+      dbpyt.Post;
     end;
-    db_pytanie.Close;
-    fEkran.odp_a.Font.Color:=clWhite;
-    fEkran.odp_b.Font.Color:=clWhite;
-    fEkran.odp_c.Font.Color:=clWhite;
-    fEkran.odp_d.Font.Color:=clWhite;
-    fEkran.Panel1.Color:=clBlue;
-    fEkran.Panel2.Color:=clBlue;
-    fEkran.Panel3.Color:=clBlue;
-    fEkran.Panel4.Color:=clBlue;
+    dbpyt.Close;
+
+    odp_a.Font.Color:=clWhite; fEkran.odp_a.Font.Color:=clWhite;
+    odp_b.Font.Color:=clWhite; fEkran.odp_b.Font.Color:=clWhite;
+    odp_c.Font.Color:=clWhite; fEkran.odp_c.Font.Color:=clWhite;
+    odp_d.Font.Color:=clWhite; fEkran.odp_d.Font.Color:=clWhite;
+    Panel6.Color:=clBlue;      fEkran.Panel1.Color:=clBlue;
+    Panel7.Color:=clBlue;      fEkran.Panel2.Color:=clBlue;
+    Panel8.Color:=clBlue;      fEkran.Panel3.Color:=clBlue;
+    Panel9.Color:=clBlue;      fEkran.Panel4.Color:=clBlue;
+
     (* na panelu sterującym *)
     Label2.Color:=clNone;
     Label3.Color:=clNone;
@@ -820,16 +1027,16 @@ begin
     Label10.Caption:='';
   end else begin
     case aLp of
-      0: fEkran.pytanie.Visible:=true;
-      1: fEkran.odp_a.Visible:=true;
-      2: fEkran.odp_b.Visible:=true;
-      3: fEkran.odp_c.Visible:=true;
-      4: fEkran.odp_d.Visible:=true;
+      0: begin ppytanie.Visible:=true; fEkran.pytanie.Visible:=true; end;
+      1: begin odp_a.Visible:=true;    fEkran.odp_a.Visible:=true; end;
+      2: begin odp_b.Visible:=true;    fEkran.odp_b.Visible:=true; end;
+      3: begin odp_c.Visible:=true;    fEkran.odp_c.Visible:=true; end;
+      4: begin odp_d.Visible:=true;    fEkran.odp_d.Visible:=true; end;
     end;
-    fEkran.Label_a.Visible:=fEkran.odp_a.Visible;
-    fEkran.Label_b.Visible:=fEkran.odp_b.Visible;
-    fEkran.Label_c.Visible:=fEkran.odp_c.Visible;
-    fEkran.Label_d.Visible:=fEkran.odp_d.Visible;
+    Label_a.Visible:=odp_a.Visible; fEkran.Label_a.Visible:=fEkran.odp_a.Visible;
+    Label_b.Visible:=odp_b.Visible; fEkran.Label_b.Visible:=fEkran.odp_b.Visible;
+    Label_c.Visible:=odp_c.Visible; fEkran.Label_c.Visible:=fEkran.odp_c.Visible;
+    Label_d.Visible:=odp_d.Visible; fEkran.Label_d.Visible:=fEkran.odp_d.Visible;
     (* na panelu sterującym *)
     case aLp of
       0: Label2.Caption:=fEkran.pytanie.Caption;
@@ -901,16 +1108,16 @@ begin
     4: Label12.Caption:='D'+s;
   end;
   case aNr of
-    1: fEkran.Panel1.Color:=CL_ZAZNACZENIE;
-    2: fEkran.Panel2.Color:=CL_ZAZNACZENIE;
-    3: fEkran.Panel3.Color:=CL_ZAZNACZENIE;
-    4: fEkran.Panel4.Color:=CL_ZAZNACZENIE;
+    1: begin Panel6.Color:=CL_ZAZNACZENIE; fEkran.Panel1.Color:=CL_ZAZNACZENIE; end;
+    2: begin Panel7.Color:=CL_ZAZNACZENIE; fEkran.Panel2.Color:=CL_ZAZNACZENIE; end;
+    3: begin Panel8.Color:=CL_ZAZNACZENIE; fEkran.Panel3.Color:=CL_ZAZNACZENIE; end;
+    4: begin Panel9.Color:=CL_ZAZNACZENIE; fEkran.Panel4.Color:=CL_ZAZNACZENIE; end;
   end;
   case aNr of
-    1: fEkran.odp_a.Font.Color:=clBlack;
-    2: fEkran.odp_b.Font.Color:=clBlack;
-    3: fEkran.odp_c.Font.Color:=clBlack;
-    4: fEkran.odp_d.Font.Color:=clBlack;
+    1: begin odp_a.Font.Color:=clBlack; fEkran.odp_a.Font.Color:=clBlack; end;
+    2: begin odp_b.Font.Color:=clBlack; fEkran.odp_b.Font.Color:=clBlack; end;
+    3: begin odp_c.Font.Color:=clBlack; fEkran.odp_c.Font.Color:=clBlack; end;
+    4: begin odp_d.Font.Color:=clBlack; fEkran.odp_d.Font.Color:=clBlack; end;
   end;
 end;
 

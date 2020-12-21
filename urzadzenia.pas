@@ -13,18 +13,21 @@ type
 
   TuuMilionerzyTest = procedure(aTryb: integer) of object;
   TuuMilionerzyVar = procedure(var aTryb,aGPytanie: integer; var aOnPause,aGStop: boolean) of object;
+  TuuMilionerzySetGPytanie = procedure(aGPytanie: integer) of object;
 
   Tuu = class(TDataModule)
     mpilot: TPresentation;
     procedure mpilotClick(aButton: integer; var aTestDblClick: boolean);
     procedure mpilotClickLong(aButton: integer; aDblClick: boolean);
   private
+    FMilionerzySetGPytanie: TuuMilionerzySetGPytanie;
     FMilionerzyVar: TuuMilionerzyVar;
     FMilionerzyTest: TuuMilionerzyTest;
   public
   published
     property OnMilionerzyTest: TuuMilionerzyTest read FMilionerzyTest write FMilionerzyTest;
     property OnMilionerzyVar: TuuMilionerzyVar read FMilionerzyVar write FMilionerzyVar;
+    property OnMilionerzySetGPytanie: TuuMilionerzySetGPytanie read FMilionerzySetGPytanie write FMilionerzySetGPytanie;
   end;
 
 var
@@ -95,6 +98,7 @@ begin
     19: if litera=1 then
         begin
           inc(g_pytanie);
+          FMilionerzySetGPytanie(g_pytanie);
           FMilionerzyTest(8);
         end else if litera=4 then FMilionerzyTest(20);
     20: if litera=1 then FMilionerzyTest(21);

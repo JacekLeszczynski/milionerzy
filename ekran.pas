@@ -46,6 +46,7 @@ type
     Label31: TLabel;
     Label32: TLabel;
     Label33: TLabel;
+    Label34: TLabel;
     Panel10: TPanel;
     Panel11: TPanel;
     Panel9: TPanel;
