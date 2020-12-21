@@ -29,6 +29,7 @@ type
 
 const
   CL_ZAZNACZENIE = clGray;
+  CL_DIAMENT = '♦';
 
 var (* program *)
   dm: Tdm;

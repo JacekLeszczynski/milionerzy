@@ -177,7 +177,7 @@ begin
   eOff;
   if aKoniec then s:='Na koncie: ' else s:='';
   Panel7.Visible:=true;
-  podsumowanie.Caption:=s+FormatFloat('### ### ##0',aKwota)+' zł.';
+  podsumowanie.Caption:=s+SpacesToPoints(FormatFloat('### ### ##0',aKwota))+' '+CL_DIAMENT;
 end;
 
 procedure TfEkran.eCzas30(aPokaz: boolean);

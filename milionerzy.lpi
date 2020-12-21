@@ -250,7 +250,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="milionerzy.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -290,6 +290,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="urzadzenia.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="uu"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

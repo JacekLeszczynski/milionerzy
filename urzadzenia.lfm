@@ -1,0 +1,14 @@
+object uu: Tuu
+  OldCreateOrder = False
+  Height = 187
+  HorizontalOffset = 364
+  VerticalOffset = 544
+  Width = 251
+  object mpilot: TPresentation
+    Device = dvGembird
+    OnClick = mpilotClick
+    OnClickLong = mpilotClickLong
+    Left = 48
+    Top = 16
+  end
+end
