@@ -1,7 +1,7 @@
 object FClient: TFClient
-  Left = 350
+  Left = 352
   Height = 411
-  Top = 124
+  Top = 131
   Width = 783
   Caption = 'Jahu - Milionerzy (client)'
   ClientHeight = 384
@@ -657,7 +657,7 @@ object FClient: TFClient
       Caption = 'Inne'
       object MenuItem9: TMenuItem
         Caption = 'Informacje'
-        Enabled = False
+        OnClick = MenuItem9Click
       end
     end
   end

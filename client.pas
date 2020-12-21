@@ -73,6 +73,7 @@ type
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
+    procedure MenuItem9Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
@@ -98,7 +99,7 @@ var
 implementation
 
 uses
-  ecode, serwis, cverinfo;
+  ecode, serwis, cverinfo, about;
 
 {$R *.lfm}
 
@@ -337,6 +338,12 @@ end;
 procedure TFClient.MenuItem5Click(Sender: TObject);
 begin
   close;
+end;
+
+procedure TFClient.MenuItem9Click(Sender: TObject);
+begin
+  FAbout:=TFAbout.Create(self);
+  FAbout.ShowModal;
 end;
 
 procedure TFClient.SpeedButton1Click(Sender: TObject);

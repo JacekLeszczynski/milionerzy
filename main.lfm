@@ -1,7 +1,7 @@
 object FServer: TFServer
-  Left = 361
+  Left = 569
   Height = 482
-  Top = 379
+  Top = 444
   Width = 880
   BorderStyle = bsSingle
   Caption = 'Panel kontrolny'
