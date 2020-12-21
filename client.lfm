@@ -1,11 +1,13 @@
 object FClient: TFClient
   Left = 350
-  Height = 349
+  Height = 411
   Top = 124
-  Width = 766
+  Width = 783
   Caption = 'Jahu - Milionerzy (client)'
-  ClientHeight = 322
-  ClientWidth = 766
+  ClientHeight = 384
+  ClientWidth = 783
+  Constraints.MinHeight = 411
+  Constraints.MinWidth = 630
   Menu = MainMenu1
   OnCreate = FormCreate
   SessionProperties = 'eImie.Text;eSkad.Text;Top;Left;Height;Width'
@@ -13,8 +15,8 @@ object FClient: TFClient
   object StatusBar: TStatusBar
     Left = 0
     Height = 20
-    Top = 302
-    Width = 766
+    Top = 364
+    Width = 783
     Font.Height = -13
     Font.Name = 'Monospace'
     Panels = <    
@@ -35,100 +37,70 @@ object FClient: TFClient
   end
   object Panel1: TPanel
     Left = 0
-    Height = 64
+    Height = 53
     Top = 0
-    Width = 766
+    Width = 783
     Align = alTop
-    ClientHeight = 64
-    ClientWidth = 766
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 53
+    ClientWidth = 783
     TabOrder = 1
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
       AnchorSideTop.Control = Panel1
-      Left = 9
-      Height = 17
-      Top = 5
+      Left = 8
+      Height = 19
+      Top = 4
       Width = 33
       BorderSpacing.Left = 8
       BorderSpacing.Top = 4
       Caption = 'Imię:'
+      Constraints.MinHeight = 19
       ParentColor = False
     end
     object eImie: TEdit
       AnchorSideLeft.Control = Label1
       AnchorSideTop.Control = Label1
       AnchorSideTop.Side = asrBottom
-      Left = 9
+      Left = 8
       Height = 30
-      Top = 22
+      Top = 23
       Width = 241
       TabOrder = 0
     end
-    object Label2: TLabel
-      AnchorSideLeft.Control = eImie
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = Label1
-      Left = 258
-      Height = 17
-      Top = 5
-      Width = 153
-      BorderSpacing.Left = 8
-      Caption = 'Skąd (np. miejscowość):'
-      ParentColor = False
-    end
-    object eSkad: TEdit
-      AnchorSideLeft.Control = Label2
-      AnchorSideTop.Control = Label2
-      AnchorSideTop.Side = asrBottom
-      Left = 258
-      Height = 30
-      Top = 22
-      Width = 241
-      TabOrder = 1
-    end
-    object BitBtn1: TBitBtn
-      AnchorSideLeft.Control = eSkad
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = eSkad
-      Left = 507
-      Height = 30
-      Top = 22
-      Width = 75
-      BorderSpacing.Left = 8
-      Caption = 'Połącz'
-      OnClick = BitBtn1Click
-      TabOrder = 2
-    end
   end
   object Panel2: TPanel
-    AnchorSideLeft.Control = Panel1
-    AnchorSideTop.Control = Panel1
+    AnchorSideLeft.Control = Panel3
+    AnchorSideTop.Control = Panel3
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Panel1
+    AnchorSideRight.Control = Panel3
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar
     Left = 8
-    Height = 230
-    Top = 68
-    Width = 750
+    Height = 174
+    Top = 186
+    Width = 767
     Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Left = 8
     BorderSpacing.Top = 4
-    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
     BevelOuter = bvNone
-    ClientHeight = 230
-    ClientWidth = 750
+    ClientHeight = 174
+    ClientWidth = 767
     TabOrder = 2
     object Label3: TLabel
       AnchorSideLeft.Control = Panel2
       AnchorSideTop.Control = Panel2
       Left = 0
-      Height = 17
+      Height = 15
       Top = 0
-      Width = 53
+      Width = 64
       Caption = 'Pytanie:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
       ParentColor = False
+      ParentFont = False
     end
     object Label4: TLabel
       AnchorSideLeft.Control = Label3
@@ -136,34 +108,40 @@ object FClient: TFClient
       AnchorSideTop.Control = Label3
       AnchorSideRight.Control = Panel2
       AnchorSideRight.Side = asrBottom
-      Left = 57
-      Height = 17
+      Left = 68
+      Height = 40
       Top = 0
-      Width = 693
+      Width = 699
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
-      Constraints.MinHeight = 17
+      Color = 15003379
+      Constraints.MinHeight = 40
       Font.Color = clBlue
       Layout = tlCenter
       ParentColor = False
       ParentFont = False
+      Transparent = False
       WordWrap = True
     end
     object Label5: TLabel
       AnchorSideTop.Control = Label6
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Label6
-      Left = 40
-      Height = 17
-      Top = 27
-      Width = 13
+      Left = 48
+      Height = 15
+      Top = 44
+      Width = 16
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 2
       BorderSpacing.Top = 2
       BorderSpacing.Right = 4
       Caption = 'A:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
       ParentColor = False
+      ParentFont = False
     end
     object Label6: TLabel
       AnchorSideLeft.Control = Label4
@@ -171,33 +149,38 @@ object FClient: TFClient
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = Label4
       AnchorSideRight.Side = asrBottom
-      Left = 57
+      Left = 68
       Height = 20
-      Top = 25
-      Width = 693
+      Top = 41
+      Width = 699
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 8
-      BorderSpacing.Bottom = 2
+      BorderSpacing.Top = 1
+      Color = 15003379
       Constraints.MinHeight = 20
       Layout = tlCenter
       ParentColor = False
+      Transparent = False
       WordWrap = True
     end
     object Label7: TLabel
       AnchorSideTop.Control = Label8
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Label8
-      Left = 40
-      Height = 17
-      Top = 49
-      Width = 13
+      Left = 48
+      Height = 15
+      Top = 65
+      Width = 16
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 2
       BorderSpacing.Top = 2
       BorderSpacing.Right = 4
       Caption = 'B:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
       ParentColor = False
+      ParentFont = False
     end
     object Label8: TLabel
       AnchorSideLeft.Control = Label4
@@ -205,16 +188,18 @@ object FClient: TFClient
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = Label4
       AnchorSideRight.Side = asrBottom
-      Left = 57
+      Left = 68
       Height = 20
-      Top = 47
-      Width = 693
+      Top = 62
+      Width = 699
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 2
+      BorderSpacing.Top = 1
+      Color = 15003379
       Constraints.MinHeight = 20
       Layout = tlCenter
       ParentColor = False
+      Transparent = False
       WordWrap = True
     end
     object Label9: TLabel
@@ -223,73 +208,85 @@ object FClient: TFClient
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = Label4
       AnchorSideRight.Side = asrBottom
-      Left = 57
+      Left = 68
       Height = 20
-      Top = 69
-      Width = 693
+      Top = 83
+      Width = 699
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 2
+      BorderSpacing.Top = 1
+      Color = 15003379
       Constraints.MinHeight = 20
       Layout = tlCenter
       ParentColor = False
+      Transparent = False
       WordWrap = True
     end
     object Label10: TLabel
       AnchorSideTop.Control = Label9
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Label9
-      Left = 40
-      Height = 17
-      Top = 71
-      Width = 13
+      Left = 48
+      Height = 15
+      Top = 86
+      Width = 16
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 2
       BorderSpacing.Top = 2
       BorderSpacing.Right = 4
       Caption = 'C:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
       ParentColor = False
+      ParentFont = False
     end
     object Label11: TLabel
       AnchorSideTop.Control = Label12
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = Label12
-      Left = 39
-      Height = 17
-      Top = 92
-      Width = 14
+      Left = 48
+      Height = 15
+      Top = 107
+      Width = 16
       Anchors = [akTop, akRight]
       BorderSpacing.Left = 2
       BorderSpacing.Top = 2
       BorderSpacing.Right = 4
       Caption = 'D:'
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
       ParentColor = False
+      ParentFont = False
     end
     object Label12: TLabel
       AnchorSideLeft.Control = Label4
-      AnchorSideTop.Control = Label10
+      AnchorSideTop.Control = Label9
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = Label4
       AnchorSideRight.Side = asrBottom
-      Left = 57
+      Left = 68
       Height = 20
-      Top = 90
-      Width = 693
+      Top = 104
+      Width = 699
       Alignment = taCenter
       Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 2
+      BorderSpacing.Top = 1
+      Color = 15003379
       Constraints.MinHeight = 20
       Layout = tlCenter
       ParentColor = False
+      Transparent = False
       WordWrap = True
     end
     object SpeedButton1: TSpeedButton
       AnchorSideLeft.Control = Label12
       AnchorSideTop.Control = Label12
       AnchorSideTop.Side = asrBottom
-      Left = 57
+      Left = 68
       Height = 37
-      Top = 114
+      Top = 128
       Width = 60
       BorderSpacing.Top = 4
       Enabled = False
@@ -303,9 +300,9 @@ object FClient: TFClient
       AnchorSideLeft.Control = SpeedButton1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton1
-      Left = 117
+      Left = 128
       Height = 37
-      Top = 114
+      Top = 128
       Width = 60
       Enabled = False
       Font.Height = -16
@@ -318,9 +315,9 @@ object FClient: TFClient
       AnchorSideLeft.Control = SpeedButton2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton2
-      Left = 177
+      Left = 188
       Height = 37
-      Top = 114
+      Top = 128
       Width = 60
       Enabled = False
       Font.Height = -16
@@ -333,9 +330,9 @@ object FClient: TFClient
       AnchorSideLeft.Control = SpeedButton3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton3
-      Left = 237
+      Left = 248
       Height = 37
-      Top = 114
+      Top = 128
       Width = 60
       Enabled = False
       Font.Height = -16
@@ -349,14 +346,15 @@ object FClient: TFClient
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton4
       AnchorSideTop.Side = asrCenter
-      Left = 305
-      Height = 22
-      Top = 121
-      Width = 242
+      Left = 316
+      Height = 24
+      Top = 134
+      Width = 264
       BorderSpacing.Left = 8
       Caption = 'Zaznaczyłeś odpowiedź:'
+      Constraints.MinHeight = 24
       Font.Height = -20
-      Font.Name = 'Sans'
+      Font.Name = 'Monospace'
       ParentColor = False
       ParentFont = False
     end
@@ -364,18 +362,215 @@ object FClient: TFClient
       AnchorSideLeft.Control = Label13
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Label13
-      Left = 555
-      Height = 22
-      Top = 121
+      Left = 588
+      Height = 24
+      Top = 134
       Width = 15
       BorderSpacing.Left = 8
-      Constraints.MinHeight = 22
+      Constraints.MinHeight = 24
       Constraints.MinWidth = 15
       Font.Height = -20
-      Font.Name = 'Sans'
+      Font.Name = 'Monospace'
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
+    end
+  end
+  object Panel3: TPanel
+    AnchorSideLeft.Control = Panel1
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Panel1
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 125
+    Top = 57
+    Width = 767
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 8
+    ClientHeight = 125
+    ClientWidth = 767
+    Color = clMoneyGreen
+    ParentColor = False
+    TabOrder = 3
+    object Label2: TLabel
+      AnchorSideLeft.Control = Panel3
+      AnchorSideTop.Control = Panel3
+      Left = 3
+      Height = 19
+      Top = 3
+      Width = 531
+      BorderSpacing.Left = 2
+      BorderSpacing.Top = 2
+      Caption = 'Wyniki głosowania publiczności, gdy zostanie wybrane koło "Pomoc Publiczności":'
+      Constraints.MinHeight = 19
+      Font.Color = clBlack
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label18: TLabel
+      AnchorSideLeft.Control = Label2
+      AnchorSideTop.Control = Label2
+      AnchorSideTop.Side = asrBottom
+      Left = 11
+      Height = 15
+      Top = 28
+      Width = 16
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 4
+      Caption = 'A:'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object gl1: TplGauge
+      AnchorSideLeft.Control = Label18
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label18
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Label15
+      Left = 31
+      Height = 23
+      Top = 24
+      Width = 722
+      Color = clDefault
+      BarColor = clGray
+      Progress = 0
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Anchors = [akTop, akLeft, akRight]
+    end
+    object Label19: TLabel
+      AnchorSideLeft.Control = Label18
+      AnchorSideTop.Control = Label18
+      AnchorSideTop.Side = asrBottom
+      Left = 11
+      Height = 15
+      Top = 51
+      Width = 16
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 4
+      Caption = 'B:'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object gl2: TplGauge
+      AnchorSideLeft.Control = Label19
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label19
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = gl1
+      AnchorSideRight.Side = asrBottom
+      Left = 31
+      Height = 23
+      Top = 47
+      Width = 722
+      Color = clDefault
+      BarColor = clGray
+      Progress = 0
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Anchors = [akTop, akLeft, akRight]
+    end
+    object Label20: TLabel
+      AnchorSideLeft.Control = Label19
+      AnchorSideTop.Control = Label19
+      AnchorSideTop.Side = asrBottom
+      Left = 11
+      Height = 15
+      Top = 74
+      Width = 16
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 4
+      Caption = 'C:'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object gl3: TplGauge
+      AnchorSideLeft.Control = Label20
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label20
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = gl1
+      AnchorSideRight.Side = asrBottom
+      Left = 31
+      Height = 23
+      Top = 70
+      Width = 722
+      Color = clDefault
+      BarColor = clGray
+      Progress = 0
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Anchors = [akTop, akLeft, akRight]
+    end
+    object Label21: TLabel
+      AnchorSideLeft.Control = Label20
+      AnchorSideTop.Control = Label20
+      AnchorSideTop.Side = asrBottom
+      Left = 11
+      Height = 15
+      Top = 97
+      Width = 16
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 4
+      BorderSpacing.Bottom = 12
+      Caption = 'D:'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Monospace'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object gl4: TplGauge
+      AnchorSideLeft.Control = Label21
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label21
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = gl1
+      AnchorSideRight.Side = asrBottom
+      Left = 31
+      Height = 23
+      Top = 93
+      Width = 722
+      Color = clDefault
+      BarColor = clGray
+      Progress = 0
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Anchors = [akTop, akLeft, akRight]
+    end
+    object Label15: TLabel
+      AnchorSideTop.Control = Panel3
+      AnchorSideRight.Control = Panel3
+      AnchorSideRight.Side = asrBottom
+      Left = 753
+      Height = 1
+      Top = 1
+      Width = 1
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 12
+      ParentColor = False
     end
   end
   object cli: TNetSocket
@@ -387,6 +582,7 @@ object FClient: TFClient
     ReuseAddress = True
     Timeout = 0
     SSLMethod = msSSLv2or3
+    OnProcessMessage = cliProcessMessage
     OnConnect = cliConnect
     OnDisconnect = cliDisconnect
     OnReceiveString = cliReceiveString
@@ -425,12 +621,12 @@ object FClient: TFClient
     Interval = 250
     OnTimer = tCzasTimer
     OnStopTimer = tCzasStopTimer
-    Left = 496
-    Top = 104
+    Left = 544
+    Top = 8
   end
   object MainMenu1: TMainMenu
-    Left = 600
-    Top = 200
+    Left = 472
+    Top = 8
     object MenuItem1: TMenuItem
       Caption = 'Menu'
       object MenuItem2: TMenuItem
@@ -442,11 +638,12 @@ object FClient: TFClient
       end
       object MenuItem3: TMenuItem
         Caption = 'Połącz'
-        Enabled = False
+        OnClick = MenuItem3Click
       end
       object MenuItem4: TMenuItem
         Caption = 'Rozłącz'
         Enabled = False
+        OnClick = MenuItem4Click
       end
       object MenuItem6: TMenuItem
         Caption = '-'

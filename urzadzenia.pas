@@ -17,8 +17,10 @@ type
 
   Tuu = class(TDataModule)
     mpilot: TPresentation;
+    ytplayer: TPresentation;
     procedure mpilotClick(aButton: integer; var aTestDblClick: boolean);
     procedure mpilotClickLong(aButton: integer; aDblClick: boolean);
+    procedure ytplayerClick(aButton: integer; var aTestDblClick: boolean);
   private
     FMilionerzySetGPytanie: TuuMilionerzySetGPytanie;
     FMilionerzyVar: TuuMilionerzyVar;
@@ -51,6 +53,17 @@ begin
   end;
 end;
 
+procedure Tuu.ytplayerClick(aButton: integer; var aTestDblClick: boolean);
+var
+  a: integer;
+begin
+  a:=aButton; if a=5 then a:=4;
+  if a=1 then ytplayer.SendKey(ord('9')) else
+  if a=2 then ytplayer.SendKey(ord('8')) else
+  if a=3 then ytplayer.SendKey(ord('0')) else
+  if a=4 then ytplayer.SendKey(ord('`'));
+end;
+
 procedure Tuu.mpilotClick(aButton: integer; var aTestDblClick: boolean
   );
 var
@@ -58,8 +71,6 @@ var
   TRYB,g_pytanie: integer;
   ON_pause,g_stop: boolean;
 begin
-  if not assigned(FMilionerzyTest) then exit;
-  if not assigned(FMilionerzyVar) then exit;
   FMilionerzyVar(TRYB,g_pytanie,ON_pause,g_stop);
   case aButton of
     1: litera:=1;

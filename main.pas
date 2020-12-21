@@ -19,6 +19,7 @@ type
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
     dbpyttrudnosc: TLargeintField;
     dbpytuzyte: TMemoField;
     gl5: TplGauge;
@@ -83,6 +84,7 @@ type
     Label75: TLabel;
     Label76: TLabel;
     Label77: TLabel;
+    Label78: TLabel;
     Panel12: TPanel;
     Panel13: TPanel;
     Panel14: TPanel;
@@ -121,34 +123,11 @@ type
     gl2: TplGauge;
     gl3: TplGauge;
     gl4: TplGauge;
-    GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
     GroupBox5: TGroupBox;
-    i10: TLabel;
-    i11: TLabel;
-    i12: TLabel;
-    i13: TLabel;
-    i14: TLabel;
-    i15: TLabel;
-    i16: TLabel;
-    i17: TLabel;
-    i18: TLabel;
-    i19: TLabel;
-    i20: TLabel;
-    i21: TLabel;
-    i8: TLabel;
-    i9: TLabel;
     Label1: TLabel;
-    i0: TLabel;
-    i1: TLabel;
-    i2: TLabel;
-    i3: TLabel;
-    i4: TLabel;
-    i5: TLabel;
-    i6: TLabel;
-    i7: TLabel;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
@@ -191,6 +170,8 @@ type
     StatusBar: TStatusBar;
     tSer: TTimer;
     uELED1: TuELED;
+    led_null_screen: TuELED;
+    led_rozgrywka: TuELED;
     x1: TLabel;
     x2: TLabel;
     x3: TLabel;
@@ -315,17 +296,11 @@ end;
 procedure TFServer.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
   );
 begin
-  if ON_gra then
-  begin
-    uu.mpilot.Execute(Key);
-    //pilot.Execute(Key);
-    Key:=0;
-  end else begin
-    case Key of
-      VK_F9: okno_config;
-    end;
-    Key:=0;
+  case Key of
+    VK_F9: okno_config;
+    else if CheckBox4.Checked then uu.mpilot.Execute(Key) else uu.ytplayer.Execute(Key);
   end;
+  Key:=0;
 end;
 
 procedure TFServer.serCryptString(var aText: string);
@@ -850,28 +825,8 @@ begin
     fEkran.eOff;
   end;
   (* informacja *)
-  i0.Font.Bold:=TRYB=0;
-  i1.Font.Bold:=TRYB=1;
-  i2.Font.Bold:=TRYB=2;
-  i3.Font.Bold:=TRYB=3;
-  i4.Font.Bold:=TRYB=4;
-  i5.Font.Bold:=TRYB=5;
-  i6.Font.Bold:=TRYB=6;
-  i7.Font.Bold:=TRYB=7;
-  i8.Font.Bold:=TRYB=8;
-  i9.Font.Bold:=TRYB=9;
-  i10.Font.Bold:=TRYB=10;
-  i11.Font.Bold:=TRYB=11;
-  i12.Font.Bold:=TRYB=12;
-  i13.Font.Bold:=TRYB=13;
-  i14.Font.Bold:=TRYB=14;
-  i15.Font.Bold:=TRYB=15;
-  i16.Font.Bold:=TRYB=16;
-  i17.Font.Bold:=TRYB=17;
-  i18.Font.Bold:=TRYB=18;
-  i19.Font.Bold:=TRYB=19;
-  i20.Font.Bold:=TRYB=20;
-  i21.Font.Bold:=TRYB=21;
+  led_null_screen.Active:=(TRYB=0) or (TRYB=8) or (TRYB=18);
+  led_rozgrywka.Active:=(TRYB>=9) and (TRYB<=15);
 end;
 
 procedure TFServer.ekran_info(aLp: integer);
@@ -906,6 +861,7 @@ procedure TFServer.CheckBox1Change(Sender: TObject);
 begin
   ON_ekran:=CheckBox1.Checked;
   if ON_ekran then fEkran.Show else fEkran.Hide;
+  led_null_screen.Active:=ON_ekran;
 end;
 
 procedure TFServer.ButtOdpNow(Sender: TObject);
@@ -936,6 +892,7 @@ begin
     fEkran.gl3.Progress:=gl3.Progress;
     fEkran.gl4.Progress:=gl4.Progress;
     GroupBox4.Enabled:=false;
+    ser.SendString('o$all$glosowanie$'+IntToStr(gl1.Progress)+'$'+IntToStr(gl2.Progress)+'$'+IntToStr(gl3.Progress)+'$'+IntToStr(gl4.Progress));
   end;
   aktywacja_odpowiedzi(true,true);
 end;
@@ -1059,6 +1016,7 @@ end;
 
 procedure TFServer.okno_config;
 begin
+  if CheckBox3.Checked then exit;
   FKonfiguracja:=TFKonfiguracja.Create(self);
   FKonfiguracja.ShowModal;
 end;

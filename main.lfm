@@ -1,11 +1,11 @@
 object FServer: TFServer
-  Left = 387
-  Height = 569
-  Top = 389
+  Left = 361
+  Height = 482
+  Top = 379
   Width = 880
   BorderStyle = bsSingle
   Caption = 'Panel kontrolny'
-  ClientHeight = 569
+  ClientHeight = 482
   ClientWidth = 880
   KeyPreview = True
   OnClose = FormClose
@@ -108,20 +108,19 @@ object FServer: TFServer
       OnClick = uELED1Click
     end
     object Label31: TLabel
-      AnchorSideTop.Control = uELED1
+      AnchorSideLeft.Control = led_null_screen
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = led_null_screen
       AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = uELED1
-      Left = 744
+      Left = 481
       Height = 12
       Top = 6
-      Width = 46
-      Anchors = [akTop, akRight]
-      BorderSpacing.Right = 4
-      Caption = 'Serwer:'
+      Width = 103
+      BorderSpacing.Left = 2
+      Caption = 'EKRAN JEST PUSTY'
       Font.Color = clGray
       Font.Height = -11
       Font.Name = 'Sans'
-      Font.Style = [fsBold, fsItalic]
       ParentColor = False
       ParentFont = False
     end
@@ -137,355 +136,59 @@ object FServer: TFServer
       Caption = 'Gra na żywo'
       TabOrder = 1
     end
-  end
-  object GroupBox1: TGroupBox
-    AnchorSideLeft.Control = Panel1
-    AnchorSideTop.Control = Panel1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Side = asrBottom
-    Left = 6
-    Height = 466
-    Top = 58
-    Width = 441
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 2
-    BorderSpacing.Top = 2
-    Caption = 'Informacja'
-    ClientHeight = 446
-    ClientWidth = 439
-    TabOrder = 1
-    object i0: TLabel
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = GroupBox1
-      AnchorSideRight.Control = GroupBox1
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 2
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Left = 12
-      BorderSpacing.Top = 2
-      BorderSpacing.Right = 8
-      Caption = '1. Pusty ekran'
-      Constraints.MinHeight = 20
+    object CheckBox4: TCheckBox
+      Left = 150
+      Height = 23
+      Top = 1
+      Width = 149
+      Caption = 'Rozmowa na skype'
+      TabOrder = 3
+    end
+    object led_null_screen: TuELED
+      Left = 455
+      Height = 24
+      Top = 0
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledSquare
+      Bright = True
+      Reflection = True
+      Color = clBlue
       ParentColor = False
     end
-    object i1: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i0
+    object led_rozgrywka: TuELED
+      AnchorSideLeft.Control = led_null_screen
+      AnchorSideTop.Control = led_null_screen
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 22
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '2. Ekran informacyjny'
-      Constraints.MinHeight = 20
+      Left = 455
+      Height = 24
+      Top = 24
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledSquare
+      Bright = True
+      Reflection = True
+      Color = clYellow
       ParentColor = False
     end
-    object i2: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i1
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 42
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - gwarantowane 1000 zł'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i3: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i2
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 62
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - gwarantowane 40 000 zł'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i4: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i3
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 82
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - gwarantowany MILION'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i5: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i4
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 102
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - koło "pół na pół"'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i6: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i5
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 122
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - koło "pytanie do publiczności"'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i7: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i6
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 142
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - koło "telefon do przyjaciela"'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i8: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i7
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 162
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '3. Pusty Ekran'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i9: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i8
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 182
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '4. Pytanie'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i10: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i9
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 202
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - pytanie'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i11: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i10
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 222
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - odpowiedź A'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i12: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i11
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 242
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - odpowiedź B'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i13: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i12
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 262
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - odpowiedź C'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i14: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i13
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 282
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - odpowiedź D'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i15: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i14
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 302
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - oczekiwanie na odpowiedź'
-      Constraints.MinHeight = 20
+    object Label78: TLabel
+      AnchorSideLeft.Control = led_rozgrywka
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = led_rozgrywka
+      AnchorSideTop.Side = asrCenter
+      Left = 481
+      Height = 12
+      Top = 30
+      Width = 74
+      BorderSpacing.Left = 2
+      Caption = 'ROZGRYWKA'
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Sans'
       ParentColor = False
       ParentFont = False
-    end
-    object i16: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i15
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 322
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - wyniki'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i17: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i16
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 342
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '     - podsumowanie'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i18: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i17
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 362
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '5. Pusty ekran'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i19: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i18
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 382
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '6. Gramy dalej?'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i20: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i19
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 402
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '7. Podsumowanie.'
-      Constraints.MinHeight = 20
-      ParentColor = False
-    end
-    object i21: TLabel
-      AnchorSideLeft.Control = i0
-      AnchorSideTop.Control = i20
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = i0
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 20
-      Top = 422
-      Width = 419
-      Anchors = [akTop, akLeft, akRight]
-      Caption = '8. Koniec gry.'
-      Constraints.MinHeight = 20
-      ParentColor = False
     end
   end
   object GroupBox2: TGroupBox
@@ -503,7 +206,7 @@ object FServer: TFServer
     Caption = 'Pytanie'
     ClientHeight = 155
     ClientWidth = 416
-    TabOrder = 2
+    TabOrder = 1
     object Label2: TLabel
       AnchorSideLeft.Control = GroupBox2
       AnchorSideTop.Control = GroupBox2
@@ -775,26 +478,26 @@ object FServer: TFServer
     ParentFont = False
   end
   object GroupBox3: TGroupBox
-    AnchorSideLeft.Control = GroupBox5
-    AnchorSideTop.Control = GroupBox5
+    AnchorSideLeft.Control = Panel2
+    AnchorSideTop.Control = Panel2
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = GroupBox5
+    AnchorSideRight.Control = Panel2
     AnchorSideRight.Side = asrBottom
-    Left = 458
+    Left = 6
     Height = 60
-    Top = 464
-    Width = 418
+    Top = 374
+    Width = 439
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Top = 19
+    BorderSpacing.Top = 4
     Caption = 'Wygrana:'
     ClientHeight = 44
-    ClientWidth = 416
+    ClientWidth = 437
     Color = clCream
     Font.Height = -12
     Font.Name = 'Sans'
     ParentColor = False
     ParentFont = False
-    TabOrder = 3
+    TabOrder = 2
     object Label13: TLabel
       AnchorSideLeft.Control = GroupBox3
       AnchorSideTop.Control = GroupBox3
@@ -1007,7 +710,7 @@ object FServer: TFServer
     ClientHeight = 42
     ClientWidth = 416
     Enabled = False
-    TabOrder = 4
+    TabOrder = 3
     object BitBtn1: TBitBtn
       AnchorSideLeft.Control = GroupBox4
       AnchorSideTop.Control = GroupBox4
@@ -1054,7 +757,7 @@ object FServer: TFServer
   object StatusBar: TStatusBar
     Left = 0
     Height = 20
-    Top = 549
+    Top = 462
     Width = 880
     Panels = <    
       item
@@ -1079,7 +782,7 @@ object FServer: TFServer
     Caption = 'Głosowanie'
     ClientHeight = 99
     ClientWidth = 416
-    TabOrder = 6
+    TabOrder = 5
     object gl1: TplGauge
       AnchorSideLeft.Control = Label18
       AnchorSideLeft.Side = asrBottom
@@ -1227,44 +930,50 @@ object FServer: TFServer
     end
   end
   object GameLastModePlay: TCheckBox
-    AnchorSideLeft.Control = GroupBox1
-    AnchorSideTop.Control = GroupBox1
+    AnchorSideLeft.Control = GroupBox3
+    AnchorSideTop.Control = GroupBox3
     AnchorSideTop.Side = asrBottom
     Left = 6
     Height = 23
-    Top = 524
+    Top = 434
     Width = 238
     Caption = 'Przegrana nie oznacza końca gry'
     Color = clDefault
     Font.Color = clRed
     ParentColor = False
     ParentFont = False
-    TabOrder = 7
+    TabOrder = 6
   end
   object PublicGame: TCheckBox
-    AnchorSideLeft.Control = GroupBox3
-    AnchorSideTop.Control = GroupBox3
-    AnchorSideTop.Side = asrBottom
-    Left = 458
+    AnchorSideLeft.Control = GameLastModePlay
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = GameLastModePlay
+    Left = 252
     Height = 23
-    Top = 524
+    Top = 434
     Width = 151
+    BorderSpacing.Left = 8
     Caption = 'Gra z publicznością'
     Font.Color = clRed
     ParentFont = False
-    TabOrder = 8
+    TabOrder = 7
     Visible = False
   end
   object Panel2: TPanel
-    Left = 8
+    AnchorSideLeft.Control = Panel1
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    Left = 6
     Height = 312
     Top = 58
     Width = 439
+    BorderSpacing.Left = 2
+    BorderSpacing.Top = 2
     ClientHeight = 312
     ClientWidth = 439
     Color = clBlack
     ParentColor = False
-    TabOrder = 9
+    TabOrder = 8
     object Panel4: TPanel
       AnchorSideLeft.Control = Panel2
       AnchorSideLeft.Side = asrCenter
@@ -20133,7 +19842,7 @@ object FServer: TFServer
         Name = 't2'
         ParamType = ptUnknown
       end>
-    Left = 480
+    Left = 680
     Top = 8
     ParamData = <    
       item
@@ -20243,7 +19952,7 @@ object FServer: TFServer
   object dspyt: TDataSource
     AutoEdit = False
     DataSet = dbpyt
-    Left = 520
+    Left = 720
     Top = 8
   end
   object tGra: TTimer
@@ -20311,7 +20020,7 @@ object FServer: TFServer
     Top = 128
   end
   object zegar: TLiveTimer
-    Left = 400
+    Left = 600
     Top = 8
   end
   object ser: TNetSocket
@@ -20328,14 +20037,14 @@ object FServer: TFServer
     OnStatus = serStatus
     OnCryptString = serCryptString
     OnDecryptString = serDecryptString
-    Left = 560
+    Left = 760
     Top = 8
   end
   object ps: TXMLPropStorage
     StoredValues = <>
     RootNodePath = 'server'
     Active = False
-    Left = 440
+    Left = 640
     Top = 8
   end
   object tSer: TTimer

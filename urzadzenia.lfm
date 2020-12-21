@@ -8,7 +8,13 @@ object uu: Tuu
     Device = dvGembird
     OnClick = mpilotClick
     OnClickLong = mpilotClickLong
-    Left = 48
+    Left = 136
+    Top = 16
+  end
+  object ytplayer: TPresentation
+    Device = dvGembird
+    OnClick = ytplayerClick
+    Left = 64
     Top = 16
   end
 end
