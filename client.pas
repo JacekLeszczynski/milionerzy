@@ -18,10 +18,6 @@ type
     BitBtn2: TBitBtn;
     cli: TNetSocket;
     eImie: TEdit;
-    gl1: TplGauge;
-    gl2: TplGauge;
-    gl3: TplGauge;
-    gl4: TplGauge;
     gl5: TplGauge;
     gl6: TplGauge;
     gl7: TplGauge;
@@ -29,18 +25,8 @@ type
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
-    Label10: TLabel;
-    Label11: TLabel;
-    Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
-    Label15: TLabel;
-    Label18: TLabel;
-    Label19: TLabel;
-    Label2: TLabel;
-    Label20: TLabel;
-    Label21: TLabel;
-    Label3: TLabel;
     Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
@@ -49,7 +35,6 @@ type
     Label37: TLabel;
     Label38: TLabel;
     Label39: TLabel;
-    Label4: TLabel;
     Label40: TLabel;
     Label41: TLabel;
     Label42: TLabel;
@@ -60,7 +45,6 @@ type
     Label47: TLabel;
     Label48: TLabel;
     Label49: TLabel;
-    Label5: TLabel;
     Label50: TLabel;
     Label51: TLabel;
     Label52: TLabel;
@@ -71,7 +55,6 @@ type
     Label57: TLabel;
     Label58: TLabel;
     Label59: TLabel;
-    Label6: TLabel;
     Label60: TLabel;
     Label61: TLabel;
     Label62: TLabel;
@@ -82,7 +65,6 @@ type
     Label67: TLabel;
     Label68: TLabel;
     Label69: TLabel;
-    Label7: TLabel;
     Label70: TLabel;
     Label71: TLabel;
     Label72: TLabel;
@@ -91,8 +73,6 @@ type
     Label75: TLabel;
     Label76: TLabel;
     Label77: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
     Label_a: TLabel;
     Label_b: TLabel;
     Label_c: TLabel;
@@ -122,7 +102,6 @@ type
     Panel15: TPanel;
     Panel16: TPanel;
     Panel17: TPanel;
-    Panel3: TPanel;
     Panel4: TPanel;
     Panel5: TPanel;
     Panel6: TPanel;
@@ -259,14 +238,7 @@ end;
 procedure TFClient.odp_activate(aOn: boolean);
 begin
   odp_przyciski(aOn);
-  if not aOn then
-  begin
-    Label14.Caption:='';
-    gl1.Progress:=0;
-    gl2.Progress:=0;
-    gl3.Progress:=0;
-    gl4.Progress:=0;
-  end;
+  if not aOn then Label14.Caption:='';
 end;
 
 procedure TFClient.offkey(aStr: string);
@@ -275,7 +247,6 @@ begin
   begin
     SpeedButton1.Enabled:=false;
     SpeedButton1.Caption:='';
-    Label6.Caption:='';
     if Label14.Caption='A' then Label14.Caption:='';
     Label_a.Visible:=false;
     odp_a.Visible:=false;
@@ -284,7 +255,6 @@ begin
   begin
     SpeedButton2.Enabled:=false;
     SpeedButton2.Caption:='';
-    Label8.Caption:='';
     if Label14.Caption='B' then Label14.Caption:='';
     Label_b.Visible:=false;
     odp_b.Visible:=false;
@@ -293,7 +263,6 @@ begin
   begin
     SpeedButton3.Enabled:=false;
     SpeedButton3.Caption:='';
-    Label9.Caption:='';
     if Label14.Caption='C' then Label14.Caption:='';
     Label_c.Visible:=false;
     odp_c.Visible:=false;
@@ -302,7 +271,6 @@ begin
   begin
     SpeedButton4.Enabled:=false;
     SpeedButton4.Caption:='';
-    Label12.Caption:='';
     if Label14.Caption='D' then Label14.Caption:='';
     Label_d.Visible:=false;
     odp_d.Visible:=false;
@@ -311,11 +279,6 @@ end;
 
 procedure TFClient.clear;
 begin
-  Label4.Caption:='';
-  Label6.Caption:='';
-  Label8.Caption:='';
-  Label9.Caption:='';
-  Label12.Caption:='';
 end;
 
 procedure TFClient.send(aStr: string; aOdpowiedz: boolean);
@@ -408,11 +371,6 @@ begin
   if odp='synchronizacja' then
   begin
     clear;
-    Label4.Caption:=GetLineToStr(s,4,'$');
-    Label6.Caption:=GetLineToStr(s,5,'$');
-    Label8.Caption:=GetLineToStr(s,6,'$');
-    Label9.Caption:=GetLineToStr(s,7,'$');
-    Label12.Caption:=GetLineToStr(s,8,'$');
     if GetLineToStr(s,9,'$')='1' then odp_activate(true) else odp_activate(false);
     w:=GetLineToStr(s,10,'$');
     if w<>'' then Label14.Caption:=upcase(w);
@@ -420,11 +378,6 @@ begin
     w:=GetLineToStr(s,12,'$');
     if w<>'' then offkey(w);
   end else
-  if odp='title' then Label4.Caption:=GetLineToStr(s,4,'$') else
-  if odp='odpa' then Label6.Caption:=GetLineToStr(s,4,'$') else
-  if odp='odpb' then Label8.Caption:=GetLineToStr(s,4,'$') else
-  if odp='odpc' then Label9.Caption:=GetLineToStr(s,4,'$') else
-  if odp='odpd' then Label12.Caption:=GetLineToStr(s,4,'$') else
   if odp='goactive' then odp_activate(true) else
   if odp='godeactive' then odp_activate(false) else
   if odp='goblock' then odp_przyciski(false) else
@@ -433,10 +386,6 @@ begin
   if odp='zaznacz' then Label14.Caption:=GetLineToStr(s,4,'$') else
   if odp='glosowanie' then
   begin
-    gl1.Progress:=StrToInt(GetLineToStr(s,4,'$','0'));
-    gl2.Progress:=StrToInt(GetLineToStr(s,5,'$','0'));
-    gl3.Progress:=StrToInt(GetLineToStr(s,6,'$','0'));
-    gl4.Progress:=StrToInt(GetLineToStr(s,7,'$','0'));
     gl5.Progress:=StrToInt(GetLineToStr(s,4,'$','0'));
     gl6.Progress:=StrToInt(GetLineToStr(s,5,'$','0'));
     gl7.Progress:=StrToInt(GetLineToStr(s,6,'$','0'));

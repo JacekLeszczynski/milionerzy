@@ -1094,14 +1094,6 @@ begin
       3: Label8.Caption:=fEkran.odp_c.Caption;
       4: Label10.Caption:=fEkran.odp_d.Caption;
     end;
-    (* wysłanie do klientów sieciowych *)
-    case aLp of
-      0: ser.SendString('o$all$title$'+fEkran.pytanie.Caption);
-      1: ser.SendString('o$all$odpa$'+fEkran.odp_a.Caption);
-      2: ser.SendString('o$all$odpb$'+fEkran.odp_b.Caption);
-      3: ser.SendString('o$all$odpc$'+fEkran.odp_c.Caption);
-      4: ser.SendString('o$all$odpd$'+fEkran.odp_d.Caption);
-    end;
     ON_pause:=false;
   end;
 end;

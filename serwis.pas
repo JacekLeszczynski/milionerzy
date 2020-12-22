@@ -173,12 +173,12 @@ end;
 
 function Tdm.CryptString(aStr: string): string;
 begin
-  result:=EncryptString(aStr,'6273627^&#^7276376276327');
+  result:=EncryptString(aStr,'ghs673uh7d8sd68y32euyeuhe287hujhd');
 end;
 
 function Tdm.DecryptString(aStr: string): string;
 begin
-  result:=ecode.DecryptString(aStr,'6273627^&#^7276376276327');
+  result:=ecode.DecryptString(aStr,'ghs673uh7d8sd68y32euyeuhe287hujhd');
 end;
 
 end.
