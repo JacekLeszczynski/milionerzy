@@ -233,6 +233,7 @@ type
     procedure nomusic;
     procedure sound(aNr: integer = 0; aLoop: boolean = false; aVolume: integer = 100);
     procedure nosound;
+    procedure synchronizuj(aKey: string; aSocket: TLSocket);
     procedure test(aTryb: integer);
     procedure test_info(aPytanie: integer);
     procedure ekran_info(aLp: integer = 0);
@@ -244,7 +245,6 @@ type
     procedure glosy_wyniki(var a,b,c,d: integer);
     procedure glosy_aktualizacja;
     procedure glosy_clear;
-    procedure synchronizuj(aKey: string; aSocket: TLSocket);
   public
 
   end;
@@ -708,6 +708,37 @@ begin
   play2.Stop(true);
 end;
 
+procedure TFServer.synchronizuj(aKey: string; aSocket: TLSocket);
+var
+  s: string;
+  s0,s1,s2,s3,s4: string;
+  s5,s6: string;
+  uo,o,ok: string;
+begin
+  s0:=ppytanie.Caption;
+  s1:=odp_a.Caption;
+  s2:=odp_b.Caption;
+  s3:=odp_c.Caption;
+  s4:=odp_d.Caption;
+  uo:=IntToStr(g_udzielona_odpowiedz);
+  o:=IntToStr(g_odpowiedz);
+  s5:=ppodsumowanie.Caption;
+  s6:='000';
+  if g_kolo_1 then s6[1]:='1';
+  if g_kolo_2 then s6[2]:='1';
+  if g_kolo_3 then s6[3]:='1';
+  ok:='';
+  if TRYB=15 then
+  begin
+    if not odp_a.Visible then ok:='a';
+    if not odp_b.Visible then ok:=ok+'b';
+    if not odp_c.Visible then ok:=ok+'c';
+    if not odp_d.Visible then ok:=ok+'d';
+  end;
+  s:=IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s0+'$'+s1+'$'+s2+'$'+s3+'$'+s4+'$'+uo+'$'+o+'$'+s5+'$'+s6+'$'+ok;
+  ser.SendString('o$'+aKey+'$synchronizacja$'+s,aSocket);
+end;
+
 procedure TFServer.test(aTryb: integer);
 var
   s: string;
@@ -734,6 +765,8 @@ begin
   (* PYTANIE *)
   if TRYB=9 then
   begin
+    g_odpowiedz:=0;
+    g_udzielona_odpowiedz:=0;
     ON_pause:=true;
     ePytanie;
     fEkran.ePytanie;
@@ -1198,56 +1231,6 @@ begin
   gl2.Progress:=0;
   gl3.Progress:=0;
   gl4.Progress:=0;
-end;
-
-procedure TFServer.synchronizuj(aKey: string; aSocket: TLSocket);
-var
-  s: string;
-  t,a,b,c,d,p,z,bg: string;
-  bb: boolean;
-  ii: integer;
-begin
-  z:='';
-  t:='';
-  a:='';
-  b:='';
-  c:='';
-  d:='';
-  p:='0';
-  case TRYB of
-    10: t:=fEkran.pytanie.Caption;
-    11: begin
-          t:=fEkran.pytanie.Caption;
-          a:=fEkran.odp_a.Caption;
-        end;
-    12: begin
-          t:=fEkran.pytanie.Caption;
-          a:=fEkran.odp_a.Caption;
-          b:=fEkran.odp_b.Caption;
-        end;
-    13: begin
-          t:=fEkran.pytanie.Caption;
-          a:=fEkran.odp_a.Caption;
-          b:=fEkran.odp_b.Caption;
-          c:=fEkran.odp_c.Caption;
-        end;
-    14,15: begin
-             t:=fEkran.pytanie.Caption;
-             a:=fEkran.odp_a.Caption;
-             b:=fEkran.odp_b.Caption;
-             c:=fEkran.odp_c.Caption;
-             d:=fEkran.odp_d.Caption;
-             p:='1'
-           end;
-  end;
-  if (TRYB>=14) and (TRYB<=15) then
-  begin
-    bb:=glosy.Find(aKey,ii);
-    if bb and (ii>-1) then z:=GetLineToStr(glosy2[ii],2,';');
-  end;
-  if g_blokada_glosowania then bg:='1' else bg:='0';
-  s:=t+'$'+a+'$'+b+'$'+c+'$'+d+'$'+p+'$'+z+'$'+bg+'$'+g_wylaczenie_odpowiedzi;
-  ser.SendString('o$'+aKey+'$synchronizacja$'+s,aSocket);
 end;
 
 end.

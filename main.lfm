@@ -19274,280 +19274,17 @@ object FServer: TFServer
         Visible = False
       end
     end
-    object Panel4: TPanel
-      AnchorSideLeft.Control = Panel2
-      AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = Panel2
-      AnchorSideTop.Side = asrCenter
-      Left = 8
-      Height = 287
-      Top = 13
-      Width = 422
-      BevelOuter = bvNone
-      ClientHeight = 287
-      ClientWidth = 422
-      Color = clBlack
-      ParentColor = False
-      TabOrder = 1
-      Visible = False
-      object Panel5: TPanel
-        Left = 8
-        Height = 77
-        Top = 18
-        Width = 408
-        ClientHeight = 77
-        ClientWidth = 408
-        Color = clBlue
-        ParentColor = False
-        TabOrder = 0
-        object ppytanie: TLabel
-          Left = 9
-          Height = 71
-          Top = 3
-          Width = 390
-          Align = alClient
-          Alignment = taCenter
-          BorderSpacing.Left = 8
-          BorderSpacing.Top = 2
-          BorderSpacing.Right = 8
-          BorderSpacing.Bottom = 2
-          Caption = 'Pytanie'
-          Font.Color = clWhite
-          Font.Height = -17
-          Font.Name = 'Sans'
-          Layout = tlCenter
-          ParentColor = False
-          ParentFont = False
-          WordWrap = True
-        end
-      end
-      object Panel6: TPanel
-        Left = 8
-        Height = 74
-        Top = 112
-        Width = 200
-        ClientHeight = 74
-        ClientWidth = 200
-        Color = clBlue
-        ParentColor = False
-        TabOrder = 1
-        object odp_a: TLabel
-          AnchorSideLeft.Control = Label_a
-          AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel6
-          AnchorSideRight.Control = Panel6
-          AnchorSideRight.Side = asrBottom
-          AnchorSideBottom.Control = Panel6
-          AnchorSideBottom.Side = asrBottom
-          Left = 27
-          Height = 64
-          Top = 5
-          Width = 166
-          Alignment = taCenter
-          Anchors = [akTop, akLeft, akRight, akBottom]
-          BorderSpacing.Right = 2
-          BorderSpacing.Around = 4
-          Caption = 'Pytanie'
-          Font.Color = clYellow
-          Font.Height = -15
-          Font.Name = 'Sans'
-          Layout = tlCenter
-          ParentColor = False
-          ParentFont = False
-          WordWrap = True
-        end
-        object Label_a: TLabel
-          AnchorSideLeft.Control = Panel6
-          AnchorSideTop.Control = Panel6
-          AnchorSideTop.Side = asrCenter
-          Left = 5
-          Height = 16
-          Top = 29
-          Width = 18
-          BorderSpacing.Left = 4
-          BorderSpacing.Top = 2
-          Caption = 'A:'
-          Font.Color = clYellow
-          Font.Height = -15
-          Font.Name = 'Sans'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-        end
-      end
-      object Panel7: TPanel
-        Left = 216
-        Height = 74
-        Top = 112
-        Width = 200
-        ClientHeight = 74
-        ClientWidth = 200
-        Color = clBlue
-        ParentColor = False
-        TabOrder = 2
-        object Label_b: TLabel
-          AnchorSideLeft.Control = Panel7
-          AnchorSideTop.Control = Panel7
-          AnchorSideTop.Side = asrCenter
-          Left = 5
-          Height = 16
-          Top = 29
-          Width = 17
-          BorderSpacing.Left = 4
-          BorderSpacing.Top = 2
-          Caption = 'B:'
-          Font.Color = clYellow
-          Font.Height = -15
-          Font.Name = 'Sans'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-        end
-        object odp_b: TLabel
-          AnchorSideLeft.Control = Label_b
-          AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel7
-          AnchorSideRight.Control = Panel7
-          AnchorSideRight.Side = asrBottom
-          AnchorSideBottom.Control = Panel7
-          AnchorSideBottom.Side = asrBottom
-          Left = 26
-          Height = 64
-          Top = 5
-          Width = 167
-          Alignment = taCenter
-          Anchors = [akTop, akLeft, akRight, akBottom]
-          BorderSpacing.Right = 2
-          BorderSpacing.Around = 4
-          Caption = 'Pytanie'
-          Font.Color = clYellow
-          Font.Height = -15
-          Font.Name = 'Sans'
-          Layout = tlCenter
-          ParentColor = False
-          ParentFont = False
-          WordWrap = True
-        end
-      end
-      object Panel8: TPanel
-        Left = 8
-        Height = 74
-        Top = 197
-        Width = 200
-        ClientHeight = 74
-        ClientWidth = 200
-        Color = clBlue
-        ParentColor = False
-        TabOrder = 3
-        object Label_c: TLabel
-          AnchorSideLeft.Control = Panel8
-          AnchorSideTop.Control = Panel8
-          AnchorSideTop.Side = asrCenter
-          Left = 5
-          Height = 16
-          Top = 29
-          Width = 17
-          BorderSpacing.Left = 4
-          BorderSpacing.Top = 2
-          Caption = 'C:'
-          Font.Color = clYellow
-          Font.Height = -15
-          Font.Name = 'Sans'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-        end
-        object odp_c: TLabel
-          AnchorSideLeft.Control = Label_c
-          AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel8
-          AnchorSideRight.Control = Panel8
-          AnchorSideRight.Side = asrBottom
-          AnchorSideBottom.Control = Panel8
-          AnchorSideBottom.Side = asrBottom
-          Left = 26
-          Height = 64
-          Top = 5
-          Width = 167
-          Alignment = taCenter
-          Anchors = [akTop, akLeft, akRight, akBottom]
-          BorderSpacing.Right = 2
-          BorderSpacing.Around = 4
-          Caption = 'Pytanie'
-          Font.Color = clYellow
-          Font.Height = -15
-          Font.Name = 'Sans'
-          Layout = tlCenter
-          ParentColor = False
-          ParentFont = False
-          WordWrap = True
-        end
-      end
-      object Panel9: TPanel
-        Left = 216
-        Height = 74
-        Top = 197
-        Width = 200
-        ClientHeight = 74
-        ClientWidth = 200
-        Color = clBlue
-        ParentColor = False
-        TabOrder = 4
-        object Label_d: TLabel
-          AnchorSideLeft.Control = Panel9
-          AnchorSideTop.Control = Panel9
-          AnchorSideTop.Side = asrCenter
-          Left = 5
-          Height = 16
-          Top = 29
-          Width = 18
-          BorderSpacing.Left = 4
-          BorderSpacing.Top = 2
-          Caption = 'D:'
-          Font.Color = clYellow
-          Font.Height = -15
-          Font.Name = 'Sans'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-        end
-        object odp_d: TLabel
-          AnchorSideLeft.Control = Label_d
-          AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = Panel9
-          AnchorSideRight.Control = Panel9
-          AnchorSideRight.Side = asrBottom
-          AnchorSideBottom.Control = Panel9
-          AnchorSideBottom.Side = asrBottom
-          Left = 27
-          Height = 64
-          Top = 5
-          Width = 166
-          Alignment = taCenter
-          Anchors = [akTop, akLeft, akRight, akBottom]
-          BorderSpacing.Right = 2
-          BorderSpacing.Around = 4
-          Caption = 'Pytanie'
-          Font.Color = clYellow
-          Font.Height = -15
-          Font.Name = 'Sans'
-          Layout = tlCenter
-          ParentColor = False
-          ParentFont = False
-          WordWrap = True
-        end
-      end
-    end
     object Panel10: TPanel
       AnchorSideLeft.Control = Panel2
       AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Panel2
       AnchorSideTop.Side = asrCenter
       Left = 8
-      Height = 287
-      Top = 13
+      Height = 131
+      Top = 91
       Width = 422
-      ClientHeight = 287
+      BevelOuter = bvNone
+      ClientHeight = 131
       ClientWidth = 422
       TabOrder = 2
       Visible = False
@@ -19558,7 +19295,7 @@ object FServer: TFServer
         AnchorSideTop.Side = asrCenter
         Left = 14
         Height = 98
-        Top = 94
+        Top = 16
         Width = 394
         ClientHeight = 98
         ClientWidth = 394
@@ -19592,15 +19329,16 @@ object FServer: TFServer
     end
     object Panel12: TPanel
       AnchorSideLeft.Control = Panel2
-      AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Panel2
-      AnchorSideTop.Side = asrCenter
-      Left = 8
-      Height = 287
-      Top = 13
-      Width = 422
-      ClientHeight = 287
-      ClientWidth = 422
+      Left = 126
+      Height = 100
+      Top = 9
+      Width = 268
+      BorderSpacing.Left = 125
+      BorderSpacing.Top = 8
+      BevelOuter = bvNone
+      ClientHeight = 100
+      ClientWidth = 268
       TabOrder = 3
       Visible = False
       object Panel13: TPanel
@@ -19608,12 +19346,12 @@ object FServer: TFServer
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = Panel12
         AnchorSideTop.Side = asrCenter
-        Left = 14
-        Height = 120
-        Top = 83
-        Width = 394
-        ClientHeight = 120
-        ClientWidth = 394
+        Left = 9
+        Height = 84
+        Top = 8
+        Width = 250
+        ClientHeight = 84
+        ClientWidth = 250
         Color = clBlue
         ParentColor = False
         TabOrder = 0
@@ -19621,14 +19359,14 @@ object FServer: TFServer
           AnchorSideLeft.Control = Panel13
           AnchorSideTop.Control = Panel13
           Left = 9
-          Height = 31
+          Height = 17
           Top = 7
-          Width = 32
+          Width = 20
           BorderSpacing.Left = 8
           BorderSpacing.Top = 6
           Caption = 'A:'
           Font.Color = clYellow
-          Font.Height = -27
+          Font.Height = -16
           Font.Name = 'Droid Sans Mono'
           Font.Style = [fsBold]
           ParentColor = False
@@ -19640,13 +19378,13 @@ object FServer: TFServer
           AnchorSideRight.Control = Label71
           AnchorSideRight.Side = asrBottom
           Left = 9
-          Height = 31
-          Top = 32
-          Width = 32
+          Height = 17
+          Top = 25
+          Width = 20
           Anchors = [akTop, akRight]
           Caption = 'B:'
           Font.Color = clYellow
-          Font.Height = -27
+          Font.Height = -16
           Font.Name = 'Droid Sans Mono'
           Font.Style = [fsBold]
           ParentColor = False
@@ -19658,13 +19396,13 @@ object FServer: TFServer
           AnchorSideRight.Control = Label71
           AnchorSideRight.Side = asrBottom
           Left = 9
-          Height = 31
-          Top = 57
-          Width = 32
+          Height = 17
+          Top = 43
+          Width = 20
           Anchors = [akTop, akRight]
           Caption = 'C:'
           Font.Color = clYellow
-          Font.Height = -27
+          Font.Height = -16
           Font.Name = 'Droid Sans Mono'
           Font.Style = [fsBold]
           ParentColor = False
@@ -19676,13 +19414,13 @@ object FServer: TFServer
           AnchorSideRight.Control = Label71
           AnchorSideRight.Side = asrBottom
           Left = 9
-          Height = 31
-          Top = 82
-          Width = 32
+          Height = 17
+          Top = 61
+          Width = 20
           Anchors = [akTop, akRight]
           Caption = 'D:'
           Font.Color = clYellow
-          Font.Height = -27
+          Font.Height = -16
           Font.Name = 'Droid Sans Mono'
           Font.Style = [fsBold]
           ParentColor = False
@@ -19694,10 +19432,10 @@ object FServer: TFServer
           AnchorSideTop.Control = Label71
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = Label75
-          Left = 41
-          Height = 25
-          Top = 10
-          Width = 343
+          Left = 29
+          Height = 18
+          Top = 6
+          Width = 211
           Color = clSkyBlue
           BarColor = clYellow
           Progress = 0
@@ -19710,10 +19448,10 @@ object FServer: TFServer
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = gl5
           AnchorSideRight.Side = asrBottom
-          Left = 41
-          Height = 25
-          Top = 35
-          Width = 343
+          Left = 29
+          Height = 18
+          Top = 24
+          Width = 211
           Color = clSkyBlue
           BarColor = clYellow
           Progress = 0
@@ -19726,10 +19464,10 @@ object FServer: TFServer
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = gl6
           AnchorSideRight.Side = asrBottom
-          Left = 41
-          Height = 25
-          Top = 60
-          Width = 343
+          Left = 29
+          Height = 18
+          Top = 42
+          Width = 211
           Color = clSkyBlue
           BarColor = clYellow
           Progress = 0
@@ -19742,10 +19480,10 @@ object FServer: TFServer
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Control = gl7
           AnchorSideRight.Side = asrBottom
-          Left = 41
-          Height = 25
-          Top = 85
-          Width = 343
+          Left = 29
+          Height = 18
+          Top = 60
+          Width = 211
           Color = clSkyBlue
           BarColor = clYellow
           Progress = 0
@@ -19756,7 +19494,7 @@ object FServer: TFServer
           AnchorSideTop.Control = Panel13
           AnchorSideRight.Control = Panel13
           AnchorSideRight.Side = asrBottom
-          Left = 384
+          Left = 240
           Height = 1
           Top = 1
           Width = 1
@@ -19768,15 +19506,16 @@ object FServer: TFServer
     end
     object Panel14: TPanel
       AnchorSideLeft.Control = Panel2
-      AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Panel2
-      AnchorSideTop.Side = asrCenter
-      Left = 8
-      Height = 287
-      Top = 13
-      Width = 422
-      ClientHeight = 287
-      ClientWidth = 422
+      Left = 28
+      Height = 79
+      Top = 22
+      Width = 80
+      BorderSpacing.Left = 27
+      BorderSpacing.Top = 21
+      BevelOuter = bvNone
+      ClientHeight = 79
+      ClientWidth = 80
       TabOrder = 4
       Visible = False
       object Panel15: TPanel
@@ -19784,9 +19523,9 @@ object FServer: TFServer
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = Panel14
         AnchorSideTop.Side = asrCenter
-        Left = 179
+        Left = 8
         Height = 62
-        Top = 112
+        Top = 8
         Width = 64
         ClientHeight = 62
         ClientWidth = 64
@@ -19834,6 +19573,272 @@ object FServer: TFServer
           Font.Style = [fsBold]
           ParentColor = False
           ParentFont = False
+        end
+      end
+    end
+    object Panel4: TPanel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel2
+      AnchorSideBottom.Control = Panel2
+      AnchorSideBottom.Side = asrBottom
+      Left = 8
+      Height = 210
+      Top = 101
+      Width = 422
+      Anchors = [akLeft, akBottom]
+      BevelOuter = bvNone
+      ClientHeight = 210
+      ClientWidth = 422
+      Color = clBlack
+      ParentColor = False
+      TabOrder = 1
+      Visible = False
+      object Panel5: TPanel
+        Left = 8
+        Height = 57
+        Top = 16
+        Width = 408
+        ClientHeight = 57
+        ClientWidth = 408
+        Color = clBlue
+        ParentColor = False
+        TabOrder = 0
+        object ppytanie: TLabel
+          Left = 9
+          Height = 51
+          Top = 3
+          Width = 390
+          Align = alClient
+          Alignment = taCenter
+          BorderSpacing.Left = 8
+          BorderSpacing.Top = 2
+          BorderSpacing.Right = 8
+          BorderSpacing.Bottom = 2
+          Caption = 'Pytanie'
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Layout = tlCenter
+          ParentColor = False
+          ParentFont = False
+          WordWrap = True
+        end
+      end
+      object Panel6: TPanel
+        Left = 8
+        Height = 60
+        Top = 79
+        Width = 200
+        ClientHeight = 60
+        ClientWidth = 200
+        Color = clBlue
+        ParentColor = False
+        TabOrder = 1
+        object odp_a: TLabel
+          AnchorSideLeft.Control = Label_a
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel6
+          AnchorSideRight.Control = Panel6
+          AnchorSideRight.Side = asrBottom
+          AnchorSideBottom.Control = Panel6
+          AnchorSideBottom.Side = asrBottom
+          Left = 27
+          Height = 50
+          Top = 5
+          Width = 166
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight, akBottom]
+          BorderSpacing.Right = 2
+          BorderSpacing.Around = 4
+          Caption = 'Pytanie'
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Layout = tlCenter
+          ParentColor = False
+          ParentFont = False
+          WordWrap = True
+        end
+        object Label_a: TLabel
+          AnchorSideLeft.Control = Panel6
+          AnchorSideTop.Control = Panel6
+          AnchorSideTop.Side = asrCenter
+          Left = 5
+          Height = 16
+          Top = 22
+          Width = 18
+          BorderSpacing.Left = 4
+          BorderSpacing.Top = 2
+          Caption = 'A:'
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+      end
+      object Panel7: TPanel
+        Left = 216
+        Height = 60
+        Top = 79
+        Width = 200
+        ClientHeight = 60
+        ClientWidth = 200
+        Color = clBlue
+        ParentColor = False
+        TabOrder = 2
+        object Label_b: TLabel
+          AnchorSideLeft.Control = Panel7
+          AnchorSideTop.Control = Panel7
+          AnchorSideTop.Side = asrCenter
+          Left = 5
+          Height = 16
+          Top = 22
+          Width = 17
+          BorderSpacing.Left = 4
+          BorderSpacing.Top = 2
+          Caption = 'B:'
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object odp_b: TLabel
+          AnchorSideLeft.Control = Label_b
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel7
+          AnchorSideRight.Control = Panel7
+          AnchorSideRight.Side = asrBottom
+          AnchorSideBottom.Control = Panel7
+          AnchorSideBottom.Side = asrBottom
+          Left = 26
+          Height = 50
+          Top = 5
+          Width = 167
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight, akBottom]
+          BorderSpacing.Right = 2
+          BorderSpacing.Around = 4
+          Caption = 'Pytanie'
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Layout = tlCenter
+          ParentColor = False
+          ParentFont = False
+          WordWrap = True
+        end
+      end
+      object Panel8: TPanel
+        Left = 8
+        Height = 60
+        Top = 144
+        Width = 200
+        ClientHeight = 60
+        ClientWidth = 200
+        Color = clBlue
+        ParentColor = False
+        TabOrder = 3
+        object Label_c: TLabel
+          AnchorSideLeft.Control = Panel8
+          AnchorSideTop.Control = Panel8
+          AnchorSideTop.Side = asrCenter
+          Left = 5
+          Height = 16
+          Top = 22
+          Width = 17
+          BorderSpacing.Left = 4
+          BorderSpacing.Top = 2
+          Caption = 'C:'
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object odp_c: TLabel
+          AnchorSideLeft.Control = Label_c
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel8
+          AnchorSideRight.Control = Panel8
+          AnchorSideRight.Side = asrBottom
+          AnchorSideBottom.Control = Panel8
+          AnchorSideBottom.Side = asrBottom
+          Left = 26
+          Height = 50
+          Top = 5
+          Width = 167
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight, akBottom]
+          BorderSpacing.Right = 2
+          BorderSpacing.Around = 4
+          Caption = 'Pytanie'
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Layout = tlCenter
+          ParentColor = False
+          ParentFont = False
+          WordWrap = True
+        end
+      end
+      object Panel9: TPanel
+        Left = 216
+        Height = 60
+        Top = 144
+        Width = 200
+        ClientHeight = 60
+        ClientWidth = 200
+        Color = clBlue
+        ParentColor = False
+        TabOrder = 4
+        object Label_d: TLabel
+          AnchorSideLeft.Control = Panel9
+          AnchorSideTop.Control = Panel9
+          AnchorSideTop.Side = asrCenter
+          Left = 5
+          Height = 16
+          Top = 22
+          Width = 18
+          BorderSpacing.Left = 4
+          BorderSpacing.Top = 2
+          Caption = 'D:'
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object odp_d: TLabel
+          AnchorSideLeft.Control = Label_d
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel9
+          AnchorSideRight.Control = Panel9
+          AnchorSideRight.Side = asrBottom
+          AnchorSideBottom.Control = Panel9
+          AnchorSideBottom.Side = asrBottom
+          Left = 27
+          Height = 50
+          Top = 5
+          Width = 166
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight, akBottom]
+          BorderSpacing.Right = 2
+          BorderSpacing.Around = 4
+          Caption = 'Pytanie'
+          Font.Color = clYellow
+          Font.Height = -15
+          Font.Name = 'Sans'
+          Layout = tlCenter
+          ParentColor = False
+          ParentFont = False
+          WordWrap = True
         end
       end
     end

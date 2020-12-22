@@ -178,7 +178,8 @@ type
     procedure test_info(aPytanie: integer);
     procedure ekran_info(aLp: integer = 0);
     procedure ekran_pytanie(aNr: integer; aLp: integer = -1);
-    procedure set_ogolne(aTryb,aPytanie: integer; aPom: string);
+    procedure synchronizuj(aCiag: string);
+    procedure set_ogolne(aTryb,aPytanie: integer; aPom: string = '');
     procedure set_dane(aPytanie,aOdp1,aOdp2,aOdp3,aOdp4: string);
     procedure set_zaznacz(aN1,aN2: integer);
     procedure connect;
@@ -279,6 +280,16 @@ end;
 
 procedure TFClient.clear;
 begin
+  eOff;
+  SpeedButton1.Caption:='';
+  SpeedButton2.Caption:='';
+  SpeedButton3.Caption:='';
+  SpeedButton4.Caption:='';
+  SpeedButton1.Enabled:=false;
+  SpeedButton2.Enabled:=false;
+  SpeedButton3.Enabled:=false;
+  SpeedButton4.Enabled:=false;
+  Label14.Caption:='';
 end;
 
 procedure TFClient.send(aStr: string; aOdpowiedz: boolean);
@@ -368,16 +379,16 @@ begin
       close;
     end;
   end else
-  if odp='synchronizacja' then
-  begin
-    clear;
-    if GetLineToStr(s,9,'$')='1' then odp_activate(true) else odp_activate(false);
-    w:=GetLineToStr(s,10,'$');
-    if w<>'' then Label14.Caption:=upcase(w);
-    if GetLineToStr(s,11,'$')='1' then odp_przyciski(false);
-    w:=GetLineToStr(s,12,'$');
-    if w<>'' then offkey(w);
-  end else
+  if odp='synchronizacja' then synchronizuj(s) else
+  //begin
+    //clear;
+    //if GetLineToStr(s,9,'$')='1' then odp_activate(true) else odp_activate(false);
+    //w:=GetLineToStr(s,10,'$');
+    //if w<>'' then Label14.Caption:=upcase(w);
+    //if GetLineToStr(s,11,'$')='1' then odp_przyciski(false);
+    //w:=GetLineToStr(s,12,'$');
+    //if w<>'' then offkey(w);
+  //end else
   if odp='goactive' then odp_activate(true) else
   if odp='godeactive' then odp_activate(false) else
   if odp='goblock' then odp_przyciski(false) else
@@ -665,6 +676,77 @@ begin
     Label_c.Visible:=odp_c.Visible;
     Label_d.Visible:=odp_d.Visible;
   end;
+end;
+
+procedure TFClient.synchronizuj(aCiag: string);
+var
+  vTryb,vPytanie: integer;
+  s0,s1,s2,s3,s4: string;
+  vOdpowiedz,vUdzielonaOdpowiedz: integer;
+  vPodsumowanie,vKola,pol: string;
+begin
+TRY
+  clear;
+  vTryb:=StrToInt(GetLineToStr(aCiag,4,'$','0'));
+  vPytanie:=StrToInt(GetLineToStr(aCiag,5,'$','0'));
+  if vTryb>=1 then set_ogolne(1,vPytanie);
+  if vTryb>=2 then set_ogolne(2,vPytanie);
+  if vTryb>=3 then set_ogolne(3,vPytanie);
+  if vTryb>=4 then set_ogolne(4,vPytanie);
+  if vTryb>=5 then set_ogolne(5,vPytanie);
+  if vTryb>=6 then set_ogolne(6,vPytanie);
+  if vTryb>=7 then set_ogolne(7,vPytanie);
+  if vTryb>=8 then set_ogolne(8,vPytanie);
+  if vTryb>=9 then
+  begin
+    s0:=GetLineToStr(aCiag,6,'$');
+    s1:=GetLineToStr(aCiag,7,'$');
+    s2:=GetLineToStr(aCiag,8,'$');
+    s3:=GetLineToStr(aCiag,9,'$');
+    s4:=GetLineToStr(aCiag,10,'$');
+    set_ogolne(9,vPytanie);
+    set_dane(s0,s1,s2,s3,s4);
+  end;
+  if vTryb>=10 then set_ogolne(10,vPytanie);
+  if vTryb>=11 then set_ogolne(11,vPytanie);
+  if vTryb>=12 then set_ogolne(12,vPytanie);
+  if vTryb>=13 then set_ogolne(13,vPytanie);
+  if vTryb>=14 then set_ogolne(14,vPytanie);
+  if vTryb>=15 then
+  begin
+    pol:=GetLineToStr(aCiag,15,'$');
+    vUdzielonaOdpowiedz:=StrToInt(GetLineToStr(aCiag,11,'$','0'));
+    odp_activate(true);
+    if pol<>'' then offkey(pol);
+    set_zaznacz(vUdzielonaOdpowiedz,0);
+  end;
+  if vTryb>=16 then
+  begin
+    vOdpowiedz:=StrToInt(GetLineToStr(aCiag,12,'$','0'));
+    odp_activate(false);
+    if vOdpowiedz<>vUdzielonaOdpowiedz then set_zaznacz(vOdpowiedz,vUdzielonaOdpowiedz);
+  end;
+  if vTryb>=17 then
+  begin
+    vPodsumowanie:=GetLineToStr(aCiag,13,'$');
+    set_ogolne(17,vPytanie,vPodsumowanie);
+  end;
+  if vTryb>=18 then set_ogolne(18,vPytanie);
+  if vTryb>=19 then
+  begin
+    vKola:=GetLineToStr(aCiag,14,'$');
+    set_ogolne(19,vPytanie,vKola);
+  end;
+  if vTryb>=20 then set_ogolne(20,vPytanie,vPodsumowanie);
+  if vTryb>=21 then set_ogolne(21,vPytanie);
+EXCEPT
+  on E: Exception do
+  begin
+      writeln('Wystąpił błąd:');
+      writeln('  TRYB=',vTryb,', RUNDA=',vPytanie);
+      writeln('  Treść błędu: ',E.Message);
+  end;
+END;
 end;
 
 procedure TFClient.set_ogolne(aTryb, aPytanie: integer; aPom: string);
