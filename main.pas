@@ -20,6 +20,7 @@ type
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
     CheckBox4: TCheckBox;
+    CheckTest: TCheckBox;
     dbpyttrudnosc: TLargeintField;
     dbpytuzyte: TMemoField;
     gl5: TplGauge;
@@ -233,6 +234,7 @@ type
     procedure sound(aNr: integer = 0; aLoop: boolean = false; aVolume: integer = 100);
     procedure nosound;
     procedure test(aTryb: integer);
+    procedure test_info(aPytanie: integer);
     procedure ekran_info(aLp: integer = 0);
     procedure ekran_pytanie(aNr: integer; aLp: integer = -1);
     procedure okno_config;
@@ -261,6 +263,7 @@ uses
 
 procedure TFServer.FormCreate(Sender: TObject);
 begin
+  randomize;
   sesje:=TStringList.Create;
   sesje.Sorted:=true;
   glosy:=TStringList.Create;
@@ -384,7 +387,9 @@ end;
 
 procedure TFServer.SpeedButton5Click(Sender: TObject);
 begin
+  ePub(false);
   fEkran.ePub(false);
+  ser.SendString('o$all$puboff');
   g_kolo_1:=false;
   aktywacja_odpowiedzi(false,true);
   t50.Enabled:=true;
@@ -399,12 +404,14 @@ begin
   BitBtn2.Enabled:=true;
   ePub(true);
   fEkran.ePub(true);
+  ser.SendString('o$all$pubon');
 end;
 
 procedure TFServer.SpeedButton7Click(Sender: TObject);
 begin
   ePub(false);
   fEkran.ePub(false);
+  ser.SendString('o$all$puboff');
   g_kolo_3:=false;
   aktywacja_odpowiedzi(false,true);
   GroupBox4.Enabled:=true;
@@ -412,11 +419,11 @@ begin
   BitBtn2.Enabled:=false;
   eCzas30;
   fEkran.eCzas30;
+  ser.SendString('o$all$telon');
 end;
 
 procedure TFServer.t50StartTimer(Sender: TObject);
 begin
-  randomize;
   sound(8);
 end;
 
@@ -485,8 +492,8 @@ end;
 
 procedure TFServer.tGraTimer(Sender: TObject);
 begin
-  //lInfo.Caption:=IntToStr(TRYB);
-  lInfo.Caption:=IntToStr(g_pytanie);
+  lInfo.Caption:=IntToStr(TRYB);
+  //lInfo.Caption:=IntToStr(g_pytanie);
 end;
 
 procedure TFServer.tSerTimer(Sender: TObject);
@@ -501,9 +508,13 @@ begin
 end;
 
 procedure TFServer.tTelStartTimer(Sender: TObject);
+var
+  czas: TTime;
 begin
+  czas:=time;
   zegar.tag:=0;
   zegar.Start;
+  ser.SendString('o$all$tel30start$'+IntToStr(TimeToInteger(czas)));
 end;
 
 procedure TFServer.tTelStopTimer(Sender: TObject);
@@ -513,6 +524,7 @@ begin
   GroupBox4.Enabled:=false;
   eCzas30(false);
   fEkran.eCzas30(false);
+  ser.SendString('o$all$tel30stop');
 end;
 
 procedure TFServer.tTelTimer(Sender: TObject);
@@ -697,15 +709,28 @@ begin
 end;
 
 procedure TFServer.test(aTryb: integer);
+var
+  s: string;
 begin
   TRYB:=aTryb;
+  {* lecimy *}
   if TRYB=1 then
   begin
     eTabInfo;
     fEkran.eTabInfo;
+    test_info(0);
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
   end;
-  if (TRYB>=1) and (TRYB<=7) then ekran_info(TRYB-1);
-  if TRYB=8 then begin tInfo.Enabled:=false; eOff; fEkran.eOff; end;
+  if (TRYB>=1) and (TRYB<=7) then
+  begin
+    ekran_info(TRYB-1);
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
+  end;
+  if TRYB=8 then
+  begin
+    tInfo.Enabled:=false; eOff; fEkran.eOff;
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
+  end;
   (* PYTANIE *)
   if TRYB=9 then
   begin
@@ -713,6 +738,7 @@ begin
     ePytanie;
     fEkran.ePytanie;
     ekran_pytanie(g_pytanie);
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
     TRYB:=10;
     case g_pytanie of
       1..4: music(1);
@@ -721,7 +747,11 @@ begin
     end;
   end;
   if TRYB=10 then zysk_i_strata;
-  if (TRYB>=10) and (TRYB<=14) then ekran_pytanie(g_pytanie,TRYB-10);
+  if (TRYB>=10) and (TRYB<=14) then
+  begin
+    ekran_pytanie(g_pytanie,TRYB-10);
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
+  end;
   if TRYB=14 then TRYB:=15;
   if TRYB=15 then
   begin
@@ -744,6 +774,7 @@ begin
       sound(2);
       music;
     end else begin
+      ser.SendString('o$all$ogolne_zaznacz$'+IntToStr(g_odpowiedz)+'$'+IntToStr(g_udzielona_odpowiedz));
       g_stop:=not GameLastModePlay.Checked;
       dm.oblicz_wygrana(g_pytanie,GameLastModePlay.Checked,g_wygrana,g_wygrana_gwarantowana);
       case g_udzielona_odpowiedz of
@@ -781,32 +812,30 @@ begin
     ePodsumowanie(g_wygrana);
     fEkran.ePodsumowanie(g_wygrana);
     ON_pause:=false;
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+ppodsumowanie.Caption);
   end;
-  if TRYB=18 then begin eOff; fEkran.eOff; end;
+  if TRYB=18 then
+  begin
+    eOff;
+    fEkran.eOff;
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
+  end;
   if TRYB=19 then
   begin
     eTabInfo;
     fEkran.eTabInfo;
-    case g_pytanie of
-       1: begin fEkran.Shape1.Visible:=true; Shape1.Visible:=true; end;
-       2: begin fEkran.Shape2.Visible:=true; Shape2.Visible:=true; end;
-       3: begin fEkran.Shape3.Visible:=true; Shape3.Visible:=true; end;
-       4: begin fEkran.Shape4.Visible:=true; Shape4.Visible:=true; end;
-       5: begin fEkran.Shape5.Visible:=true; Shape5.Visible:=true; end;
-       6: begin fEkran.Shape6.Visible:=true; Shape6.Visible:=true; end;
-       7: begin fEkran.Shape7.Visible:=true; Shape7.Visible:=true; end;
-       8: begin fEkran.Shape8.Visible:=true; Shape8.Visible:=true; end;
-       9: begin fEkran.Shape9.Visible:=true; Shape9.Visible:=true; end;
-      10: begin fEkran.Shape10.Visible:=true; Shape10.Visible:=true; end;
-      11: begin fEkran.Shape11.Visible:=true; Shape11.Visible:=true; end;
-      12: begin fEkran.Shape12.Visible:=true; Shape12.Visible:=true; end;
-    end;
+    test_info(g_pytanie);
     x1.Visible:=not g_kolo_1;
     x2.Visible:=not g_kolo_2;
     x3.Visible:=not g_kolo_3;
     fEkran.x1.Visible:=x1.Visible;
     fEkran.x2.Visible:=x2.Visible;
     fEkran.x3.Visible:=x3.Visible;
+    s:='000';
+    if g_kolo_1 then s[1]:='1';
+    if g_kolo_2 then s[2]:='1';
+    if g_kolo_3 then s[3]:='1';
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s);
   end;
   if TRYB=20 then
   begin
@@ -814,6 +843,7 @@ begin
     Label16.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana_gwarantowana))+' '+CL_DIAMENT;
     ePodsumowanie(g_wygrana,true);
     fEkran.ePodsumowanie(g_wygrana,true);
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+ppodsumowanie.Caption);
     if g_wygrana=1000000 then sound(5) else
     if g_wygrana=0 then sound(6) else sound(4);
     if g_wygrana=1000000 then music(5) else music(4);
@@ -823,10 +853,55 @@ begin
   begin
     eOff;
     fEkran.eOff;
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
   end;
   (* informacja *)
   led_null_screen.Active:=(TRYB=0) or (TRYB=8) or (TRYB=18);
   led_rozgrywka.Active:=(TRYB>=9) and (TRYB<=15);
+end;
+
+procedure TFServer.test_info(aPytanie: integer);
+begin
+  if aPytanie>=1 then Label55.Caption:=CL_KOLO_1 else Label55.Caption:=CL_KOLO_0;
+  if aPytanie>=2 then Label54.Caption:=CL_KOLO_1 else Label54.Caption:=CL_KOLO_0;
+  if aPytanie>=3 then Label53.Caption:=CL_KOLO_1 else Label53.Caption:=CL_KOLO_0;
+  if aPytanie>=4 then Label52.Caption:=CL_KOLO_1 else Label52.Caption:=CL_KOLO_0;
+  if aPytanie>=5 then Label51.Caption:=CL_KOLO_1 else Label51.Caption:=CL_KOLO_0;
+  if aPytanie>=6 then Label50.Caption:=CL_KOLO_1 else Label50.Caption:=CL_KOLO_0;
+  if aPytanie>=7 then Label49.Caption:=CL_KOLO_1 else Label49.Caption:=CL_KOLO_0;
+  if aPytanie>=8 then Label48.Caption:=CL_KOLO_1 else Label48.Caption:=CL_KOLO_0;
+  if aPytanie>=9 then Label47.Caption:=CL_KOLO_1 else Label47.Caption:=CL_KOLO_0;
+  if aPytanie>=10 then Label46.Caption:=CL_KOLO_1 else Label46.Caption:=CL_KOLO_0;
+  if aPytanie>=11 then Label45.Caption:=CL_KOLO_1 else Label45.Caption:=CL_KOLO_0;
+  if aPytanie>=12 then Label44.Caption:=CL_KOLO_1 else Label44.Caption:=CL_KOLO_0;
+  case aPytanie of
+     1: Shape1.Visible:=true;
+     2: Shape2.Visible:=true;
+     3: Shape3.Visible:=true;
+     4: Shape4.Visible:=true;
+     5: Shape5.Visible:=true;
+     6: Shape6.Visible:=true;
+     7: Shape7.Visible:=true;
+     8: Shape8.Visible:=true;
+     9: Shape9.Visible:=true;
+    10: Shape10.Visible:=true;
+    11: Shape11.Visible:=true;
+    12: Shape12.Visible:=true;
+  end;
+  case aPytanie of
+     1:  fEkran.Shape1.Visible:=true;
+     2:  fEkran.Shape2.Visible:=true;
+     3:  fEkran.Shape3.Visible:=true;
+     4:  fEkran.Shape4.Visible:=true;
+     5:  fEkran.Shape5.Visible:=true;
+     6:  fEkran.Shape6.Visible:=true;
+     7:  fEkran.Shape7.Visible:=true;
+     8:  fEkran.Shape8.Visible:=true;
+     9:  fEkran.Shape9.Visible:=true;
+    10:  fEkran.Shape10.Visible:=true;
+    11:  fEkran.Shape11.Visible:=true;
+    12:  fEkran.Shape12.Visible:=true;
+  end;
 end;
 
 procedure TFServer.ekran_info(aLp: integer);
@@ -917,7 +992,8 @@ end;
 
 procedure TFServer.ekran_pytanie(aNr: integer; aLp: integer);
 var
-  a,b,i: integer;
+  a,b,i,o: integer;
+  s,s1,s2,s3,s4: string;
 begin
   if aLp=-1 then
   begin
@@ -944,12 +1020,28 @@ begin
     a:=dbpyt.RecordCount;
     b:=random(a);
     for i:=1 to b do if not dbpyt.EOF then dbpyt.Next;
-    ppytanie.Caption:=dbpytpytanie.AsString; fEkran.pytanie.Caption:=dbpytpytanie.AsString;
-    odp_a.Caption:=dbpytodp_1.AsString;      fEkran.odp_a.Caption:=dbpytodp_1.AsString;
-    odp_b.Caption:=dbpytodp_2.AsString;      fEkran.odp_b.Caption:=dbpytodp_2.AsString;
-    odp_c.Caption:=dbpytodp_3.AsString;      fEkran.odp_c.Caption:=dbpytodp_3.AsString;
-    odp_d.Caption:=dbpytodp_4.AsString;      fEkran.odp_d.Caption:=dbpytodp_4.AsString;
-    g_odpowiedz:=dbpytodpowiedz.AsInteger;
+    s:=dbpytpytanie.AsString;
+    s1:=dbpytodp_1.AsString;
+    s2:=dbpytodp_2.AsString;
+    s3:=dbpytodp_3.AsString;
+    s4:=dbpytodp_4.AsString;
+    o:=dbpytodpowiedz.AsInteger;
+    if CheckTest.Checked then
+    begin
+      s:='[TEST] Poprawna odpowiedź to odpowiedź druga!';
+      s1:='Odpowiedź pierwsza';
+      s2:='Odpowiedź druga';
+      s3:='Odpowiedź trzecia';
+      s4:='Odpowiedź czwarta';
+      o:=2;
+    end;
+    ser.SendString('o$all$dane$'+s+'$'+s1+'$'+s2+'$'+s3+'$'+s4);
+    ppytanie.Caption:=s; fEkran.pytanie.Caption:=s;
+    odp_a.Caption:=s1;   fEkran.odp_a.Caption:=s1;
+    odp_b.Caption:=s2;   fEkran.odp_b.Caption:=s2;
+    odp_c.Caption:=s3;   fEkran.odp_c.Caption:=s3;
+    odp_d.Caption:=s4;   fEkran.odp_d.Caption:=s4;
+    g_odpowiedz:=o;
     if CheckBox3.Checked then
     begin
       dbpyt.Edit;
@@ -1077,6 +1169,7 @@ begin
     3: begin odp_c.Font.Color:=clBlack; fEkran.odp_c.Font.Color:=clBlack; end;
     4: begin odp_d.Font.Color:=clBlack; fEkran.odp_d.Font.Color:=clBlack; end;
   end;
+  ser.SendString('o$all$ogolne_zaznacz$'+IntToStr(aNr));
 end;
 
 procedure TFServer.glosy_wyniki(var a, b, c, d: integer);

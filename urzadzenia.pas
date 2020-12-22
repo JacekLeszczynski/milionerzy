@@ -61,7 +61,7 @@ begin
   if a=1 then ytplayer.SendKey(ord('9')) else
   if a=2 then ytplayer.SendKey(ord('8')) else
   if a=3 then ytplayer.SendKey(ord('0')) else
-  if a=4 then ytplayer.SendKey(ord('`'));
+  if a=4 then ytplayer.SendKey(ord('4'));
 end;
 
 procedure Tuu.mpilotClick(aButton: integer; var aTestDblClick: boolean

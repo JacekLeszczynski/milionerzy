@@ -29,7 +29,8 @@ type
 
 const
   CL_ZAZNACZENIE = clGray;
-  CL_KOLO_0 = '○';
+  //CL_KOLO_0 = '○';
+  CL_KOLO_0 = '';
   CL_KOLO_1 = '◉';
   CL_DIAMENT = '♦';
 
