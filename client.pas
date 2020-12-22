@@ -14,6 +14,8 @@ type
   { TFClient }
 
   TFClient = class(TForm)
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
     cli: TNetSocket;
     eImie: TEdit;
     gl1: TplGauge;
@@ -62,6 +64,8 @@ type
     autorun: TTimer;
     ps: TXMLPropStorage;
     procedure autorunTimer(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
     procedure cliConnect(aSocket: TLSocket);
     procedure cliCryptString(var aText: string);
     procedure cliDecryptString(var aText: string);
@@ -69,6 +73,7 @@ type
     procedure cliProcessMessage;
     procedure cliReceiveString(aMsg: string; aSocket: TLSocket);
     procedure cliTimeVector(aTimeVector: integer);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
@@ -200,6 +205,8 @@ procedure TFClient.cliConnect(aSocket: TLSocket);
 begin
   Menuitem3.Enabled:=false;
   Menuitem4.Enabled:=true;
+  BitBtn1.Enabled:=false;
+  BitBtn2.Enabled:=true;
   eImie.Enabled:=false;
   StatusBar.Panels[0].Text:='Connected: OK';
   cli.GetTimeVector;
@@ -222,6 +229,8 @@ begin
   StatusBar.Panels[0].Text:='Connected: OFF';
   Menuitem3.Enabled:=true;
   Menuitem4.Enabled:=false;
+  BitBtn1.Enabled:=true;
+  BitBtn2.Enabled:=false;
   eImie.Enabled:=true;
   clear;
 end;
@@ -236,6 +245,16 @@ begin
   autorun.Enabled:=false;
   key:=dm.KeyLoad;
   connect;
+end;
+
+procedure TFClient.BitBtn1Click(Sender: TObject);
+begin
+  connect;
+end;
+
+procedure TFClient.BitBtn2Click(Sender: TObject);
+begin
+  cli.Disconnect;
 end;
 
 procedure TFClient.cliReceiveString(aMsg: string; aSocket: TLSocket);
@@ -308,6 +327,15 @@ begin
     key:='new';
     send('register');
   end else send('login');
+end;
+
+procedure TFClient.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  if cli.Active then
+  begin
+    cli.Disconnect;
+    sleep(250);
+  end;
 end;
 
 procedure TFClient.FormCreate(Sender: TObject);
