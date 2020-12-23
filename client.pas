@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
   StdCtrls, Buttons, XMLPropStorage, Menus, TplGaugeUnit, NetSocket, ExtMessage,
-  LiveTimer, lNet;
+  LiveTimer, UOSEngine, UOSPlayer, lNet;
 
 type
 
@@ -79,6 +79,9 @@ type
     Label_d: TLabel;
     lInfo: TLabel;
     t30: TTimer;
+    uos: TUOSEngine;
+    mic: TUOSPlayer;
+    glosnik: TUOSPlayer;
     zegar: TLiveTimer;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
@@ -153,6 +156,7 @@ type
     procedure cliTimeVector(aTimeVector: integer);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
@@ -281,6 +285,7 @@ end;
 procedure TFClient.clear;
 begin
   eOff;
+  linfo.Caption:='';
   SpeedButton1.Caption:='';
   SpeedButton2.Caption:='';
   SpeedButton3.Caption:='';
@@ -380,15 +385,6 @@ begin
     end;
   end else
   if odp='synchronizacja' then synchronizuj(s) else
-  //begin
-    //clear;
-    //if GetLineToStr(s,9,'$')='1' then odp_activate(true) else odp_activate(false);
-    //w:=GetLineToStr(s,10,'$');
-    //if w<>'' then Label14.Caption:=upcase(w);
-    //if GetLineToStr(s,11,'$')='1' then odp_przyciski(false);
-    //w:=GetLineToStr(s,12,'$');
-    //if w<>'' then offkey(w);
-  //end else
   if odp='goactive' then odp_activate(true) else
   if odp='godeactive' then odp_activate(false) else
   if odp='goblock' then odp_przyciski(false) else
@@ -446,12 +442,20 @@ begin
   SetConfDir('milionerzy');
   ps.FileName:=MyConfDir('client.xml');
   ps.Active:=true;
+  (* uos *)
+  //uos.LibDirectory:=MyDir('uos');
+  //uos.LoadLibrary;
   (* ver *)
   GetProgramVersion(v1,v2,v3,v4);
   if v4>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+'.'+IntToStr(v3)+'-'+IntToStr(v4)+')' else
   if v3>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+'.'+IntToStr(v3)+')' else
-  if v2>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+')' else Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+')';
+  Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+')';
   autorun.Enabled:=true;
+end;
+
+procedure TFClient.FormDestroy(Sender: TObject);
+begin
+  //uos.UnLoadLibrary;
 end;
 
 procedure TFClient.MenuItem3Click(Sender: TObject);
@@ -684,6 +688,7 @@ var
   s0,s1,s2,s3,s4: string;
   vOdpowiedz,vUdzielonaOdpowiedz: integer;
   vPodsumowanie,vKola,pol: string;
+  vGlos: string;
 begin
 TRY
   clear;
@@ -715,9 +720,11 @@ TRY
   if vTryb>=15 then
   begin
     pol:=GetLineToStr(aCiag,15,'$');
+    vGlos:=GetLineToStr(aCiag,16,'$');
     vUdzielonaOdpowiedz:=StrToInt(GetLineToStr(aCiag,11,'$','0'));
     odp_activate(true);
     if pol<>'' then offkey(pol);
+    Label14.Caption:=vGlos;
     set_zaznacz(vUdzielonaOdpowiedz,0);
   end;
   if vTryb>=16 then

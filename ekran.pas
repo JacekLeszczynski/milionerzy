@@ -47,6 +47,18 @@ type
     Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
+    Label35: TLabel;
+    Label36: TLabel;
+    Label37: TLabel;
+    Label38: TLabel;
+    Label39: TLabel;
+    Label40: TLabel;
+    Label41: TLabel;
+    Label42: TLabel;
+    Label43: TLabel;
+    Label44: TLabel;
+    Label45: TLabel;
+    Label46: TLabel;
     Panel10: TPanel;
     Panel11: TPanel;
     Panel9: TPanel;

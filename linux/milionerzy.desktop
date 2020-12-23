@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Millionaires
+Name[pl]=Milionerzy
+GenericName=Millionaires
+GenericName[pl]=Milionerzy
+Comment=Recording games on youtube
+Comment[pl]=Prowadzenie gier na youtubie
+Icon=milionerzy
+Exec=milionerzy
+Terminal=false
+Categories=AudioVideo;Recorder

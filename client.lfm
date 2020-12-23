@@ -1,7 +1,7 @@
 object FClient: TFClient
-  Left = 352
+  Left = 357
   Height = 551
-  Top = 124
+  Top = 142
   Width = 800
   Caption = 'Jahu - Milionerzy (client)'
   ClientHeight = 524
@@ -11,6 +11,7 @@ object FClient: TFClient
   Menu = MainMenu1
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   SessionProperties = 'eImie.Text;eSkad.Text;Top;Left;Height;Width'
   LCLVersion = '2.0.10.0'
   object StatusBar: TStatusBar
@@ -1072,7 +1073,7 @@ object FClient: TFClient
           Top = 30
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -1086,7 +1087,7 @@ object FClient: TFClient
           Top = 52
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -1100,7 +1101,7 @@ object FClient: TFClient
           Top = 74
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -1114,7 +1115,7 @@ object FClient: TFClient
           Top = 96
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -1142,7 +1143,7 @@ object FClient: TFClient
           Top = 140
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -1156,7 +1157,7 @@ object FClient: TFClient
           Top = 162
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -1170,7 +1171,7 @@ object FClient: TFClient
           Top = 184
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -1184,7 +1185,7 @@ object FClient: TFClient
           Top = 206
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -1212,7 +1213,7 @@ object FClient: TFClient
           Top = 250
           Width = 17
           Caption = '○'
-          Font.Color = clYellow
+          Font.Color = clWhite
           Font.Height = -19
           Font.Name = 'Sans'
           ParentColor = False
@@ -18985,7 +18986,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label43
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 249
           Width = 203
@@ -18996,7 +18997,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label42
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 227
           Width = 203
@@ -19007,7 +19008,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label41
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 205
           Width = 203
@@ -19018,7 +19019,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label40
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 183
           Width = 203
@@ -19029,7 +19030,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label39
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 161
           Width = 203
@@ -19040,7 +19041,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label38
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 139
           Width = 203
@@ -19051,7 +19052,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label37
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 117
           Width = 203
@@ -19062,7 +19063,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label36
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 95
           Width = 203
@@ -19073,7 +19074,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label35
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 73
           Width = 203
@@ -19084,7 +19085,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label34
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 51
           Width = 203
@@ -19095,7 +19096,7 @@ object FClient: TFClient
           AnchorSideLeft.Control = Shape12
           AnchorSideTop.Control = Label33
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 29
           Width = 203
@@ -19105,7 +19106,7 @@ object FClient: TFClient
         object Shape12: TShape
           AnchorSideTop.Control = Label32
           AnchorSideTop.Side = asrCenter
-          Left = 5
+          Left = 4
           Height = 24
           Top = 7
           Width = 203
@@ -19222,5 +19223,28 @@ object FClient: TFClient
     OnStopTimer = t30StopTimer
     Left = 675
     Top = 8
+  end
+  object uos: TUOSEngine
+    LibDirectory = '<auto>'
+    DriversLoad = [dlPortAudio, dlSndAudio]
+    Left = 678
+    Top = 87
+  end
+  object mic: TUOSPlayer
+    DeviceEngine = uos
+    Mode = moRecord
+    Volume = 1
+    VolumeGlobal = 1
+    Left = 720
+    Top = 87
+  end
+  object glosnik: TUOSPlayer
+    DeviceEngine = uos
+    Mode = moPlay
+    DeviceIndex = 1
+    Volume = 1
+    VolumeGlobal = 1
+    Left = 720
+    Top = 144
   end
 end

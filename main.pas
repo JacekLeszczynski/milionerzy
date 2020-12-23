@@ -713,7 +713,9 @@ var
   s: string;
   s0,s1,s2,s3,s4: string;
   s5,s6: string;
-  uo,o,ok: string;
+  uo,o,ok,glos: string;
+  b: boolean;
+  a: integer;
 begin
   s0:=ppytanie.Caption;
   s1:=odp_a.Caption;
@@ -735,7 +737,10 @@ begin
     if not odp_c.Visible then ok:=ok+'c';
     if not odp_d.Visible then ok:=ok+'d';
   end;
-  s:=IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s0+'$'+s1+'$'+s2+'$'+s3+'$'+s4+'$'+uo+'$'+o+'$'+s5+'$'+s6+'$'+ok;
+  glos:='';
+  b:=glosy.Find(aKey,a);
+  if b and (a>-1) then glos:=GetLineToStr(glosy2[a],2,';');
+  s:=IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s0+'$'+s1+'$'+s2+'$'+s3+'$'+s4+'$'+uo+'$'+o+'$'+s5+'$'+s6+'$'+ok+'$'+glos;
   ser.SendString('o$'+aKey+'$synchronizacja$'+s,aSocket);
 end;
 
@@ -907,6 +912,18 @@ begin
   if aPytanie>=10 then Label46.Caption:=CL_KOLO_1 else Label46.Caption:=CL_KOLO_0;
   if aPytanie>=11 then Label45.Caption:=CL_KOLO_1 else Label45.Caption:=CL_KOLO_0;
   if aPytanie>=12 then Label44.Caption:=CL_KOLO_1 else Label44.Caption:=CL_KOLO_0;
+  if aPytanie>=1 then fEkran.Label35.Caption:=CL_KOLO_1 else fEkran.Label35.Caption:=CL_KOLO_0;
+  if aPytanie>=2 then fEkran.Label36.Caption:=CL_KOLO_1 else fEkran.Label36.Caption:=CL_KOLO_0;
+  if aPytanie>=3 then fEkran.Label37.Caption:=CL_KOLO_1 else fEkran.Label37.Caption:=CL_KOLO_0;
+  if aPytanie>=4 then fEkran.Label38.Caption:=CL_KOLO_1 else fEkran.Label38.Caption:=CL_KOLO_0;
+  if aPytanie>=5 then fEkran.Label39.Caption:=CL_KOLO_1 else fEkran.Label39.Caption:=CL_KOLO_0;
+  if aPytanie>=6 then fEkran.Label40.Caption:=CL_KOLO_1 else fEkran.Label40.Caption:=CL_KOLO_0;
+  if aPytanie>=7 then fEkran.Label41.Caption:=CL_KOLO_1 else fEkran.Label41.Caption:=CL_KOLO_0;
+  if aPytanie>=8 then fEkran.Label42.Caption:=CL_KOLO_1 else fEkran.Label42.Caption:=CL_KOLO_0;
+  if aPytanie>=9 then fEkran.Label43.Caption:=CL_KOLO_1 else fEkran.Label43.Caption:=CL_KOLO_0;
+  if aPytanie>=10 then fEkran.Label44.Caption:=CL_KOLO_1 else fEkran.Label44.Caption:=CL_KOLO_0;
+  if aPytanie>=11 then fEkran.Label45.Caption:=CL_KOLO_1 else fEkran.Label45.Caption:=CL_KOLO_0;
+  if aPytanie>=12 then fEkran.Label46.Caption:=CL_KOLO_1 else fEkran.Label46.Caption:=CL_KOLO_0;
   case aPytanie of
      1: Shape1.Visible:=true;
      2: Shape2.Visible:=true;
