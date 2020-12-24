@@ -86,6 +86,8 @@ type
     Label76: TLabel;
     Label77: TLabel;
     Label78: TLabel;
+    Label79: TLabel;
+    ListBox1: TListBox;
     Panel12: TPanel;
     Panel13: TPanel;
     Panel14: TPanel;
@@ -220,7 +222,8 @@ type
     procedure tTelTimer(Sender: TObject);
     procedure uELED1Click(Sender: TObject);
   private
-    sesje,glosy,glosy2: TStringList;
+    sesje,nazwy,glosy,glosy2: TStringList;
+    klucze: TList;
     procedure eOff;
     procedure ePytanie;
     procedure eTabInfo;
@@ -233,7 +236,7 @@ type
     procedure nomusic;
     procedure sound(aNr: integer = 0; aLoop: boolean = false; aVolume: integer = 100);
     procedure nosound;
-    procedure synchronizuj(aKey: string; aSocket: TLSocket);
+    procedure synchronizuj(aSocket: TLSocket; aKey: string);
     procedure test(aTryb: integer);
     procedure test_info(aPytanie: integer);
     procedure ekran_info(aLp: integer = 0);
@@ -245,6 +248,8 @@ type
     procedure glosy_wyniki(var a,b,c,d: integer);
     procedure glosy_aktualizacja;
     procedure glosy_clear;
+    procedure users_add(aImie,aKey: string);
+    procedure users_edit(aImie,aKey: string);
   public
 
   end;
@@ -265,7 +270,8 @@ procedure TFServer.FormCreate(Sender: TObject);
 begin
   randomize;
   sesje:=TStringList.Create;
-  sesje.Sorted:=true;
+  klucze:=TList.Create;
+  nazwy:=TStringList.Create;
   glosy:=TStringList.Create;
   glosy.Sorted:=true;
   glosy2:=TStringList.Create;
@@ -288,6 +294,8 @@ end;
 procedure TFServer.FormDestroy(Sender: TObject);
 begin
   sesje.Free;
+  klucze.Free;
+  nazwy.Free;
   glosy.Free;
   glosy2.Free;
   dm.Free;
@@ -337,22 +345,36 @@ begin
   (* rejestracja lub logowanie *)
   if (key='new') and (kom='register') then
   begin
-    key:=dm.GetGUID;
+    pom:=GetLineToStr(s,4,'$');
+    key:=ser.GetGUID;
     sesje.Add(key);
+    klucze.Add(aSocket);
+    nazwy.Add(pom);
+    users_add(pom,key);
     ser.SendString('o$new$register$'+key,aSocket);
-    synchronizuj(key,aSocket);
+    synchronizuj(aSocket,key);
   end else
   if kom='login' then
   begin
-    b:=sesje.Find(key,i);
-    if b and (i>-1) then ser.SendString('o$'+key+'$ok',aSocket) else
+    pom:=GetLineToStr(s,4,'$');
+    i:=StringToItemIndex(sesje,key);
+    if i>-1 then
     begin
-      nkey:=dm.GetGUID;
+      klucze[i]:=aSocket;
+      nazwy.Delete(i);
+      nazwy.Insert(i,pom);
+      users_edit(pom,key);
+      ser.SendString('o$'+key+'$ok',aSocket);
+    end else begin
+      nkey:=ser.GetGUID;
       sesje.Add(nkey);
+      klucze.Add(aSocket);
+      nazwy.Add(pom);
+      users_add(pom,nkey);
       ser.SendString('o$'+key+'$register$'+nkey,aSocket);
       key:=nkey;
     end;
-    synchronizuj(key,aSocket);
+    synchronizuj(aSocket,key);
   end else
   if kom='zaznacz' then
   begin
@@ -708,7 +730,7 @@ begin
   play2.Stop(true);
 end;
 
-procedure TFServer.synchronizuj(aKey: string; aSocket: TLSocket);
+procedure TFServer.synchronizuj(aSocket: TLSocket; aKey: string);
 var
   s: string;
   s0,s1,s2,s3,s4: string;
@@ -1248,6 +1270,28 @@ begin
   gl2.Progress:=0;
   gl3.Progress:=0;
   gl4.Progress:=0;
+end;
+
+procedure TFServer.users_add(aImie, aKey: string);
+begin
+  ListBox1.Items.Add(aImie+CL_SPACE+aKey);
+end;
+
+procedure TFServer.users_edit(aImie, aKey: string);
+var
+  i: integer;
+  s: string;
+begin
+  for i:=0 to ListBox1.Items.Count-1 do
+  begin
+    s:=ListBox1.Items[i];
+    if pos(aKey,s)>0 then
+    begin
+      ListBox1.Items.Delete(i);
+      break;
+    end;
+  end;
+  ListBox1.Items.Add(aImie+CL_SPACE+aKey);
 end;
 
 end.

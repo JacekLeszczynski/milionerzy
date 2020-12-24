@@ -48,8 +48,7 @@ begin
     begin
       GetProgramVersion(v1,v2,v3,v4);
       if v4>0 then writeln(v1,'.',v2,'.',v3,'-',v4) else
-      if v3>0 then writeln(v1,'.',v2,'.',v3) else
-      if v2>0 then writeln(v1,'.',v2) else writeln(v1,'.',v2);
+      writeln(v1,'.',v2,'.',v3);
       go_exit:=true;
     end;
     //par.ParamsForValues.Add('db');

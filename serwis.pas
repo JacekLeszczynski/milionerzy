@@ -20,7 +20,6 @@ type
     procedure db_close;
     procedure oblicz_wygrana(aPytanie: integer; aWygrana: boolean; var kwota,gwarantowana: integer);
     procedure zysk_i_strata(aPytanie: integer; var gra_o,zysk,strata: integer);
-    function GetGUID: string;
     procedure KeySave(aKey: string);
     function KeyLoad: string;
     function CryptString(aStr: string): string;
@@ -28,6 +27,7 @@ type
   end;
 
 const
+  CL_SPACE = '                    ';
   CL_ZAZNACZENIE = clGray;
   //CL_KOLO_0 = '○';
   CL_KOLO_0 = '';
@@ -129,20 +129,6 @@ begin
     11: begin gra_o:=500000; zysk:=250000; strata:=210000; end;
     12: begin gra_o:=1000000; zysk:=500000; strata:=460000; end;
   end;
-end;
-
-function Tdm.GetGUID: string;
-var
-  error: integer;
-  a: TGUID;
-  s: string;
-begin
-  error:=CreateGUID(a);
-  if error=0 then
-  begin
-    s:=GUIDToString(a);
-    result:=s;
-  end else result:='';
 end;
 
 procedure Tdm.KeySave(aKey: string);

@@ -12,7 +12,7 @@ object FClient: TFClient
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  SessionProperties = 'eImie.Text;eSkad.Text;Top;Left;Height;Width'
+  SessionProperties = 'eImie.Text;eSkad.Text;Height;Left;Top;Width;Autoconnect.Checked'
   LCLVersion = '2.0.10.0'
   object StatusBar: TStatusBar
     Left = 0
@@ -39,13 +39,13 @@ object FClient: TFClient
   end
   object Panel1: TPanel
     Left = 0
-    Height = 53
+    Height = 54
     Top = 0
     Width = 800
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
-    ClientHeight = 53
+    ClientHeight = 54
     ClientWidth = 800
     TabOrder = 1
     object Label1: TLabel
@@ -69,6 +69,7 @@ object FClient: TFClient
       Height = 30
       Top = 23
       Width = 241
+      OnKeyPress = eImieKeyPress
       TabOrder = 0
     end
     object BitBtn1: TBitBtn
@@ -102,7 +103,7 @@ object FClient: TFClient
     end
     object lInfo: TLabel
       Left = 746
-      Height = 53
+      Height = 54
       Top = 0
       Width = 54
       Align = alRight
@@ -115,6 +116,59 @@ object FClient: TFClient
       ParentColor = False
       ParentFont = False
     end
+    object Autoconnect: TCheckBox
+      AnchorSideLeft.Control = BitBtn1
+      AnchorSideBottom.Control = BitBtn1
+      Left = 253
+      Height = 23
+      Top = 0
+      Width = 111
+      Anchors = [akLeft, akBottom]
+      Caption = 'Autołączenie'
+      OnChange = AutoconnectChange
+      TabOrder = 3
+    end
+    object uELED1: TuELED
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED2
+      AnchorSideRight.Control = uELED2
+      Left = 201
+      Height = 24
+      Hint = 'Autołączenie z ponawianiem prób co 10 sekund'
+      Top = -1
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 4
+      Color = clSilver
+      ParentColor = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object uELED2: TuELED
+      AnchorSideRight.Control = eImie
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = eImie
+      Left = 225
+      Height = 24
+      Hint = 'Połączenie aktywne'
+      Top = -1
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Anchors = [akRight, akBottom]
+      Color = clRed
+      ParentColor = False
+      ParentShowHint = False
+      ShowHint = True
+    end
   end
   object Panel2: TPanel
     AnchorSideLeft.Control = Panel1
@@ -124,8 +178,8 @@ object FClient: TFClient
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar
     Left = 8
-    Height = 443
-    Top = 57
+    Height = 442
+    Top = 58
     Width = 784
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
@@ -133,7 +187,7 @@ object FClient: TFClient
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
     BevelOuter = bvNone
-    ClientHeight = 443
+    ClientHeight = 442
     ClientWidth = 784
     TabOrder = 2
     object SpeedButton1: TSpeedButton
@@ -19132,7 +19186,7 @@ object FClient: TFClient
     OnCryptString = cliCryptString
     OnDecryptString = cliDecryptString
     OnTimeVector = cliTimeVector
-    Left = 520
+    Left = 560
     Top = 8
   end
   object mess: TExtMessage
@@ -19142,21 +19196,21 @@ object FClient: TFClient
     PosTop = 0
     PosLeft = 0
     StringToCR = '^'
-    Left = 472
+    Left = 520
     Top = 8
   end
   object autorun: TTimer
     Enabled = False
-    Interval = 1
+    Interval = 500
     OnTimer = autorunTimer
-    Left = 216
-    Top = 8
+    Left = 32
+    Top = 216
   end
   object ps: TXMLPropStorage
     StoredValues = <>
     RootNodePath = 'client'
     Active = False
-    Left = 432
+    Left = 480
     Top = 8
   end
   object tCzas: TTimer
@@ -19164,11 +19218,11 @@ object FClient: TFClient
     Interval = 250
     OnTimer = tCzasTimer
     OnStopTimer = tCzasStopTimer
-    Left = 152
+    Left = 640
     Top = 8
   end
   object MainMenu1: TMainMenu
-    Left = 80
+    Left = 408
     Top = 8
     object MenuItem1: TMenuItem
       Caption = 'Menu'
@@ -19212,8 +19266,8 @@ object FClient: TFClient
     Top = 8
   end
   object zegar: TLiveTimer
-    Left = 606
-    Top = 10
+    Left = 600
+    Top = 8
   end
   object t30: TTimer
     Enabled = False
@@ -19246,5 +19300,14 @@ object FClient: TFClient
     VolumeGlobal = 1
     Left = 720
     Top = 144
+  end
+  object tconn: TTimer
+    Enabled = False
+    Interval = 10000
+    OnTimer = tconnTimer
+    OnStartTimer = tconnStartTimer
+    OnStopTimer = tconnStopTimer
+    Left = 32
+    Top = 272
   end
 end

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
   StdCtrls, Buttons, XMLPropStorage, Menus, TplGaugeUnit, NetSocket, ExtMessage,
-  LiveTimer, UOSEngine, UOSPlayer, lNet;
+  LiveTimer, UOSEngine, UOSPlayer, lNet, ueled;
 
 type
 
@@ -16,6 +16,7 @@ type
   TFClient = class(TForm)
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    Autoconnect: TCheckBox;
     cli: TNetSocket;
     eImie: TEdit;
     gl5: TplGauge;
@@ -79,6 +80,9 @@ type
     Label_d: TLabel;
     lInfo: TLabel;
     t30: TTimer;
+    tconn: TTimer;
+    uELED1: TuELED;
+    uELED2: TuELED;
     uos: TUOSEngine;
     mic: TUOSPlayer;
     glosnik: TUOSPlayer;
@@ -144,6 +148,7 @@ type
     x1: TLabel;
     x2: TLabel;
     x3: TLabel;
+    procedure AutoconnectChange(Sender: TObject);
     procedure autorunTimer(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
@@ -154,6 +159,7 @@ type
     procedure cliProcessMessage;
     procedure cliReceiveString(aMsg: string; aSocket: TLSocket);
     procedure cliTimeVector(aTimeVector: integer);
+    procedure eImieKeyPress(Sender: TObject; var Key: char);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -168,6 +174,9 @@ type
     procedure t30StartTimer(Sender: TObject);
     procedure t30StopTimer(Sender: TObject);
     procedure t30Timer(Sender: TObject);
+    procedure tconnStartTimer(Sender: TObject);
+    procedure tconnStopTimer(Sender: TObject);
+    procedure tconnTimer(Sender: TObject);
     procedure tCzasStopTimer(Sender: TObject);
     procedure tCzasTimer(Sender: TObject);
     procedure tInfoTimer(Sender: TObject);
@@ -213,6 +222,7 @@ procedure TFClient.connect;
 begin
   if trim(eImie.Text)='' then
   begin
+    Autoconnect.Checked:=false;
     mess.ShowWarning('Wypełnij wymagane dane','Zanim się połączysz, wypełnij pole IMIĘ w górnej części ekranu.^Następnie wciśnij przycisk "Połącz" by połączyć się ze zdalnym serwerem.');
     exit;
   end;
@@ -303,17 +313,6 @@ begin
   if aOdpowiedz then cli.SendString('o$'+key+'$'+aStr) else cli.SendString('c$'+key+'$'+aStr);
 end;
 
-procedure TFClient.cliConnect(aSocket: TLSocket);
-begin
-  Menuitem3.Enabled:=false;
-  Menuitem4.Enabled:=true;
-  BitBtn1.Enabled:=false;
-  BitBtn2.Enabled:=true;
-  eImie.Enabled:=false;
-  StatusBar.Panels[0].Text:='Connected: OK';
-  cli.GetTimeVector;
-end;
-
 procedure TFClient.cliCryptString(var aText: string);
 begin
   aText:=dm.CryptString(aText);
@@ -327,6 +326,7 @@ end;
 procedure TFClient.cliDisconnect;
 begin
   tCzas.Enabled:=false;
+  uELED2.Active:=false;
   StatusBar.Panels[1].Text:='Różnica czasu: 0 ms.';
   StatusBar.Panels[0].Text:='Connected: OFF';
   Menuitem3.Enabled:=true;
@@ -335,6 +335,7 @@ begin
   BitBtn2.Enabled:=false;
   eImie.Enabled:=true;
   clear;
+  tconn.Enabled:=Autoconnect.Checked;
 end;
 
 procedure TFClient.cliProcessMessage;
@@ -346,7 +347,13 @@ procedure TFClient.autorunTimer(Sender: TObject);
 begin
   autorun.Enabled:=false;
   key:=dm.KeyLoad;
-  connect;
+  tconn.Enabled:=Autoconnect.Checked;
+  if Autoconnect.Checked then connect;
+end;
+
+procedure TFClient.AutoconnectChange(Sender: TObject);
+begin
+  tconn.Enabled:=Autoconnect.Checked and (not cli.Active);
 end;
 
 procedure TFClient.BitBtn1Click(Sender: TObject);
@@ -357,6 +364,20 @@ end;
 procedure TFClient.BitBtn2Click(Sender: TObject);
 begin
   cli.Disconnect;
+  Autoconnect.Checked:=false;
+end;
+
+procedure TFClient.cliConnect(aSocket: TLSocket);
+begin
+  tconn.Enabled:=false;
+  Menuitem3.Enabled:=false;
+  Menuitem4.Enabled:=true;
+  BitBtn1.Enabled:=false;
+  BitBtn2.Enabled:=true;
+  eImie.Enabled:=false;
+  StatusBar.Panels[0].Text:='Connected: OK';
+  cli.GetTimeVector;
+  uELED2.Active:=true;
 end;
 
 procedure TFClient.cliReceiveString(aMsg: string; aSocket: TLSocket);
@@ -422,8 +443,13 @@ begin
   if (key='') or (key='new') then
   begin
     key:='new';
-    send('register');
-  end else send('login');
+    send('register$'+eImie.Text);
+  end else send('login$'+eImie.Text);
+end;
+
+procedure TFClient.eImieKeyPress(Sender: TObject; var Key: char);
+begin
+  if Key='$' then Key:=#9;
 end;
 
 procedure TFClient.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -522,6 +548,21 @@ begin
   b:=abs(30-(a div 1000));
   Label77.Caption:=IntToStr(b);
   if a>30000 then t30.Enabled:=false;
+end;
+
+procedure TFClient.tconnStartTimer(Sender: TObject);
+begin
+  uELED1.Active:=true;
+end;
+
+procedure TFClient.tconnStopTimer(Sender: TObject);
+begin
+  uELED1.Active:=false;
+end;
+
+procedure TFClient.tconnTimer(Sender: TObject);
+begin
+  connect;
 end;
 
 procedure TFClient.tCzasStopTimer(Sender: TObject);
