@@ -205,6 +205,41 @@ object FServer: TFServer
       ParentFont = False
       TabOrder = 4
     end
+    object uELED2: TuELED
+      AnchorSideLeft.Control = uELED1
+      AnchorSideTop.Control = uELED1
+      AnchorSideTop.Side = asrBottom
+      Left = 909
+      Height = 24
+      Top = 24
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledSquare
+      Bright = True
+      Reflection = True
+      Color = clBlue
+      ParentColor = False
+    end
+    object BitBtn3: TBitBtn
+      AnchorSideTop.Control = uELED2
+      AnchorSideRight.Control = uELED2
+      AnchorSideBottom.Control = uELED2
+      AnchorSideBottom.Side = asrBottom
+      Left = 834
+      Height = 24
+      Top = 24
+      Width = 75
+      Anchors = [akTop, akRight, akBottom]
+      Caption = 'ZAMKNIJ'
+      Enabled = False
+      Font.Height = -11
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      OnClick = BitBtn3Click
+      ParentFont = False
+      TabOrder = 5
+    end
   end
   object GroupBox2: TGroupBox
     AnchorSideLeft.Control = Panel2
@@ -380,7 +415,7 @@ object FServer: TFServer
       Left = 24
       Height = 22
       Top = 103
-      Width = 50
+      Width = 55
       BorderSpacing.Bottom = 2
       Caption = 'A'
       Enabled = False
@@ -391,10 +426,10 @@ object FServer: TFServer
       AnchorSideLeft.Control = SpeedButton1
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton1
-      Left = 74
+      Left = 79
       Height = 22
       Top = 103
-      Width = 50
+      Width = 55
       Caption = 'B'
       Enabled = False
       OnClick = ButtOdpNow
@@ -404,10 +439,10 @@ object FServer: TFServer
       AnchorSideLeft.Control = SpeedButton2
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton1
-      Left = 124
+      Left = 134
       Height = 22
       Top = 103
-      Width = 50
+      Width = 55
       Caption = 'C'
       Enabled = False
       OnClick = ButtOdpNow
@@ -417,10 +452,10 @@ object FServer: TFServer
       AnchorSideLeft.Control = SpeedButton3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = SpeedButton1
-      Left = 174
+      Left = 189
       Height = 22
       Top = 103
-      Width = 50
+      Width = 55
       Caption = 'D'
       Enabled = False
       OnClick = ButtOdpNow
@@ -772,7 +807,10 @@ object FServer: TFServer
     Panels = <    
       item
         Text = 'Ilość podłączonych klientów: 0'
-        Width = 50
+        Width = 250
+      end    
+      item
+        Width = 250
       end>
     SimplePanel = False
   end
@@ -19848,12 +19886,13 @@ object FServer: TFServer
     AnchorSideBottom.Control = GameLastModePlay
     AnchorSideBottom.Side = asrBottom
     Left = 816
-    Height = 380
+    Height = 275
     Top = 77
     Width = 171
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 8
     ItemHeight = 0
+    PopupMenu = PopupMenu1
     ScrollWidth = 169
     Sorted = True
     TabOrder = 9
@@ -19867,6 +19906,26 @@ object FServer: TFServer
     Caption = 'Użytkownicy:'
     Constraints.MinHeight = 19
     ParentColor = False
+  end
+  object ListBox2: TListBox
+    AnchorSideLeft.Control = Label79
+    AnchorSideTop.Control = ListBox1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GameLastModePlay
+    AnchorSideBottom.Side = asrBottom
+    Left = 816
+    Height = 103
+    Top = 354
+    Width = 171
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 2
+    BorderSpacing.Right = 8
+    ItemHeight = 0
+    ScrollWidth = 169
+    TabOrder = 10
+    TopIndex = -1
   end
   object dbpyt: TZQuery
     Connection = dm.db
@@ -20094,5 +20153,52 @@ object FServer: TFServer
     OnTimer = tSerTimer
     Left = 488
     Top = 80
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 858
+    Top = 191
+    object MenuItem1: TMenuItem
+      Caption = 'Ping'
+      OnClick = MenuItem1Click
+    end
+    object MenuItem4: TMenuItem
+      Caption = 'Połączenie głosowe'
+      OnClick = MenuItem4Click
+    end
+    object MenuItem3: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'Rozłącz'
+      OnClick = MenuItem2Click
+    end
+  end
+  object muse: TNetSocket
+    Mode = smServer
+    Security = ssNone
+    BinaryMode = False
+    Host = '127.0.0.1'
+    Port = 4681
+    ReuseAddress = True
+    Timeout = 0
+    SSLMethod = msSSLv2or3
+    OnAccept = museAccept
+    OnReceiveString = museReceiveString
+    Left = 800
+    Top = 8
+  end
+  object tpings: TTimer
+    Enabled = False
+    Interval = 3000
+    OnTimer = tpingsTimer
+    Left = 840
+    Top = 376
+  end
+  object todpowiedz: TTimer
+    Enabled = False
+    Interval = 3000
+    OnTimer = todpowiedzTimer
+    Left = 920
+    Top = 376
   end
 end

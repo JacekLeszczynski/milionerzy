@@ -17,6 +17,7 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     Autoconnect: TCheckBox;
+    BitBtn3: TBitBtn;
     cli: TNetSocket;
     eImie: TEdit;
     gl5: TplGauge;
@@ -79,10 +80,17 @@ type
     Label_c: TLabel;
     Label_d: TLabel;
     lInfo: TLabel;
+    muse: TNetSocket;
+    tcpon: TTimer;
+    tcpoff: TTimer;
+    uELED1: TuELED;
+    uELED4: TuELED;
+    z1: TLiveTimer;
     t30: TTimer;
     tconn: TTimer;
-    uELED1: TuELED;
+    tping: TTimer;
     uELED2: TuELED;
+    uELED3: TuELED;
     uos: TUOSEngine;
     mic: TUOSPlayer;
     glosnik: TUOSPlayer;
@@ -152,6 +160,7 @@ type
     procedure autorunTimer(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
     procedure cliConnect(aSocket: TLSocket);
     procedure cliCryptString(var aText: string);
     procedure cliDecryptString(var aText: string);
@@ -167,6 +176,9 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem9Click(Sender: TObject);
+    procedure museConnect(aSocket: TLSocket);
+    procedure museDisconnect;
+    procedure museReceiveString(aMsg: string; aSocket: TLSocket);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
@@ -174,12 +186,15 @@ type
     procedure t30StartTimer(Sender: TObject);
     procedure t30StopTimer(Sender: TObject);
     procedure t30Timer(Sender: TObject);
-    procedure tconnStartTimer(Sender: TObject);
-    procedure tconnStopTimer(Sender: TObject);
     procedure tconnTimer(Sender: TObject);
+    procedure tcpoffTimer(Sender: TObject);
+    procedure tcponTimer(Sender: TObject);
     procedure tCzasStopTimer(Sender: TObject);
     procedure tCzasTimer(Sender: TObject);
     procedure tInfoTimer(Sender: TObject);
+    procedure tpingStartTimer(Sender: TObject);
+    procedure tpingStopTimer(Sender: TObject);
+    procedure tpingTimer(Sender: TObject);
   private
     key: string;
     procedure eOff;
@@ -326,7 +341,7 @@ end;
 procedure TFClient.cliDisconnect;
 begin
   tCzas.Enabled:=false;
-  uELED2.Active:=false;
+  uELED1.Active:=false;
   StatusBar.Panels[1].Text:='Różnica czasu: 0 ms.';
   StatusBar.Panels[0].Text:='Connected: OFF';
   Menuitem3.Enabled:=true;
@@ -367,6 +382,11 @@ begin
   Autoconnect.Checked:=false;
 end;
 
+procedure TFClient.BitBtn3Click(Sender: TObject);
+begin
+  send('ping');
+end;
+
 procedure TFClient.cliConnect(aSocket: TLSocket);
 begin
   tconn.Enabled:=false;
@@ -377,7 +397,7 @@ begin
   eImie.Enabled:=false;
   StatusBar.Panels[0].Text:='Connected: OK';
   cli.GetTimeVector;
-  uELED2.Active:=true;
+  uELED1.Active:=true;
 end;
 
 procedure TFClient.cliReceiveString(aMsg: string; aSocket: TLSocket);
@@ -431,7 +451,13 @@ begin
     zegar.Tag:=StrToInt(GetLineToStr(s,4,'$','0'));
     t30.Enabled:=true;
   end else
-  if odp='tel30stop' then t30.Enabled:=false;
+  if odp='tel30stop' then t30.Enabled:=false else
+  if odp='ping' then tping.Enabled:=true else
+  if odp='museon' then
+  begin
+    if not uELED4.Active then send('museon$soundoff') else tcpon.Enabled:=true;
+  end else
+  if odp='museoff' then tcpoff.Enabled:=true;
 end;
 
 procedure TFClient.cliTimeVector(aTimeVector: integer);
@@ -469,8 +495,12 @@ begin
   ps.FileName:=MyConfDir('client.xml');
   ps.Active:=true;
   (* uos *)
-  //uos.LibDirectory:=MyDir('uos');
-  //uos.LoadLibrary;
+  if DirectoryExists(MyDir('uos')) then
+  begin
+    uos.Tag:=1;
+    uos.LibDirectory:=MyDir('uos');
+  end;
+  if uos.Tag=1 then uELED4.Active:=uos.LoadLibrary;
   (* ver *)
   GetProgramVersion(v1,v2,v3,v4);
   if v4>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+'.'+IntToStr(v3)+'-'+IntToStr(v4)+')' else
@@ -503,6 +533,21 @@ procedure TFClient.MenuItem9Click(Sender: TObject);
 begin
   FAbout:=TFAbout.Create(self);
   FAbout.ShowModal;
+end;
+
+procedure TFClient.museConnect(aSocket: TLSocket);
+begin
+  uELED2.Active:=true;
+end;
+
+procedure TFClient.museDisconnect;
+begin
+  uELED2.Active:=false;
+end;
+
+procedure TFClient.museReceiveString(aMsg: string; aSocket: TLSocket);
+begin
+  {}
 end;
 
 procedure TFClient.SpeedButton1Click(Sender: TObject);
@@ -550,19 +595,21 @@ begin
   if a>30000 then t30.Enabled:=false;
 end;
 
-procedure TFClient.tconnStartTimer(Sender: TObject);
-begin
-  uELED1.Active:=true;
-end;
-
-procedure TFClient.tconnStopTimer(Sender: TObject);
-begin
-  uELED1.Active:=false;
-end;
-
 procedure TFClient.tconnTimer(Sender: TObject);
 begin
   connect;
+end;
+
+procedure TFClient.tcpoffTimer(Sender: TObject);
+begin
+  tcpoff.Enabled:=false;
+  muse.Disconnect;
+end;
+
+procedure TFClient.tcponTimer(Sender: TObject);
+begin
+  tcpon.Enabled:=false;
+  muse.Connect;
 end;
 
 procedure TFClient.tCzasStopTimer(Sender: TObject);
@@ -579,6 +626,30 @@ procedure TFClient.tInfoTimer(Sender: TObject);
 begin
   tInfo.Enabled:=false;
   ekran_info(0);
+end;
+
+procedure TFClient.tpingStartTimer(Sender: TObject);
+begin
+  tping.Tag:=0;
+  z1.Start;
+end;
+
+procedure TFClient.tpingStopTimer(Sender: TObject);
+begin
+  z1.Stop;
+  uELED3.Active:=false;
+end;
+
+procedure TFClient.tpingTimer(Sender: TObject);
+var
+  a,b: integer;
+begin
+  a:=z1.GetIndexTime;
+  b:=tping.Tag+1;
+  tping.Tag:=b;
+  if b mod 1 = 0 then uELED3.Active:=true;
+  if b mod 2 = 0 then uELED3.Active:=false;
+  if a>3000 then tping.Enabled:=false;
 end;
 
 procedure TFClient.eOff;

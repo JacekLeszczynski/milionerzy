@@ -1,7 +1,7 @@
 object FClient: TFClient
   Left = 357
   Height = 551
-  Top = 142
+  Top = 141
   Width = 800
   Caption = 'Jahu - Milionerzy (client)'
   ClientHeight = 524
@@ -128,13 +128,13 @@ object FClient: TFClient
       OnChange = AutoconnectChange
       TabOrder = 3
     end
-    object uELED1: TuELED
+    object uELED2: TuELED
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = uELED2
-      AnchorSideRight.Control = uELED2
+      AnchorSideTop.Control = uELED3
+      AnchorSideRight.Control = uELED3
       Left = 201
       Height = 24
-      Hint = 'Autołączenie z ponawianiem prób co 10 sekund'
+      Hint = 'Połączenie głosowe'
       Top = -1
       Width = 24
       Debug = False
@@ -143,19 +143,37 @@ object FClient: TFClient
       Bright = True
       Reflection = True
       Anchors = [akTop, akRight]
-      BorderSpacing.Left = 4
-      Color = clSilver
+      Color = clBlue
       ParentColor = False
       ParentShowHint = False
       ShowHint = True
     end
-    object uELED2: TuELED
+    object uELED3: TuELED
       AnchorSideRight.Control = eImie
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = eImie
       Left = 225
       Height = 24
-      Hint = 'Połączenie aktywne'
+      Hint = 'Ping'
+      Top = -1
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledSquare
+      Bright = True
+      Reflection = True
+      Anchors = [akRight, akBottom]
+      Color = clYellow
+      ParentColor = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object uELED4: TuELED
+      AnchorSideTop.Control = uELED3
+      AnchorSideRight.Control = uELED1
+      Left = 153
+      Height = 24
+      Hint = 'Biblioteki dźwięku aktywne'
       Top = -1
       Width = 24
       Debug = False
@@ -163,8 +181,28 @@ object FClient: TFClient
       LedType = ledRound
       Bright = True
       Reflection = True
-      Anchors = [akRight, akBottom]
-      Color = clRed
+      Anchors = [akTop, akRight]
+      Color = clAqua
+      ParentColor = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object uELED1: TuELED
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED3
+      AnchorSideRight.Control = uELED2
+      Left = 177
+      Height = 24
+      Hint = 'Połączenie sieciowe'
+      Top = -1
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Anchors = [akTop, akRight]
+      Color = clLime
       ParentColor = False
       ParentShowHint = False
       ShowHint = True
@@ -19169,6 +19207,19 @@ object FClient: TFClient
         end
       end
     end
+    object BitBtn3: TBitBtn
+      AnchorSideTop.Control = SpeedButton4
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      Left = 704
+      Height = 30
+      Top = 404
+      Width = 80
+      Anchors = [akTop, akRight]
+      Caption = 'PING'
+      OnClick = BitBtn3Click
+      TabOrder = 1
+    end
   end
   object cli: TNetSocket
     Mode = smClient
@@ -19186,7 +19237,7 @@ object FClient: TFClient
     OnCryptString = cliCryptString
     OnDecryptString = cliDecryptString
     OnTimeVector = cliTimeVector
-    Left = 560
+    Left = 544
     Top = 8
   end
   object mess: TExtMessage
@@ -19196,7 +19247,7 @@ object FClient: TFClient
     PosTop = 0
     PosLeft = 0
     StringToCR = '^'
-    Left = 520
+    Left = 504
     Top = 8
   end
   object autorun: TTimer
@@ -19210,7 +19261,7 @@ object FClient: TFClient
     StoredValues = <>
     RootNodePath = 'client'
     Active = False
-    Left = 480
+    Left = 464
     Top = 8
   end
   object tCzas: TTimer
@@ -19222,8 +19273,8 @@ object FClient: TFClient
     Top = 8
   end
   object MainMenu1: TMainMenu
-    Left = 408
-    Top = 8
+    Left = 720
+    Top = 208
     object MenuItem1: TMenuItem
       Caption = 'Menu'
       object MenuItem2: TMenuItem
@@ -19262,11 +19313,11 @@ object FClient: TFClient
     Enabled = False
     Interval = 750
     OnTimer = tInfoTimer
-    Left = 720
+    Left = 712
     Top = 8
   end
   object zegar: TLiveTimer
-    Left = 600
+    Left = 424
     Top = 8
   end
   object t30: TTimer
@@ -19305,9 +19356,50 @@ object FClient: TFClient
     Enabled = False
     Interval = 10000
     OnTimer = tconnTimer
-    OnStartTimer = tconnStartTimer
-    OnStopTimer = tconnStopTimer
     Left = 32
     Top = 272
+  end
+  object tping: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = tpingTimer
+    OnStartTimer = tpingStartTimer
+    OnStopTimer = tpingStopTimer
+    Left = 32
+    Top = 328
+  end
+  object z1: TLiveTimer
+    Left = 80
+    Top = 328
+  end
+  object muse: TNetSocket
+    Mode = smClient
+    Security = ssNone
+    BinaryMode = False
+    Host = 'studiojahu.duckdns.org'
+    Port = 4681
+    ReuseAddress = True
+    Timeout = 0
+    SSLMethod = msSSLv2or3
+    OnProcessMessage = cliProcessMessage
+    OnConnect = museConnect
+    OnDisconnect = museDisconnect
+    OnReceiveString = museReceiveString
+    Left = 584
+    Top = 8
+  end
+  object tcpon: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = tcponTimer
+    Left = 715
+    Top = 323
+  end
+  object tcpoff: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = tcpoffTimer
+    Left = 715
+    Top = 376
   end
 end

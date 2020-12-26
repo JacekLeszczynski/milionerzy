@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, XMLPropStorage, ComCtrls, TplGaugeUnit, Presentation, UOSEngine,
-  UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled;
+  Buttons, XMLPropStorage, ComCtrls, Menus, TplGaugeUnit, Presentation,
+  UOSEngine, UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled;
 
 type
 
@@ -16,6 +16,7 @@ type
   TFServer = class(TForm)
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
@@ -88,10 +89,17 @@ type
     Label78: TLabel;
     Label79: TLabel;
     ListBox1: TListBox;
+    ListBox2: TListBox;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    muse: TNetSocket;
     Panel12: TPanel;
     Panel13: TPanel;
     Panel14: TPanel;
     Panel15: TPanel;
+    PopupMenu1: TPopupMenu;
     ppodsumowanie: TLabel;
     Label_a: TLabel;
     Label_b: TLabel;
@@ -171,10 +179,13 @@ type
     Shape8: TShape;
     Shape9: TShape;
     StatusBar: TStatusBar;
+    todpowiedz: TTimer;
+    tpings: TTimer;
     tSer: TTimer;
     uELED1: TuELED;
     led_null_screen: TuELED;
     led_rozgrywka: TuELED;
+    uELED2: TuELED;
     x1: TLabel;
     x2: TLabel;
     x3: TLabel;
@@ -198,6 +209,7 @@ type
     play1: TUOSPlayer;
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
     procedure ButtOdpNow(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
@@ -205,6 +217,11 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MenuItem1Click(Sender: TObject);
+    procedure MenuItem2Click(Sender: TObject);
+    procedure MenuItem4Click(Sender: TObject);
+    procedure museAccept(aSocket: TLSocket);
+    procedure museReceiveString(aMsg: string; aSocket: TLSocket);
     procedure serCryptString(var aText: string);
     procedure serDecryptString(var aText: string);
     procedure serReceiveString(aMsg: string; aSocket: TLSocket);
@@ -215,6 +232,8 @@ type
     procedure t50StartTimer(Sender: TObject);
     procedure t50Timer(Sender: TObject);
     procedure tGraTimer(Sender: TObject);
+    procedure todpowiedzTimer(Sender: TObject);
+    procedure tpingsTimer(Sender: TObject);
     procedure tSerTimer(Sender: TObject);
     procedure tInfoTimer(Sender: TObject);
     procedure tTelStartTimer(Sender: TObject);
@@ -223,7 +242,8 @@ type
     procedure uELED1Click(Sender: TObject);
   private
     sesje,nazwy,glosy,glosy2: TStringList;
-    klucze: TList;
+    sokety: TList;
+    soket_muse: TLSocket;
     procedure eOff;
     procedure ePytanie;
     procedure eTabInfo;
@@ -250,6 +270,11 @@ type
     procedure glosy_clear;
     procedure users_add(aImie,aKey: string);
     procedure users_edit(aImie,aKey: string);
+    procedure pings_add(aKey: string);
+    function user2socket(aItemIndex: integer; var aKey: string; var aSocket: TLSocket): boolean;
+    function user2send(aItemIndex: integer; aStr: string): boolean;
+    function user2disconnect(aItemIndex: integer): boolean;
+    procedure odpowiedz(aStr: string);
   public
 
   end;
@@ -270,7 +295,7 @@ procedure TFServer.FormCreate(Sender: TObject);
 begin
   randomize;
   sesje:=TStringList.Create;
-  klucze:=TList.Create;
+  sokety:=TList.Create;
   nazwy:=TStringList.Create;
   glosy:=TStringList.Create;
   glosy.Sorted:=true;
@@ -294,7 +319,7 @@ end;
 procedure TFServer.FormDestroy(Sender: TObject);
 begin
   sesje.Free;
-  klucze.Free;
+  sokety.Free;
   nazwy.Free;
   glosy.Free;
   glosy2.Free;
@@ -312,6 +337,31 @@ begin
     else if CheckBox4.Checked then uu.mpilot.Execute(Key) else uu.ytplayer.Execute(Key);
   end;
   Key:=0;
+end;
+
+procedure TFServer.MenuItem1Click(Sender: TObject);
+begin
+  user2send(ListBox1.ItemIndex,'ping');
+end;
+
+procedure TFServer.MenuItem2Click(Sender: TObject);
+begin
+  user2disconnect(ListBox1.ItemIndex);
+end;
+
+procedure TFServer.MenuItem4Click(Sender: TObject);
+begin
+  user2send(ListBox1.ItemIndex,'museon');
+end;
+
+procedure TFServer.museAccept(aSocket: TLSocket);
+begin
+  soket_muse:=aSocket;
+end;
+
+procedure TFServer.museReceiveString(aMsg: string; aSocket: TLSocket);
+begin
+  {}
 end;
 
 procedure TFServer.serCryptString(var aText: string);
@@ -348,7 +398,7 @@ begin
     pom:=GetLineToStr(s,4,'$');
     key:=ser.GetGUID;
     sesje.Add(key);
-    klucze.Add(aSocket);
+    sokety.Add(aSocket);
     nazwy.Add(pom);
     users_add(pom,key);
     ser.SendString('o$new$register$'+key,aSocket);
@@ -360,7 +410,7 @@ begin
     i:=StringToItemIndex(sesje,key);
     if i>-1 then
     begin
-      klucze[i]:=aSocket;
+      sokety[i]:=aSocket;
       nazwy.Delete(i);
       nazwy.Insert(i,pom);
       users_edit(pom,key);
@@ -368,7 +418,7 @@ begin
     end else begin
       nkey:=ser.GetGUID;
       sesje.Add(nkey);
-      klucze.Add(aSocket);
+      sokety.Add(aSocket);
       nazwy.Add(pom);
       users_add(pom,nkey);
       ser.SendString('o$'+key+'$register$'+nkey,aSocket);
@@ -398,6 +448,11 @@ begin
     if w='d' then inc(glosowanie_d);
     ser.SendString('o$'+key+'$zaznaczono$'+w,aSocket);
     glosy_aktualizacja;
+  end else if kom='ping' then pings_add(key) else
+  if kom='museon' then
+  begin
+    pom:=GetLineToStr(s,4,'$');
+    if pom='soundoff' then odpowiedz('System dźwięku u użytkownika nieaktywny.');
   end;
 end;
 
@@ -515,12 +570,26 @@ end;
 procedure TFServer.tGraTimer(Sender: TObject);
 begin
   lInfo.Caption:=IntToStr(TRYB);
-  //lInfo.Caption:=IntToStr(g_pytanie);
+end;
+
+procedure TFServer.todpowiedzTimer(Sender: TObject);
+begin
+  todpowiedz.Enabled:=false;
+  StatusBar.Panels[1].Text:='';
+end;
+
+procedure TFServer.tpingsTimer(Sender: TObject);
+begin
+  if ListBox2.Count>0 then ListBox2.Items.Delete(0);
+  if ListBox2.Count=0 then tpings.Enabled:=false;
 end;
 
 procedure TFServer.tSerTimer(Sender: TObject);
 begin
   StatusBar.Panels[0].Text:='Ilość podłączonych klientów: '+IntToStr(ser.Count);
+  uELED2.Active:=muse.Count>0;
+  BitBtn3.Enabled:=uELED2.Active;
+  MenuItem4.Enabled:=not uELED2.Active;
 end;
 
 procedure TFServer.tInfoTimer(Sender: TObject);
@@ -575,6 +644,7 @@ procedure TFServer.uELED1Click(Sender: TObject);
 begin
   if ser.Active then exit;
   ser.Connect;
+  muse.Connect;
 end;
 
 procedure TFServer.eOff;
@@ -1044,6 +1114,11 @@ begin
   aktywacja_odpowiedzi(true,true);
 end;
 
+procedure TFServer.BitBtn3Click(Sender: TObject);
+begin
+  soket_muse.Disconnect;
+end;
+
 procedure TFServer.CheckBox2Change(Sender: TObject);
 begin
   ON_gra:=CheckBox2.Checked;
@@ -1292,6 +1367,76 @@ begin
     end;
   end;
   ListBox1.Items.Add(aImie+CL_SPACE+aKey);
+end;
+
+procedure TFServer.pings_add(aKey: string);
+var
+  i: integer;
+  s,imie: string;
+begin
+  i:=ecode.StringToItemIndex(sesje,aKey);
+  if i=-1 then exit;
+  imie:=nazwy[i];
+  for i:=0 to ListBox2.Items.Count-1 do
+  begin
+    s:=ListBox2.Items[i];
+    if pos(aKey,s)>0 then
+    begin
+      ListBox2.Items.Delete(i);
+      break;
+    end;
+  end;
+  ListBox2.Items.Add(imie+CL_SPACE+aKey);
+  if (ListBox2.Count>0) and (not tpings.Enabled) then tpings.Enabled:=true;
+end;
+
+function TFServer.user2socket(aItemIndex: integer; var aKey: string;
+  var aSocket: TLSocket): boolean;
+var
+  a: integer;
+  key: string;
+begin
+  key:=ListBox1.Items[aItemIndex];
+  a:=pos('{',key);
+  delete(key,1,a-1);
+  a:=StringToItemIndex(sesje,key);
+  if a>-1 then
+  begin
+    aKey:=key;
+    aSocket:=TLSocket(sokety[a]);
+    if aSocket.Handle=-1 then result:=false else result:=true;
+  end else result:=false;
+end;
+
+function TFServer.user2send(aItemIndex: integer; aStr: string): boolean;
+var
+  b: boolean;
+  key: string;
+  a: TLSocket;
+begin
+  b:=user2socket(aItemIndex,key,a);
+  if b then
+  begin
+    ser.SendString('o$'+key+'$'+aStr,a);
+    result:=true;
+  end else result:=false;
+end;
+
+function TFServer.user2disconnect(aItemIndex: integer): boolean;
+var
+  b: boolean;
+  key: string;
+  a: TLSocket;
+begin
+  result:=true;
+  b:=user2socket(aItemIndex,key,a);
+  if b then a.Disconnect else result:=false;
+end;
+
+procedure TFServer.odpowiedz(aStr: string);
+begin
+  StatusBar.Panels[1].Text:='Informacja: '+aStr;
+  todpowiedz.Enabled:=true;
 end;
 
 end.
