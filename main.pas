@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, XMLPropStorage, ComCtrls, Menus, TplGaugeUnit, Presentation,
-  UOSEngine, UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled;
+  UOSEngine, UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled, pipes;
 
 type
 
@@ -161,6 +161,7 @@ type
     Label8: TLabel;
     Label9: TLabel;
     gl1: TplGauge;
+    mic: TUOSPlayer;
     ser: TNetSocket;
     ps: TXMLPropStorage;
     Shape1: TShape;
@@ -179,6 +180,7 @@ type
     Shape8: TShape;
     Shape9: TShape;
     StatusBar: TStatusBar;
+    tloop: TTimer;
     todpowiedz: TTimer;
     tpings: TTimer;
     tSer: TTimer;
@@ -186,6 +188,7 @@ type
     led_null_screen: TuELED;
     led_rozgrywka: TuELED;
     uELED2: TuELED;
+    glosnik: TUOSPlayer;
     x1: TLabel;
     x2: TLabel;
     x3: TLabel;
@@ -221,7 +224,8 @@ type
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure museAccept(aSocket: TLSocket);
-    procedure museReceiveString(aMsg: string; aSocket: TLSocket);
+    procedure museReceive(aSocket: TLSocket);
+    procedure glosnikProcessMessage;
     procedure serCryptString(var aText: string);
     procedure serDecryptString(var aText: string);
     procedure serReceiveString(aMsg: string; aSocket: TLSocket);
@@ -232,6 +236,7 @@ type
     procedure t50StartTimer(Sender: TObject);
     procedure t50Timer(Sender: TObject);
     procedure tGraTimer(Sender: TObject);
+    procedure tloopTimer(Sender: TObject);
     procedure todpowiedzTimer(Sender: TObject);
     procedure tpingsTimer(Sender: TObject);
     procedure tSerTimer(Sender: TObject);
@@ -244,6 +249,8 @@ type
     sesje,nazwy,glosy,glosy2: TStringList;
     sokety: TList;
     soket_muse: TLSocket;
+    muse_in,muse2_in: TOutputPipeStream;
+    muse_out,muse2_out: TInputPipeStream;
     procedure eOff;
     procedure ePytanie;
     procedure eTabInfo;
@@ -356,12 +363,32 @@ end;
 
 procedure TFServer.museAccept(aSocket: TLSocket);
 begin
+  BitBtn3.Enabled:=true;
   soket_muse:=aSocket;
+  CreatePipeStreams(muse_out,muse_in);
+  CreatePipeStreams(muse2_out,muse2_in);
+  mic.Start(TMemoryStream(muse2_in));
+  tloop.Enabled:=true;
 end;
 
-procedure TFServer.museReceiveString(aMsg: string; aSocket: TLSocket);
+procedure TFServer.museReceive(aSocket: TLSocket);
+const
+  BUFFER_SIZE = 65536;
+var
+  n,i: integer;
+  buf: array [0..BUFFER_SIZE-1] of byte;
 begin
-  {}
+  n:=aSocket.Get(buf,BUFFER_SIZE);
+  if n=0 then exit;
+  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
+  muse_in.WriteBuffer(buf,n);
+  writeln('Odebrano ramkę: ',n);
+  application.ProcessMessages;
+end;
+
+procedure TFServer.glosnikProcessMessage;
+begin
+  application.ProcessMessages;
 end;
 
 procedure TFServer.serCryptString(var aText: string);
@@ -570,6 +597,20 @@ end;
 procedure TFServer.tGraTimer(Sender: TObject);
 begin
   lInfo.Caption:=IntToStr(TRYB);
+end;
+
+procedure TFServer.tloopTimer(Sender: TObject);
+const
+  BUFFER_SIZE = 65536;
+var
+  cc,n,i: integer;
+  buf: array [0..BUFFER_SIZE-1] of byte;
+begin
+  cc:=muse2_out.NumBytesAvailable;
+  if cc=0 then exit;
+  if cc>65536 then cc:=65536;
+  n:=muse2_out.Read(buf,cc);
+  if (muse.Count>0) and (n>0) then soket_muse.Send(buf,n); //muse.SendBinary(buf,n);
 end;
 
 procedure TFServer.todpowiedzTimer(Sender: TObject);
@@ -1117,6 +1158,14 @@ end;
 procedure TFServer.BitBtn3Click(Sender: TObject);
 begin
   soket_muse.Disconnect;
+  glosnik.Stop;
+  while glosnik.Busy do begin application.ProcessMessages; write('.'); end;
+  muse_in.Free;
+  muse_out.Free;
+  //tloop.Enabled:=false;
+  //mic.Stop;
+  muse2_in.Free;
+  muse2_out.Free;
 end;
 
 procedure TFServer.CheckBox2Change(Sender: TObject);

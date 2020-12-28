@@ -1,7 +1,7 @@
 object FClient: TFClient
-  Left = 357
+  Left = 356
   Height = 551
-  Top = 141
+  Top = 168
   Width = 800
   Caption = 'Jahu - Milionerzy (client)'
   ClientHeight = 524
@@ -19349,6 +19349,9 @@ object FClient: TFClient
     DeviceIndex = 1
     Volume = 1
     VolumeGlobal = 1
+    PlayRawMode = True
+    SleepForPlay = 2
+    OnProcessMessage = cliProcessMessage
     Left = 720
     Top = 144
   end
@@ -19384,7 +19387,7 @@ object FClient: TFClient
     OnProcessMessage = cliProcessMessage
     OnConnect = museConnect
     OnDisconnect = museDisconnect
-    OnReceiveString = museReceiveString
+    OnReceive = museReceive
     Left = 584
     Top = 8
   end
@@ -19401,5 +19404,12 @@ object FClient: TFClient
     OnTimer = tcpoffTimer
     Left = 715
     Top = 376
+  end
+  object tloop: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = tloopTimer
+    Left = 720
+    Top = 264
   end
 end

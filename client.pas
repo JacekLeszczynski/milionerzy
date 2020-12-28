@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
   StdCtrls, Buttons, XMLPropStorage, Menus, TplGaugeUnit, NetSocket, ExtMessage,
-  LiveTimer, UOSEngine, UOSPlayer, lNet, ueled;
+  LiveTimer, UOSEngine, UOSPlayer, lNet, ueled, pipes;
 
 type
 
@@ -83,6 +83,7 @@ type
     muse: TNetSocket;
     tcpon: TTimer;
     tcpoff: TTimer;
+    tloop: TTimer;
     uELED1: TuELED;
     uELED4: TuELED;
     z1: TLiveTimer;
@@ -178,7 +179,7 @@ type
     procedure MenuItem9Click(Sender: TObject);
     procedure museConnect(aSocket: TLSocket);
     procedure museDisconnect;
-    procedure museReceiveString(aMsg: string; aSocket: TLSocket);
+    procedure museReceive(aSocket: TLSocket);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
@@ -192,11 +193,14 @@ type
     procedure tCzasStopTimer(Sender: TObject);
     procedure tCzasTimer(Sender: TObject);
     procedure tInfoTimer(Sender: TObject);
+    procedure tloopTimer(Sender: TObject);
     procedure tpingStartTimer(Sender: TObject);
     procedure tpingStopTimer(Sender: TObject);
     procedure tpingTimer(Sender: TObject);
   private
     key: string;
+    muse_in,muse2_in: TOutputPipeStream;
+    muse_out,muse2_out: TInputPipeStream;
     procedure eOff;
     procedure ePytanie;
     procedure eTabInfo;
@@ -457,7 +461,12 @@ begin
   begin
     if not uELED4.Active then send('museon$soundoff') else tcpon.Enabled:=true;
   end else
-  if odp='museoff' then tcpoff.Enabled:=true;
+  if odp='museoff' then
+  begin
+    tcpoff.Enabled:=true;
+    //muse.Disconnect;
+    //if muse.Active then mic.Stop;
+  end;
 end;
 
 procedure TFClient.cliTimeVector(aTimeVector: integer);
@@ -511,7 +520,7 @@ end;
 
 procedure TFClient.FormDestroy(Sender: TObject);
 begin
-  //uos.UnLoadLibrary;
+  if uELED4.Active then uos.UnLoadLibrary;
 end;
 
 procedure TFClient.MenuItem3Click(Sender: TObject);
@@ -537,17 +546,39 @@ end;
 
 procedure TFClient.museConnect(aSocket: TLSocket);
 begin
+  CreatePipeStreams(muse_out,muse_in);
+  CreatePipeStreams(muse2_out,muse2_in);
+  mic.Start(TMemoryStream(muse_in));
+  tloop.Enabled:=true;
   uELED2.Active:=true;
 end;
 
 procedure TFClient.museDisconnect;
 begin
+  tloop.Enabled:=false;
+  mic.Stop;
+  muse_in.Free;
+  muse_out.Free;
+  glosnik.Stop;
+  while glosnik.Busy do begin application.ProcessMessages; write('.'); end;
+  muse2_in.Free;
+  muse2_out.Free;
   uELED2.Active:=false;
 end;
 
-procedure TFClient.museReceiveString(aMsg: string; aSocket: TLSocket);
+procedure TFClient.museReceive(aSocket: TLSocket);
+const
+  BUFFER_SIZE = 65536;
+var
+  n,i: integer;
+  buf: array [0..BUFFER_SIZE-1] of byte;
 begin
-  {}
+  n:=aSocket.Get(buf,BUFFER_SIZE);
+  if n=0 then exit;
+  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse2_out));
+  muse2_in.WriteBuffer(buf,n);
+  writeln('Odebrano ramkę: ',n);
+  application.ProcessMessages;
 end;
 
 procedure TFClient.SpeedButton1Click(Sender: TObject);
@@ -603,6 +634,7 @@ end;
 procedure TFClient.tcpoffTimer(Sender: TObject);
 begin
   tcpoff.Enabled:=false;
+  //mic.Stop;
   muse.Disconnect;
 end;
 
@@ -626,6 +658,20 @@ procedure TFClient.tInfoTimer(Sender: TObject);
 begin
   tInfo.Enabled:=false;
   ekran_info(0);
+end;
+
+procedure TFClient.tloopTimer(Sender: TObject);
+const
+  BUFFER_SIZE = 65536;
+var
+  cc,n,i: integer;
+  buf: array [0..BUFFER_SIZE-1] of byte;
+begin
+  cc:=muse_out.NumBytesAvailable;
+  if cc=0 then exit;
+  if cc>65536 then cc:=65536;
+  n:=muse_out.Read(buf,cc);
+  if muse.Active and (n>0) then muse.SendBinary(buf,n);
 end;
 
 procedure TFClient.tpingStartTimer(Sender: TObject);

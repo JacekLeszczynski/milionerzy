@@ -1,7 +1,7 @@
 object FServer: TFServer
   Left = 354
   Height = 482
-  Top = 522
+  Top = 536
   Width = 995
   BorderStyle = bsSingle
   Caption = 'Panel kontrolny'
@@ -20183,7 +20183,7 @@ object FServer: TFServer
     Timeout = 0
     SSLMethod = msSSLv2or3
     OnAccept = museAccept
-    OnReceiveString = museReceiveString
+    OnReceive = museReceive
     Left = 800
     Top = 8
   end
@@ -20200,5 +20200,33 @@ object FServer: TFServer
     OnTimer = todpowiedzTimer
     Left = 920
     Top = 376
+  end
+  object glosnik: TUOSPlayer
+    DeviceEngine = uos
+    Mode = moPlay
+    DeviceIndex = 4
+    Volume = 1
+    VolumeGlobal = 1
+    PlayRawMode = True
+    SleepForPlay = 2
+    OnProcessMessage = glosnikProcessMessage
+    Left = 728
+    Top = 128
+  end
+  object mic: TUOSPlayer
+    DeviceEngine = uos
+    Mode = moRecord
+    DeviceIndex = 3
+    Volume = 1
+    VolumeGlobal = 1
+    Left = 728
+    Top = 72
+  end
+  object tloop: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = tloopTimer
+    Left = 880
+    Top = 280
   end
 end
