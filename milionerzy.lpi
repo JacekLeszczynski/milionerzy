@@ -25,7 +25,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
-      <RevisionNr Value="3"/>
+      <RevisionNr Value="4"/>
       <Language Value="0415"/>
       <StringTable CompanyName="Studio Jahu" InternalName="milionerzy.exe" LegalCopyright="2020 Krakow" LegalTrademarks="Studio Jahu" OriginalFilename="milionerzy.exe" ProductName="Milionerzy Client Studio Jahu" ProductVersion="1.0"/>
     </VersionInfo>
@@ -239,18 +239,14 @@
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="linux"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
           </CodeGeneration>
           <Linking>
             <Debugging>
-              <GenerateDebugInfo Value="False"/>
+              <UseHeaptrc Value="True"/>
+              <TrashVariables Value="True"/>
             </Debugging>
-            <LinkSmart Value="True"/>
             <Options>
               <Win32>
                 <GraphicApplication Value="True"/>
@@ -261,7 +257,7 @@
             <CustomOptions Value="-dSERVER
 -dDEBUG"/>
             <OtherDefines Count="2">
-              <Define0 Value="SERVER"/>
+              <Define0 Value="CLIENT"/>
               <Define1 Value="DEBUG"/>
             </OtherDefines>
           </Other>
@@ -279,18 +275,14 @@
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="linux"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
           </CodeGeneration>
           <Linking>
             <Debugging>
-              <GenerateDebugInfo Value="False"/>
+              <UseHeaptrc Value="True"/>
+              <TrashVariables Value="True"/>
             </Debugging>
-            <LinkSmart Value="True"/>
             <Options>
               <Win32>
                 <GraphicApplication Value="True"/>

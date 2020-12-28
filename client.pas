@@ -81,8 +81,7 @@ type
     Label_d: TLabel;
     lInfo: TLabel;
     muse: TNetSocket;
-    tcpon: TTimer;
-    tcpoff: TTimer;
+    tmuse: TTimer;
     tloop: TTimer;
     uELED1: TuELED;
     uELED4: TuELED;
@@ -177,8 +176,6 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem9Click(Sender: TObject);
-    procedure museConnect(aSocket: TLSocket);
-    procedure museDisconnect;
     procedure museReceive(aSocket: TLSocket);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
@@ -188,8 +185,7 @@ type
     procedure t30StopTimer(Sender: TObject);
     procedure t30Timer(Sender: TObject);
     procedure tconnTimer(Sender: TObject);
-    procedure tcpoffTimer(Sender: TObject);
-    procedure tcponTimer(Sender: TObject);
+    procedure tmuseTimer(Sender: TObject);
     procedure tCzasStopTimer(Sender: TObject);
     procedure tCzasTimer(Sender: TObject);
     procedure tInfoTimer(Sender: TObject);
@@ -201,6 +197,7 @@ type
     key: string;
     muse_in,muse2_in: TOutputPipeStream;
     muse_out,muse2_out: TInputPipeStream;
+    muse_on: boolean;
     procedure eOff;
     procedure ePytanie;
     procedure eTabInfo;
@@ -409,6 +406,7 @@ var
   s,s1,s2,odp,w: string;
 begin
   s:=aMsg;
+  {$IFDEF DEBUG} writeln('client.ramka: ',s); {$ENDIF}
   s1:=GetLineToStr(s,1,'$');
   if s1<>'o' then exit;
   s2:=GetLineToStr(s,2,'$');
@@ -457,15 +455,22 @@ begin
   end else
   if odp='tel30stop' then t30.Enabled:=false else
   if odp='ping' then tping.Enabled:=true else
-  if odp='museon' then
+  if odp='muse' then
   begin
-    if not uELED4.Active then send('museon$soundoff') else tcpon.Enabled:=true;
-  end else
-  if odp='museoff' then
-  begin
-    tcpoff.Enabled:=true;
-    //muse.Disconnect;
-    //if muse.Active then mic.Stop;
+    w:=GetLineToStr(s,4,'$');
+    {$IFDEF DEBUG} writeln('client.receive.muse: ',w); {$ENDIF}
+    if w='connect' then
+    begin
+      if uELED4.Active then
+      begin
+        tmuse.Tag:=1;
+        tmuse.Enabled:=true;
+      end else send('muse$connect$nosound');
+    end else
+    if w='on' then begin tmuse.Tag:=2; tmuse.Enabled:=true; end else
+    if w='start' then begin tmuse.Tag:=3; tmuse.Enabled:=true; end else
+    if w='off' then begin tmuse.Tag:=4; tmuse.Enabled:=true; end else
+    if w='off2' then begin tmuse.Tag:=5; tmuse.Enabled:=true; end;
   end;
 end;
 
@@ -503,6 +508,7 @@ begin
   SetConfDir('milionerzy');
   ps.FileName:=MyConfDir('client.xml');
   ps.Active:=true;
+  muse_on:=false;
   (* uos *)
   if DirectoryExists(MyDir('uos')) then
   begin
@@ -544,30 +550,6 @@ begin
   FAbout.ShowModal;
 end;
 
-procedure TFClient.museConnect(aSocket: TLSocket);
-begin
-  {$IFDEF DEBUG} writeln('client.museConnect'); {$ENDIF}
-  CreatePipeStreams(muse_out,muse_in);
-  CreatePipeStreams(muse2_out,muse2_in);
-  mic.Start(TMemoryStream(muse_in));
-  tloop.Enabled:=true;
-  uELED2.Active:=true;
-end;
-
-procedure TFClient.museDisconnect;
-begin
-  {$IFDEF DEBUG} writeln('client.museDisconnect'); {$ENDIF}
-  tloop.Enabled:=false;
-  mic.Stop;
-  muse_in.Free;
-  muse_out.Free;
-  glosnik.Stop;
-  while glosnik.Busy do begin application.ProcessMessages; end;
-  muse2_in.Free;
-  muse2_out.Free;
-  uELED2.Active:=false;
-end;
-
 procedure TFClient.museReceive(aSocket: TLSocket);
 const
   BUFFER_SIZE = 65536;
@@ -575,12 +557,12 @@ var
   n,i: integer;
   buf: array [0..BUFFER_SIZE-1] of byte;
 begin
-  {$IFDEF DEBUG} writeln('client.museReceive'); {$ENDIF}
   n:=aSocket.Get(buf,BUFFER_SIZE);
+  {$IFDEF DEBUG} writeln('client.museReceive.muse_on: ',muse_on,' count: ',n); {$ENDIF}
+  if not muse_on then exit;
   if n=0 then exit;
-  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse2_out));
-  muse2_in.WriteBuffer(buf,n);
-  //writeln('Odebrano ramkę: ',n);
+  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
+  muse_in.WriteBuffer(buf,n);
   application.ProcessMessages;
 end;
 
@@ -634,17 +616,53 @@ begin
   connect;
 end;
 
-procedure TFClient.tcpoffTimer(Sender: TObject);
+procedure TFClient.tmuseTimer(Sender: TObject);
 begin
-  tcpoff.Enabled:=false;
-  //mic.Stop;
-  muse.Disconnect;
-end;
-
-procedure TFClient.tcponTimer(Sender: TObject);
-begin
-  tcpon.Enabled:=false;
-  muse.Connect;
+  tmuse.Enabled:=false;
+  if tmuse.Tag=1 then
+  begin
+    {$IFDEF DEBUG} writeln('client.tmuse.1'); {$ENDIF}
+    uELED2.Color:=clRed;
+    uELED2.Active:=muse.Connect;
+    if uELED2.Active then send('muse$connect$ok') else send('muse$connect$error');
+  end else
+  if tmuse.Tag=2 then
+  begin
+    {$IFDEF DEBUG} writeln('client.tmuse.2'); {$ENDIF}
+    CreatePipeStreams(muse_out,muse_in);
+    CreatePipeStreams(muse2_out,muse2_in);
+    muse_on:=true;
+    tloop.Enabled:=true;
+    mic.Start(TMemoryStream(muse2_in));
+    send('muse$on$ok');
+  end else
+  if tmuse.Tag=3 then
+  begin
+    {$IFDEF DEBUG} writeln('client.tmuse.3'); {$ENDIF}
+    uELED2.Color:=clBlue;
+    uELED2.Active:=true;
+  end else
+  if tmuse.Tag=4 then
+  begin
+    {$IFDEF DEBUG} writeln('client.tmuse.4'); {$ENDIF}
+    muse_on:=false;
+    glosnik.Stop;
+    while glosnik.Busy do begin application.ProcessMessages; end;
+    send('muse$off$ok');
+  end else
+  if tmuse.Tag=5 then
+  begin
+    {$IFDEF DEBUG} writeln('client.tmuse.5'); {$ENDIF}
+    mic.Stop;
+    tloop.Enabled:=false;
+    muse_in.Free;
+    muse_out.Free;
+    muse2_in.Free;
+    muse2_out.Free;
+    muse.Disconnect;
+    uELED2.Active:=false;
+    send('muse$off2$ok');
+  end;
 end;
 
 procedure TFClient.tCzasStopTimer(Sender: TObject);
@@ -670,12 +688,12 @@ var
   cc,n,i: integer;
   buf: array [0..BUFFER_SIZE-1] of byte;
 begin
-  {$IFDEF DEBUG} writeln('client.tloop'); {$ENDIF}
-  cc:=muse_out.NumBytesAvailable;
+  cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
   if cc>65536 then cc:=65536;
-  n:=muse_out.Read(buf,cc);
-  if muse.Active and (n>0) then muse.SendBinary(buf,n);
+  n:=muse2_out.Read(buf,cc);
+  if n>0 then muse.SendBinary(buf,n);
+  //{$IFDEF DEBUG} writeln('client.tloop.count: ',n); {$ENDIF}
 end;
 
 procedure TFClient.tpingStartTimer(Sender: TObject);

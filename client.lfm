@@ -1,7 +1,7 @@
 object FClient: TFClient
-  Left = 352
+  Left = 351
   Height = 551
-  Top = 130
+  Top = 157
   Width = 800
   Caption = 'Jahu - Milionerzy (client)'
   ClientHeight = 524
@@ -19377,33 +19377,25 @@ object FClient: TFClient
   end
   object muse: TNetSocket
     Mode = smClient
+    Protocol = spUDP
     Security = ssNone
-    BinaryMode = False
+    BinaryMode = True
     Host = 'studiojahu.duckdns.org'
     Port = 4681
     ReuseAddress = True
     Timeout = 0
     SSLMethod = msSSLv2or3
     OnProcessMessage = cliProcessMessage
-    OnConnect = museConnect
-    OnDisconnect = museDisconnect
     OnReceive = museReceive
     Left = 584
     Top = 8
   end
-  object tcpon: TTimer
+  object tmuse: TTimer
     Enabled = False
-    Interval = 1
-    OnTimer = tcponTimer
+    Interval = 200
+    OnTimer = tmuseTimer
     Left = 715
     Top = 323
-  end
-  object tcpoff: TTimer
-    Enabled = False
-    Interval = 1
-    OnTimer = tcpoffTimer
-    Left = 715
-    Top = 376
   end
   object tloop: TTimer
     Enabled = False

@@ -20156,7 +20156,7 @@ object FServer: TFServer
   end
   object PopupMenu1: TPopupMenu
     Left = 858
-    Top = 191
+    Top = 104
     object MenuItem1: TMenuItem
       Caption = 'Ping'
       OnClick = MenuItem1Click
@@ -20175,14 +20175,15 @@ object FServer: TFServer
   end
   object muse: TNetSocket
     Mode = smServer
+    Protocol = spUDP
     Security = ssNone
-    BinaryMode = False
+    BinaryMode = True
     Host = '127.0.0.1'
     Port = 4681
     ReuseAddress = True
     Timeout = 0
     SSLMethod = msSSLv2or3
-    OnAccept = museAccept
+    OnProcessMessage = glosnikProcessMessage
     OnReceive = museReceive
     Left = 800
     Top = 8
@@ -20226,7 +20227,14 @@ object FServer: TFServer
     Enabled = False
     Interval = 200
     OnTimer = tloopTimer
-    Left = 880
-    Top = 280
+    Left = 858
+    Top = 168
+  end
+  object tmuse: TTimer
+    Enabled = False
+    Interval = 200
+    OnTimer = tmuseTimer
+    Left = 858
+    Top = 232
   end
 end
