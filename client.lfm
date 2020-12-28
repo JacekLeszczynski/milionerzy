@@ -1,7 +1,7 @@
 object FClient: TFClient
-  Left = 356
+  Left = 352
   Height = 551
-  Top = 168
+  Top = 130
   Width = 800
   Caption = 'Jahu - Milionerzy (client)'
   ClientHeight = 524
@@ -19407,7 +19407,7 @@ object FClient: TFClient
   end
   object tloop: TTimer
     Enabled = False
-    Interval = 100
+    Interval = 200
     OnTimer = tloopTimer
     Left = 720
     Top = 264

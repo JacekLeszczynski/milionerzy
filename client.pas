@@ -546,6 +546,7 @@ end;
 
 procedure TFClient.museConnect(aSocket: TLSocket);
 begin
+  {$IFDEF DEBUG} writeln('client.museConnect'); {$ENDIF}
   CreatePipeStreams(muse_out,muse_in);
   CreatePipeStreams(muse2_out,muse2_in);
   mic.Start(TMemoryStream(muse_in));
@@ -555,12 +556,13 @@ end;
 
 procedure TFClient.museDisconnect;
 begin
+  {$IFDEF DEBUG} writeln('client.museDisconnect'); {$ENDIF}
   tloop.Enabled:=false;
   mic.Stop;
   muse_in.Free;
   muse_out.Free;
   glosnik.Stop;
-  while glosnik.Busy do begin application.ProcessMessages; write('.'); end;
+  while glosnik.Busy do begin application.ProcessMessages; end;
   muse2_in.Free;
   muse2_out.Free;
   uELED2.Active:=false;
@@ -573,11 +575,12 @@ var
   n,i: integer;
   buf: array [0..BUFFER_SIZE-1] of byte;
 begin
+  {$IFDEF DEBUG} writeln('client.museReceive'); {$ENDIF}
   n:=aSocket.Get(buf,BUFFER_SIZE);
   if n=0 then exit;
   if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse2_out));
   muse2_in.WriteBuffer(buf,n);
-  writeln('Odebrano ramkę: ',n);
+  //writeln('Odebrano ramkę: ',n);
   application.ProcessMessages;
 end;
 
@@ -667,6 +670,7 @@ var
   cc,n,i: integer;
   buf: array [0..BUFFER_SIZE-1] of byte;
 begin
+  {$IFDEF DEBUG} writeln('client.tloop'); {$ENDIF}
   cc:=muse_out.NumBytesAvailable;
   if cc=0 then exit;
   if cc>65536 then cc:=65536;
@@ -905,12 +909,7 @@ TRY
   if vTryb>=20 then set_ogolne(20,vPytanie,vPodsumowanie);
   if vTryb>=21 then set_ogolne(21,vPytanie);
 EXCEPT
-  on E: Exception do
-  begin
-      writeln('Wystąpił błąd:');
-      writeln('  TRYB=',vTryb,', RUNDA=',vPytanie);
-      writeln('  Treść błędu: ',E.Message);
-  end;
+  on E: Exception do mess.ShowError('Wystąpił błąd:^  TRYB='+IntToStr(vTryb)+', RUNDA='+IntToStr(vPytanie)+'^  Treść błędu: '+E.Message);
 END;
 end;
 

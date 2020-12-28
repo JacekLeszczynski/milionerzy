@@ -363,6 +363,7 @@ end;
 
 procedure TFServer.museAccept(aSocket: TLSocket);
 begin
+  {$IFDEF DEBUG} writeln('server.museAccept'); {$ENDIF}
   BitBtn3.Enabled:=true;
   soket_muse:=aSocket;
   CreatePipeStreams(muse_out,muse_in);
@@ -378,11 +379,12 @@ var
   n,i: integer;
   buf: array [0..BUFFER_SIZE-1] of byte;
 begin
+  {$IFDEF DEBUG} writeln('server.museReceive'); {$ENDIF}
   n:=aSocket.Get(buf,BUFFER_SIZE);
   if n=0 then exit;
   if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
   muse_in.WriteBuffer(buf,n);
-  writeln('Odebrano ramkę: ',n);
+  //writeln('Odebrano ramkę: ',n);
   application.ProcessMessages;
 end;
 
@@ -606,6 +608,7 @@ var
   cc,n,i: integer;
   buf: array [0..BUFFER_SIZE-1] of byte;
 begin
+  {$IFDEF DEBUG} writeln('server.tloop'); {$ENDIF}
   cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
   if cc>65536 then cc:=65536;
@@ -1157,13 +1160,14 @@ end;
 
 procedure TFServer.BitBtn3Click(Sender: TObject);
 begin
+  {$IFDEF DEBUG} writeln('server."button zamknij połączenie rozmowy głosowej"'); {$ENDIF}
   soket_muse.Disconnect;
   glosnik.Stop;
-  while glosnik.Busy do begin application.ProcessMessages; write('.'); end;
+  while glosnik.Busy do begin application.ProcessMessages; end;
   muse_in.Free;
   muse_out.Free;
-  //tloop.Enabled:=false;
-  //mic.Stop;
+  tloop.Enabled:=false;
+  mic.Stop;
   muse2_in.Free;
   muse2_out.Free;
 end;
