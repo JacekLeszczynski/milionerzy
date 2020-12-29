@@ -19391,7 +19391,7 @@ object FClient: TFClient
   end
   object tmuse: TTimer
     Enabled = False
-    Interval = 200
+    Interval = 50
     OnTimer = tmuseTimer
     Left = 715
     Top = 323

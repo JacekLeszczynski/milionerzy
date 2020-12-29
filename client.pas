@@ -412,6 +412,8 @@ begin
   s2:=GetLineToStr(s,2,'$');
   if (s2<>key) and (s2<>'all') then exit;
   odp:=GetLineToStr(s,3,'$');
+  (* żądanie wysłania ramki danych *)
+  if (odp='cansend') then muse.SendCanSendMessage(aSocket,'server') else
   (* rejestracja lub logowanie *)
   if odp='register' then
   begin
@@ -468,7 +470,7 @@ begin
       end else send('muse$connect$nosound');
     end else
     if w='on' then begin tmuse.Tag:=2; tmuse.Enabled:=true; end else
-    if w='start' then begin tmuse.Tag:=3; tmuse.Enabled:=true; end else
+    if w='start' then begin tmuse.Tag:=3; tmuse.Enabled:=true; muse.SendCanSendMessage(aSocket,'server'); end else
     if w='off' then begin tmuse.Tag:=4; tmuse.Enabled:=true; end else
     if w='off2' then begin tmuse.Tag:=5; tmuse.Enabled:=true; end;
   end;
@@ -551,18 +553,17 @@ begin
 end;
 
 procedure TFClient.museReceive(aSocket: TLSocket);
-const
-  BUFFER_SIZE = 65536;
 var
-  n,i: integer;
-  buf: array [0..BUFFER_SIZE-1] of byte;
+  n1,n2,i: integer;
+  buf: TBufferNetwork;
 begin
-  n:=aSocket.Get(buf,BUFFER_SIZE);
-  {$IFDEF DEBUG} writeln('client.museReceive.muse_on: ',muse_on,' count: ',n); {$ENDIF}
+  n1:=aSocket.Get(buf,BUFFER_SIZE);
+  if n1=0 then exit;
   if not muse_on then exit;
-  if n=0 then exit;
   if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
-  muse_in.WriteBuffer(buf,n);
+  n1:=dm.rd.Add(buf,n1);
+  n2:=dm.rd.Execute(muse_in);
+  {$IFDEF DEBUG} writeln('client.museReceive.muse_on: ',muse_on,' count: ',n1,' -> ',n2); {$ENDIF}
   application.ProcessMessages;
 end;
 
@@ -682,18 +683,19 @@ begin
 end;
 
 procedure TFClient.tloopTimer(Sender: TObject);
-const
-  BUFFER_SIZE = 65536;
 var
-  cc,n,i: integer;
-  buf: array [0..BUFFER_SIZE-1] of byte;
+  cc,n1,n2: integer;
+  buf: TBufferNetwork;
 begin
   cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
-  if cc>65536 then cc:=65536;
-  n:=muse2_out.Read(buf,cc);
-  if n>0 then muse.SendBinary(buf,n);
-  {$IFDEF DEBUG} writeln('client.tloop.count: ',n); {$ENDIF}
+  if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
+  //n2:=muse2_out.Read(buf,cc);
+  //n2:=dm.Compress(muse2_out,buf,cc);
+  n1:=dm.rc.Add(muse2_out); //dodanie strumienia
+  n2:=dm.rc.Execute(buf);  //kompresja strumienia
+  if n2>0 then muse.SendBinary(buf,n2);
+  {$IFDEF DEBUG} writeln('client.tloop.count: ',n1,' -> ',n2); {$ENDIF}
 end;
 
 procedure TFClient.tpingStartTimer(Sender: TObject);

@@ -221,6 +221,20 @@ object FServer: TFServer
       Color = clBlue
       ParentColor = False
     end
+    object BitBtn4: TBitBtn
+      AnchorSideTop.Control = uELED1
+      AnchorSideRight.Control = uELED1
+      AnchorSideBottom.Control = uELED1
+      AnchorSideBottom.Side = asrBottom
+      Left = 834
+      Height = 24
+      Top = 0
+      Width = 75
+      Anchors = [akTop, akRight, akBottom]
+      Caption = 'TEST'
+      OnClick = BitBtn4Click
+      TabOrder = 6
+    end
     object BitBtn3: TBitBtn
       AnchorSideTop.Control = uELED2
       AnchorSideRight.Control = uELED2
@@ -20231,9 +20245,18 @@ object FServer: TFServer
   end
   object tmuse: TTimer
     Enabled = False
-    Interval = 200
+    Interval = 50
     OnTimer = tmuseTimer
     Left = 858
     Top = 232
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = Timer1Timer
+    OnStartTimer = Timer1StartTimer
+    OnStopTimer = Timer1StopTimer
+    Left = 937
+    Top = 82
   end
 end

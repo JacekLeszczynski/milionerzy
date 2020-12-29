@@ -17,6 +17,7 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
@@ -180,6 +181,7 @@ type
     Shape8: TShape;
     Shape9: TShape;
     StatusBar: TStatusBar;
+    Timer1: TTimer;
     tloop: TTimer;
     tmuse: TTimer;
     todpowiedz: TTimer;
@@ -214,6 +216,7 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
     procedure ButtOdpNow(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
@@ -236,6 +239,9 @@ type
     procedure t50StartTimer(Sender: TObject);
     procedure t50Timer(Sender: TObject);
     procedure tGraTimer(Sender: TObject);
+    procedure Timer1StartTimer(Sender: TObject);
+    procedure Timer1StopTimer(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
     procedure tloopTimer(Sender: TObject);
     procedure tmuseTimer(Sender: TObject);
     procedure todpowiedzTimer(Sender: TObject);
@@ -371,19 +377,18 @@ begin
 end;
 
 procedure TFServer.museReceive(aSocket: TLSocket);
-const
-  BUFFER_SIZE = 65536;
 var
-  n,i: integer;
-  buf: array [0..BUFFER_SIZE-1] of byte;
+  n1,n2,i: integer;
+  buf: TBufferNetwork;
 begin
-  n:=aSocket.Get(buf,BUFFER_SIZE);
-  {$IFDEF DEBUG} writeln('server.museReceive.muse_on: ',muse_on,' count: ',n); {$ENDIF}
+  n1:=aSocket.Get(buf,BUFFER_SIZE);
+  if n1=0 then exit;
   if not muse_on then exit;
-  if n=0 then exit;
-  //if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
-  //muse_in.WriteBuffer(buf,n);
-  muse_full.WriteBuffer(buf,n);
+  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
+  n1:=dm.rd.Add(buf,n1);
+  //n2:=dm.rd.Execute(muse_in);
+  n2:=dm.rd.Execute(muse_full);
+  {$IFDEF DEBUG} writeln('server.museReceive.muse_on: ',muse_on,' count: ',n1,' -> ',n2); {$ENDIF}
   application.ProcessMessages;
 end;
 
@@ -421,6 +426,8 @@ begin
   if s1<>'c' then exit;
   key:=GetLineToStr(s,2,'$');
   kom:=GetLineToStr(s,3,'$');
+  (* żądanie wysłania ramki danych *)
+  if (kom='cansend') then muse.SendCanSendMessage(aSocket,key) else
   (* rejestracja lub logowanie *)
   if (key='new') and (kom='register') then
   begin
@@ -485,7 +492,7 @@ begin
     if (pom='connect') and (pom2='ok') then begin tmuse.Tag:=1; tmuse.Enabled:=true; end else
     if (pom='connect') and (pom2='error') then odpowiedz('Zdalny host nie połączył się!') else
     if (pom='connect') and (pom2='nosound') then odpowiedz('System dźwięku u użytkownika nieaktywny.') else
-    if (pom='on') and (pom2='ok') then begin tmuse.Tag:=2; tmuse.Enabled:=true; end else
+    if (pom='on') and (pom2='ok') then begin tmuse.Tag:=2; tmuse.Enabled:=true; muse.SendCanSendMessage(aSocket,key); end else
     if (pom='off') and (pom2='ok') then begin tmuse.Tag:=3; tmuse.Enabled:=true; end else
     if (pom='off2') and (pom2='ok') then begin tmuse.Tag:=4; tmuse.Enabled:=true; end;
   end;
@@ -607,19 +614,42 @@ begin
   lInfo.Caption:=IntToStr(TRYB);
 end;
 
-procedure TFServer.tloopTimer(Sender: TObject);
-const
-  BUFFER_SIZE = 65536;
 var
-  cc,n,i: integer;
-  buf: array [0..BUFFER_SIZE-1] of byte;
+  mmmm: TMemoryStream;
+
+procedure TFServer.Timer1StartTimer(Sender: TObject);
+begin
+  mmmm:=TMemoryStream.Create;
+  mic.Start(mmmm);
+  uELED1.Active:=true;
+end;
+
+procedure TFServer.Timer1StopTimer(Sender: TObject);
+begin
+  mic.Stop;
+  mmmm.SaveToFile('/home/tao/test.wav');
+  uELED1.Active:=false;
+end;
+
+procedure TFServer.Timer1Timer(Sender: TObject);
+begin
+  Timer1.Enabled:=false;
+end;
+
+procedure TFServer.tloopTimer(Sender: TObject);
+var
+  cc,n1,n2: integer;
+  buf: TBufferNetwork;
 begin
   cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
-  if cc>65536 then cc:=65536;
-  n:=muse2_out.Read(buf,cc);
-  if n>0 then muse.SendBinary(buf,n);
-  {$IFDEF DEBUG} writeln('server.tloop.count: ',n); {$ENDIF}
+  if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
+  //n2:=muse2_out.Read(buf,cc);
+  //n2:=dm.Compress(muse2_out,buf,cc);
+  n1:=dm.rc.Add(muse2_out); //dodanie strumienia
+  n2:=dm.rc.Execute(buf);  //kompresja strumienia
+  if n2>0 then muse.SendBinary(buf,n2);
+  {$IFDEF DEBUG} writeln('server.tloop.count: ',n1,' -> ',n2); {$ENDIF}
 end;
 
 procedure TFServer.tmuseTimer(Sender: TObject);
@@ -1216,6 +1246,11 @@ begin
   {$IFDEF DEBUG} writeln('server."button zamknij połączenie rozmowy głosowej"'); {$ENDIF}
   muse_on:=false;
   ser.SendString('o$'+key_muse+'$muse$off',soket_muse);
+end;
+
+procedure TFServer.BitBtn4Click(Sender: TObject);
+begin
+  Timer1.Enabled:=true;
 end;
 
 procedure TFServer.CheckBox2Change(Sender: TObject);
