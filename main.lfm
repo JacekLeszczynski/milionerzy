@@ -20175,7 +20175,6 @@ object FServer: TFServer
   end
   object muse: TNetSocket
     Mode = smServer
-    Protocol = spUDP
     Security = ssNone
     BinaryMode = True
     Host = '127.0.0.1'

@@ -693,7 +693,7 @@ begin
   if cc>65536 then cc:=65536;
   n:=muse2_out.Read(buf,cc);
   if n>0 then muse.SendBinary(buf,n);
-  //{$IFDEF DEBUG} writeln('client.tloop.count: ',n); {$ENDIF}
+  {$IFDEF DEBUG} writeln('client.tloop.count: ',n); {$ENDIF}
 end;
 
 procedure TFClient.tpingStartTimer(Sender: TObject);

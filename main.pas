@@ -251,6 +251,7 @@ type
     sokety: TList;
     key_muse: string;
     soket_muse: TLSocket;
+    muse_full: TMemoryStream;
     muse_in,muse2_in: TOutputPipeStream;
     muse_out,muse2_out: TInputPipeStream;
     muse_on: boolean;
@@ -380,8 +381,9 @@ begin
   {$IFDEF DEBUG} writeln('server.museReceive.muse_on: ',muse_on,' count: ',n); {$ENDIF}
   if not muse_on then exit;
   if n=0 then exit;
-  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
-  muse_in.WriteBuffer(buf,n);
+  //if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
+  //muse_in.WriteBuffer(buf,n);
+  muse_full.WriteBuffer(buf,n);
   application.ProcessMessages;
 end;
 
@@ -617,7 +619,7 @@ begin
   if cc>65536 then cc:=65536;
   n:=muse2_out.Read(buf,cc);
   if n>0 then muse.SendBinary(buf,n);
-  //{$IFDEF DEBUG} writeln('server.tloop.count: ',n); {$ENDIF}
+  {$IFDEF DEBUG} writeln('server.tloop.count: ',n); {$ENDIF}
 end;
 
 procedure TFServer.tmuseTimer(Sender: TObject);
@@ -628,6 +630,7 @@ begin
     {$IFDEF DEBUG} writeln('server.tmuse.1'); {$ENDIF}
     (* połączenie zestawione - uruchamiam komunikację *)
     BitBtn3.Enabled:=true;
+    muse_full:=TMemoryStream.Create;
     CreatePipeStreams(muse_out,muse_in);
     CreatePipeStreams(muse2_out,muse2_in);
     muse_on:=true;
@@ -639,8 +642,8 @@ begin
   if tmuse.Tag=2 then
   begin
     {$IFDEF DEBUG} writeln('server.tmuse.2'); {$ENDIF}
-    tloop.Enabled:=true;
-    mic.Start(TMemoryStream(muse2_in));
+    //tloop.Enabled:=true;
+    //mic.Start(TMemoryStream(muse2_in));
     uELED2.Color:=clBlue;
     uELED2.Active:=true;
     ser.SendString('o$'+key_muse+'$muse$start',soket_muse);
@@ -652,6 +655,8 @@ begin
     while glosnik.Busy do begin application.ProcessMessages; end;
     mic.Stop;
     tloop.Enabled:=false;
+    muse_full.SaveToFile('/home/tao/test.wav');
+    muse_full.Free;
     muse_in.Free;
     muse_out.Free;
     muse2_in.Free;

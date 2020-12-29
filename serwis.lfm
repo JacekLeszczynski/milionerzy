@@ -1,9 +1,9 @@
 object dm: Tdm
   OldCreateOrder = False
-  Height = 218
+  Height = 348
   HorizontalOffset = 350
   VerticalOffset = 133
-  Width = 249
+  Width = 383
   object db: TZConnection
     ControlsCodePage = cCP_UTF8
     AutoEncodeStrings = True

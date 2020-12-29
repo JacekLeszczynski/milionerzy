@@ -24,6 +24,8 @@ type
     function KeyLoad: string;
     function CryptString(aStr: string): string;
     function DecryptString(aStr: string): string;
+    procedure Decompress(const Buffer; Count: integer; aStream: TStream);
+    function Compress(aStream: TStream; var Buffer; Count: integer): integer;
   end;
 
 const
@@ -64,7 +66,7 @@ function SpacesToPoints(s: string): string;
 implementation
 
 uses
-  ecode;
+  ecode, bzip2lib, rnl;
 
 {$R *.lfm}
 
@@ -165,6 +167,63 @@ end;
 function Tdm.DecryptString(aStr: string): string;
 begin
   result:=ecode.DecryptString(aStr,'ghs673uh7d8sd68y32euyeuhe287hujhd');
+end;
+
+procedure Tdm.Decompress(const Buffer; Count: integer; aStream: TStream);
+const
+  BUFFER_SIZE = 65536;
+var
+  cc: TRNLCompressorDeflate;
+  buf: array [0..BUFFER_SIZE-1] of byte;
+  n,nn: integer;
+begin
+  aStream.WriteBuffer(Buffer,Count);
+  exit;
+  writeln(6);
+  cc:=TRNLCompressorDeflate.Create;
+  try
+    writeln(7);
+    nn:=cc.Decompress(Pointer(Buffer),Count,Pointer(buf[0]),BUFFER_SIZE);
+  finally
+    writeln(8);
+    cc.Free;
+  end;
+  writeln(9);
+  aStream.Write(buf,nn);
+  writeln(10);
+end;
+
+TYPE
+  TTTT = array [0..65536-1] of byte;
+
+function Tdm.Compress(aStream: TStream; var Buffer; Count: integer): integer;
+const
+  BUFFER_SIZE = 65536;
+var
+  buf: array [0..BUFFER_SIZE-1] of byte;
+  i,n,nn: integer;
+var
+  cc: TRNLCompressorDeflate;
+begin
+  result:=aStream.Read(Buffer,Count);
+  //WRITELN('KOPIA:'); FOR I:=0 TO RESULT DO WRITE(TTTT(BUFFER)[I],' '); WRITELN;
+  exit;
+  writeln(1);
+  n:=aStream.Read(buf,BUFFER_SIZE);
+  WRITELN('ORYGINAŁ:'); FOR I:=0 TO N DO WRITE(BUF[I],' '); WRITELN;
+  writeln(2);
+  cc:=TRNLCompressorDeflate.Create;
+  try
+    writeln(3);
+    nn:=cc.Compress(Pointer(buf[0]),n,Pointer(Buffer),BUFFER_SIZE);
+    WRITELN('KOPIA:'); FOR I:=0 TO NN DO WRITE(TTTT(BUFFER)[I],' '); WRITELN;
+    writeln(43);
+  finally
+    writeln(44);
+    cc.Free;
+  end;
+  writeln(5);
+  result:=nn;
 end;
 
 end.
