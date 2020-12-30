@@ -1,6 +1,7 @@
 unit client;
 
 {$mode objfpc}{$H+}
+{ $define DEBUG}
 
 interface
 
@@ -216,7 +217,7 @@ type
     procedure odp_activate(aOn: boolean);
     procedure offkey(aStr: string);
     procedure clear;
-    procedure send(aStr: string; aOdpowiedz: boolean = false);
+    procedure send(aStr: string; aOdpowiedz: boolean = false); virtual;
   public
 
   end;
@@ -508,6 +509,7 @@ var
   v1,v2,v3,v4: integer;
 begin
   SetConfDir('milionerzy');
+  dm:=Tdm.Create(self);
   ps.FileName:=MyConfDir('client.xml');
   ps.Active:=true;
   muse_on:=false;
@@ -529,6 +531,7 @@ end;
 procedure TFClient.FormDestroy(Sender: TObject);
 begin
   if uELED4.Active then uos.UnLoadLibrary;
+  dm.Free;
 end;
 
 procedure TFClient.MenuItem3Click(Sender: TObject);
@@ -692,7 +695,7 @@ begin
   if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
   //n2:=muse2_out.Read(buf,cc);
   //n2:=dm.Compress(muse2_out,buf,cc);
-  n1:=dm.rc.Add(muse2_out); //dodanie strumienia
+  n1:=dm.rc.Add(muse2_out,cc); //dodanie strumienia
   n2:=dm.rc.Execute(buf);  //kompresja strumienia
   if n2>0 then muse.SendBinary(buf,n2);
   {$IFDEF DEBUG} writeln('client.tloop.count: ',n1,' -> ',n2); {$ENDIF}

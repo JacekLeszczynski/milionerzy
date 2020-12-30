@@ -19377,6 +19377,7 @@ object FClient: TFClient
   end
   object muse: TNetSocket
     Mode = smClient
+    Protocol = spUDP
     Security = ssNone
     BinaryMode = True
     Host = 'studiojahu.duckdns.org'
@@ -19398,7 +19399,7 @@ object FClient: TFClient
   end
   object tloop: TTimer
     Enabled = False
-    Interval = 200
+    Interval = 100
     OnTimer = tloopTimer
     Left = 720
     Top = 264

@@ -27,17 +27,17 @@ type
     fMode: TKompresjaRamekMode;
     fNag: boolean;
     stream: TMemoryStream;
-    function wCompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer;
-    function wDecompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer;
+    function wCompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer; virtual;
+    function wDecompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer; virtual;
   public
     constructor Create(aMode: TKompresjaRamekMode = moCompress; aDodawajNaglowki: boolean = false);
     destructor Destroy; override;
-    procedure Clear;
-    function Add(iStream: TStream; iCount: integer = 0): integer;
-    function Add(const iBuffer; iCount: integer): integer;
-    function Test: boolean;
-    function Execute(oStream: TStream): integer;
-    function Execute(var oBuffer): integer;
+    procedure Clear; virtual;
+    function Add(iStream: TStream; iCount: integer = 0): integer; virtual;
+    function Add(const iBuffer; iCount: integer): integer; virtual;
+    function Test: boolean; virtual;
+    function Execute(oStream: TStream): integer; virtual;
+    function Execute(var oBuffer): integer; virtual;
   published
     property Naglowek: boolean read fNag default false;
     property Mode: TKompresjaRamekMode read fMode default moCompress;
@@ -61,10 +61,8 @@ type
     procedure zysk_i_strata(aPytanie: integer; var gra_o,zysk,strata: integer);
     procedure KeySave(aKey: string);
     function KeyLoad: string;
-    function CryptString(aStr: string): string;
-    function DecryptString(aStr: string): string;
-    procedure Decompress(Buffer: TBufferNetwork; Count: integer; aStream: TStream);
-    function Compress(aStream: TStream; var Buffer: TBufferNetwork; Count: integer): integer;
+    function CryptString(aStr: string): string; virtual;
+    function DecryptString(aStr: string): string; virtual;
   end;
 
 const
@@ -173,6 +171,7 @@ var
   buf: TBufferNetwork;
   c,n: integer;
 begin
+  stream.Position:=stream.Size;
   if iCount=0 then c:=iStream.Size else c:=iCount;
   n:=iStream.Read(buf,c);
   fCount:=fCount+stream.Write(buf,n);
@@ -181,6 +180,7 @@ end;
 
 function TKompresjaRamek.Add(const iBuffer; iCount: integer): integer;
 begin
+  stream.Position:=stream.Size;
   fCount:=fCount+stream.Write(iBuffer,iCount);
   result:=fCount;
 end;
@@ -205,6 +205,7 @@ var
   a,n,n2: integer;
   s: string;
 begin
+  stream.Position:=0;
   n:=stream.Read(buf,stream.Size);
   if fMode=moCompress then
   begin
@@ -253,6 +254,7 @@ var
   a,n,n2: integer;
   s: string;
 begin
+  stream.Position:=0;
   n:=stream.Read(buf,stream.Size);
   if fMode=moCompress then
   begin
@@ -299,8 +301,8 @@ end;
 procedure Tdm.DataModuleCreate(Sender: TObject);
 begin
   rc:=TKompresjaRamek.Create(moCompress,true);
-  rc.AutoClear:=true;
   rd:=TKompresjaRamek.Create(moDecompress,true);
+  rc.AutoClear:=true;
   rd.AutoClear:=true;
 end;
 
@@ -400,51 +402,6 @@ end;
 function Tdm.DecryptString(aStr: string): string;
 begin
   result:=ecode.DecryptString(aStr,'ghs673uh7d8sd68y32euyeuhe287hujhd');
-end;
-
-procedure Tdm.Decompress(Buffer: TBufferNetwork; Count: integer;
-  aStream: TStream);
-var
-  cc: TRNLCompressorDeflate;
-  buf: TBufferNetwork;
-  n: integer;
-begin
-  //aStream.WriteBuffer(Buffer,Count);
-  //exit;
-  cc:=TRNLCompressorDeflate.Create;
-  try
-    writeln(2);
-    n:=cc.Decompress(@Buffer[0],Count,@buf[0],BUFFER_SIZE);
-    writeln(count,'->',n);
-  finally
-    cc.Free;
-  end;
-  TMemoryStream(aStream).Clear;
-  aStream.WriteBuffer(buf,n);
-end;
-
-function Tdm.Compress(aStream: TStream; var Buffer: TBufferNetwork;
-  Count: integer): integer;
-var
-  buf,buf2: TBufferNetwork;
-  i,n,nn: integer;
-var
-  cc: TRNLCompressorDeflate;
-begin
-  //result:=aStream.Read(Buffer,Count);
-  //exit;
-  n:=aStream.Read(buf,BUFFER_SIZE);
-  cc:=TRNLCompressorDeflate.Create;
-  try
-    writeln(1);
-    nn:=cc.Compress(@buf[0],n,@Buffer[0],BUFFER_SIZE);
-    writeln(count,'->',nn);
-  finally
-    cc.Free;
-  end;
-  //Buffer[nn]:=0;
-  //inc(Count);
-  result:=nn;
 end;
 
 end.

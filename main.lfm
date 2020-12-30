@@ -1,7 +1,7 @@
 object FServer: TFServer
-  Left = 354
+  Left = 364
   Height = 482
-  Top = 536
+  Top = 485
   Width = 995
   BorderStyle = bsSingle
   Caption = 'Panel kontrolny'
@@ -821,7 +821,11 @@ object FServer: TFServer
     Panels = <    
       item
         Text = 'Ilość podłączonych klientów: 0'
-        Width = 250
+        Width = 260
+      end    
+      item
+        Text = 'Komunikacja:'
+        Width = 220
       end    
       item
         Width = 250
@@ -20189,6 +20193,7 @@ object FServer: TFServer
   end
   object muse: TNetSocket
     Mode = smServer
+    Protocol = spUDP
     Security = ssNone
     BinaryMode = True
     Host = '127.0.0.1'
@@ -20238,7 +20243,7 @@ object FServer: TFServer
   end
   object tloop: TTimer
     Enabled = False
-    Interval = 200
+    Interval = 100
     OnTimer = tloopTimer
     Left = 858
     Top = 168

@@ -1,6 +1,7 @@
 unit main;
 
 {$mode objfpc}{$H+}
+{ $define DEBUG}
 
 interface
 
@@ -386,8 +387,8 @@ begin
   if not muse_on then exit;
   if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
   n1:=dm.rd.Add(buf,n1);
-  //n2:=dm.rd.Execute(muse_in);
-  n2:=dm.rd.Execute(muse_full);
+  n2:=dm.rd.Execute(muse_in);
+  //n2:=dm.rd.Execute(muse_full);
   {$IFDEF DEBUG} writeln('server.museReceive.muse_on: ',muse_on,' count: ',n1,' -> ',n2); {$ENDIF}
   application.ProcessMessages;
 end;
@@ -640,16 +641,20 @@ procedure TFServer.tloopTimer(Sender: TObject);
 var
   cc,n1,n2: integer;
   buf: TBufferNetwork;
+  a,b: integer;
 begin
   cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
   if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
   //n2:=muse2_out.Read(buf,cc);
   //n2:=dm.Compress(muse2_out,buf,cc);
-  n1:=dm.rc.Add(muse2_out); //dodanie strumienia
+  n1:=dm.rc.Add(muse2_out,cc); //dodanie strumienia
   n2:=dm.rc.Execute(buf);  //kompresja strumienia
   if n2>0 then muse.SendBinary(buf,n2);
   {$IFDEF DEBUG} writeln('server.tloop.count: ',n1,' -> ',n2); {$ENDIF}
+  a:=trunc(100*n1/BUFFER_SIZE);
+  b:=trunc(100*n2/BUFFER_SIZE_COMPRESSED);
+  StatusBar.Panels[1].Text:='Komunikacja: '+IntToStr(a)+'/'+IntToStr(b);
 end;
 
 procedure TFServer.tmuseTimer(Sender: TObject);
@@ -660,7 +665,7 @@ begin
     {$IFDEF DEBUG} writeln('server.tmuse.1'); {$ENDIF}
     (* połączenie zestawione - uruchamiam komunikację *)
     BitBtn3.Enabled:=true;
-    muse_full:=TMemoryStream.Create;
+    //muse_full:=TMemoryStream.Create;
     CreatePipeStreams(muse_out,muse_in);
     CreatePipeStreams(muse2_out,muse2_in);
     muse_on:=true;
@@ -672,8 +677,8 @@ begin
   if tmuse.Tag=2 then
   begin
     {$IFDEF DEBUG} writeln('server.tmuse.2'); {$ENDIF}
-    //tloop.Enabled:=true;
-    //mic.Start(TMemoryStream(muse2_in));
+    tloop.Enabled:=true;
+    mic.Start(TMemoryStream(muse2_in));
     uELED2.Color:=clBlue;
     uELED2.Active:=true;
     ser.SendString('o$'+key_muse+'$muse$start',soket_muse);
@@ -685,8 +690,8 @@ begin
     while glosnik.Busy do begin application.ProcessMessages; end;
     mic.Stop;
     tloop.Enabled:=false;
-    muse_full.SaveToFile('/home/tao/test.wav');
-    muse_full.Free;
+    //muse_full.SaveToFile('/home/tao/test.wav');
+    //muse_full.Free;
     muse_in.Free;
     muse_out.Free;
     muse2_in.Free;
@@ -1588,7 +1593,7 @@ end;
 
 procedure TFServer.odpowiedz(aStr: string);
 begin
-  StatusBar.Panels[1].Text:='Informacja: '+aStr;
+  StatusBar.Panels[2].Text:='Informacja: '+aStr;
   todpowiedz.Enabled:=true;
 end;
 
