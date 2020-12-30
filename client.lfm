@@ -32,6 +32,10 @@ object FClient: TFClient
       end    
       item
         Text = '--:--:--'
+        Width = 120
+      end    
+      item
+        Text = 'Buforowanie:'
         Width = 50
       end>
     ParentFont = False

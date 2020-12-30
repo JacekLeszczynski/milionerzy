@@ -1,7 +1,7 @@
 unit client;
 
 {$mode objfpc}{$H+}
-{ $define DEBUG}
+{$define DEBUG}
 
 interface
 
@@ -202,22 +202,22 @@ type
     procedure eOff;
     procedure ePytanie;
     procedure eTabInfo;
-    procedure ePodsumowanie(aText: string);
+    procedure ePodsumowanie(const aText: string);
     procedure eCzas30(aPokaz: boolean = true);
     procedure ePub(aPokaz: boolean = true);
     procedure test_info(aPytanie: integer);
     procedure ekran_info(aLp: integer = 0);
     procedure ekran_pytanie(aNr: integer; aLp: integer = -1);
-    procedure synchronizuj(aCiag: string);
+    procedure synchronizuj(const aCiag: string);
     procedure set_ogolne(aTryb,aPytanie: integer; aPom: string = '');
-    procedure set_dane(aPytanie,aOdp1,aOdp2,aOdp3,aOdp4: string);
+    procedure set_dane(const aPytanie,aOdp1,aOdp2,aOdp3,aOdp4: string);
     procedure set_zaznacz(aN1,aN2: integer);
     procedure connect;
     procedure odp_przyciski(aOn: boolean);
     procedure odp_activate(aOn: boolean);
     procedure offkey(aStr: string);
     procedure clear;
-    procedure send(aStr: string; aOdpowiedz: boolean = false);
+    procedure send(const aStr: string; aOdpowiedz: boolean = false);
   public
 
   end;
@@ -324,7 +324,7 @@ begin
   Label14.Caption:='';
 end;
 
-procedure TFClient.send(aStr: string; aOdpowiedz: boolean);
+procedure TFClient.send(const aStr: string; aOdpowiedz: boolean);
 begin
   if not cli.Active then exit;
   if aOdpowiedz then cli.SendString('o$'+key+'$'+aStr) else cli.SendString('c$'+key+'$'+aStr);
@@ -473,7 +473,15 @@ begin
     if w='on' then begin tmuse.Tag:=2; tmuse.Enabled:=true; end else
     if w='start' then begin tmuse.Tag:=3; tmuse.Enabled:=true; muse.SendCanSendMessage(aSocket,'server'); end else
     if w='off' then begin tmuse.Tag:=4; tmuse.Enabled:=true; end else
-    if w='off2' then begin tmuse.Tag:=5; tmuse.Enabled:=true; end;
+    if w='off2' then begin tmuse.Tag:=5; tmuse.Enabled:=true; end else
+    if w='algcompression' then
+    begin
+      w:=GetLineToStr(s,4,'$');
+      if w='none' then dm.SetAlgCompression(0) else
+      if w='deflate' then dm.SetAlgCompression(1) else
+      if w='lzbrrc' then dm.SetAlgCompression(2) else
+      if w='brrc' then dm.SetAlgCompression(3);
+    end;
   end;
 end;
 
@@ -566,7 +574,6 @@ begin
   if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
   n1:=dm.rd.Add(buf,n1);
   n2:=dm.rd.Execute(muse_in);
-  {$IFDEF DEBUG} writeln('client.museReceive.muse_on: ',muse_on,' count: ',n1,' -> ',n2); {$ENDIF}
   application.ProcessMessages;
 end;
 
@@ -627,6 +634,8 @@ begin
   begin
     {$IFDEF DEBUG} writeln('client.tmuse.1'); {$ENDIF}
     uELED2.Color:=clRed;
+    dm.rc.Clear;
+    dm.rd.Clear;
     uELED2.Active:=muse.Connect;
     if uELED2.Active then send('muse$connect$ok') else send('muse$connect$error');
   end else
@@ -644,11 +653,11 @@ begin
   begin
     {$IFDEF DEBUG} writeln('client.tmuse.3'); {$ENDIF}
     uELED2.Color:=clBlue;
-    uELED2.Active:=true;
   end else
   if tmuse.Tag=4 then
   begin
     {$IFDEF DEBUG} writeln('client.tmuse.4'); {$ENDIF}
+    uELED2.Color:=clRed;
     muse_on:=false;
     glosnik.Stop;
     while glosnik.Busy do begin application.ProcessMessages; end;
@@ -665,6 +674,7 @@ begin
     muse2_out.Free;
     muse.Disconnect;
     uELED2.Active:=false;
+    StatusBar.Panels[3].Text:='Buforowanie:';
     send('muse$off2$ok');
   end;
 end;
@@ -685,10 +695,14 @@ begin
   ekran_info(0);
 end;
 
+var
+  komunikacja: array [1..2,1..10] of integer;
+
 procedure TFClient.tloopTimer(Sender: TObject);
 var
   cc,n1,n2: integer;
   buf: TBufferNetwork;
+  a,b,i: integer;
 begin
   cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
@@ -698,7 +712,24 @@ begin
   n1:=dm.rc.Add(muse2_out,cc); //dodanie strumienia
   n2:=dm.rc.Execute(buf);  //kompresja strumienia
   if n2>0 then muse.SendBinary(buf,n2);
-  {$IFDEF DEBUG} writeln('client.tloop.count: ',n1,' -> ',n2); {$ENDIF}
+  (* bufory *)
+  for i:=2 to KOMUNIKACJA_LAST do
+  begin
+    komunikacja[1,i-1]:=komunikacja[1,i];
+    komunikacja[2,i-1]:=komunikacja[2,i];
+  end;
+  komunikacja[1,KOMUNIKACJA_LAST]:=round(100*n1/BUFFER_SIZE);
+  komunikacja[2,KOMUNIKACJA_LAST]:=round(100*n2/BUFFER_SIZE_COMPRESSED);
+  a:=0;
+  b:=0;
+  for i:=1 to KOMUNIKACJA_LAST do
+  begin
+    a:=a+komunikacja[1,i];
+    b:=b+komunikacja[2,i];
+  end;
+  a:=round(a/KOMUNIKACJA_LAST);
+  b:=round(b/KOMUNIKACJA_LAST);
+  StatusBar.Panels[3].Text:='Buforowanie: '+IntToStr(a)+'/'+IntToStr(b)+' (%)';
 end;
 
 procedure TFClient.tpingStartTimer(Sender: TObject);
@@ -772,7 +803,7 @@ begin
   x3.Visible:=false;
 end;
 
-procedure TFClient.ePodsumowanie(aText: string);
+procedure TFClient.ePodsumowanie(const aText: string);
 begin
   eOff;
   Panel11.Visible:=true;
@@ -867,13 +898,13 @@ begin
   end;
 end;
 
-procedure TFClient.synchronizuj(aCiag: string);
+procedure TFClient.synchronizuj(const aCiag: string);
 var
   vTryb,vPytanie: integer;
   s0,s1,s2,s3,s4: string;
   vOdpowiedz,vUdzielonaOdpowiedz: integer;
   vPodsumowanie,vKola,pol: string;
-  vGlos: string;
+  vGlos,vAlgCompression: string;
 begin
 TRY
   clear;
@@ -931,6 +962,11 @@ TRY
   end;
   if vTryb>=20 then set_ogolne(20,vPytanie,vPodsumowanie);
   if vTryb>=21 then set_ogolne(21,vPytanie);
+  vAlgCompression:=GetLineToStr(aCiag,17,'$');
+  if vAlgCompression='none' then dm.SetAlgCompression(0) else
+  if vAlgCompression='deflate' then dm.SetAlgCompression(1) else
+  if vAlgCompression='lzbrrc' then dm.SetAlgCompression(2) else
+  if vAlgCompression='brrc' then dm.SetAlgCompression(3);
 EXCEPT
   on E: Exception do mess.ShowError('Wystąpił błąd:^  TRYB='+IntToStr(vTryb)+', RUNDA='+IntToStr(vPytanie)+'^  Treść błędu: '+E.Message);
 END;
@@ -967,7 +1003,7 @@ begin
   if TRYB=21 then eOff;
 end;
 
-procedure TFClient.set_dane(aPytanie, aOdp1, aOdp2, aOdp3, aOdp4: string);
+procedure TFClient.set_dane(const aPytanie, aOdp1, aOdp2, aOdp3, aOdp4: string);
 begin
   ppytanie.Caption:=aPytanie;
   odp_a.Caption:=aOdp1;

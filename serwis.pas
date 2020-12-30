@@ -5,10 +5,12 @@ unit serwis;
 interface
 
 uses
-  Classes, SysUtils, ZConnection, ZSqlProcessor, Graphics, RNL;
+  Classes, SysUtils, ZConnection, ZSqlProcessor, Graphics, RNL,
+  systemtimer;
 
 const
-  BUFFER_SIZE = 75000;
+  KOMUNIKACJA_LAST = 5;
+  BUFFER_SIZE = 100000;
   BUFFER_SIZE_COMPRESSED = 65536;
 
 type
@@ -18,17 +20,19 @@ type
 
   { TKompresjaRamek }
 
+  TKompresjaRamekAlgorithm = (acNone, acDeflate,acLZBRRC,acBRRC);
   TKompresjaRamekMode = (moCompress,moDecompress);
 
   TKompresjaRamek = class
   private
+    fAlg: TKompresjaRamekAlgorithm;
     fAutoClear: boolean;
     fCount: integer;
     fMode: TKompresjaRamekMode;
     fNag: boolean;
     stream: TMemoryStream;
-    function wCompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer;
-    function wDecompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer;
+    function wCompress(const iBuffer; iCount: integer; out oBuffer; oMaxCount: integer): integer;
+    function wDecompress(const iBuffer; iCount: integer; out oBuffer; oMaxCount: integer): integer;
   public
     constructor Create(aMode: TKompresjaRamekMode = moCompress; aDodawajNaglowki: boolean = false);
     destructor Destroy; override;
@@ -37,10 +41,11 @@ type
     function Add(const iBuffer; iCount: integer): integer;
     function Test: boolean;
     function Execute(oStream: TStream): integer;
-    function Execute(var oBuffer): integer;
+    function Execute(out oBuffer): integer;
   published
-    property Naglowek: boolean read fNag default false;
     property Mode: TKompresjaRamekMode read fMode default moCompress;
+    property Naglowek: boolean read fNag default false;
+    property Algorithm: TKompresjaRamekAlgorithm read fAlg write fAlg default acNone;
     property Count: integer read fCount;
     property AutoClear: boolean read fAutoClear write fAutoClear default false;
   end;
@@ -63,6 +68,7 @@ type
     function KeyLoad: string;
     function CryptString(aStr: string): string;
     function DecryptString(aStr: string): string;
+    procedure SetAlgCompression(aAlg: integer);
   end;
 
 const
@@ -75,6 +81,7 @@ const
 
 var (* program *)
   dm: Tdm;
+  xx: TStopWatch;
   ON_ekran: boolean = false;
   ON_gra: boolean = false;
   ON_pause: boolean = false;
@@ -114,33 +121,31 @@ end;
 
 { TKompresjaRamek }
 
-function TKompresjaRamek.wCompress(const iBuffer; iCount: integer; var oBuffer;
+function TKompresjaRamek.wCompress(const iBuffer; iCount: integer; out oBuffer;
   oMaxCount: integer): integer;
 var
-  c: TRNLCompressorDeflate;
+  c1: TRNLCompressorDeflate;
+  c2: TRNLCompressorLZBRRC;
+  c3: TRNLCompressorBRRC;
   n: integer;
 begin
-  c:=TRNLCompressorDeflate.Create;
-  try
-    n:=c.Compress(@iBuffer,iCount,@oBuffer,oMaxCount);
-  finally
-    c.Free;
-  end;
+  if fAlg=acDeflate then begin c1:=TRNLCompressorDeflate.Create; try n:=c1.Compress(@iBuffer,iCount,@oBuffer,oMaxCount) finally c1.Free end; end else
+  if fAlg=acLZBRRC then begin c2:=TRNLCompressorLZBRRC.Create; try n:=c2.Compress(@iBuffer,iCount,@oBuffer,oMaxCount) finally c2.Free end; end else
+  if fAlg=acBRRC then begin c3:=TRNLCompressorBRRC.Create; try n:=c3.Compress(@iBuffer,iCount,@oBuffer,oMaxCount) finally c3.Free end; end;
   result:=n;
 end;
 
-function TKompresjaRamek.wDecompress(const iBuffer; iCount: integer;
-  var oBuffer; oMaxCount: integer): integer;
+function TKompresjaRamek.wDecompress(const iBuffer; iCount: integer; out
+  oBuffer; oMaxCount: integer): integer;
 var
-  c: TRNLCompressorDeflate;
+  c1: TRNLCompressorDeflate;
+  c2: TRNLCompressorLZBRRC;
+  c3: TRNLCompressorBRRC;
   n: integer;
 begin
-  c:=TRNLCompressorDeflate.Create;
-  try
-    n:=c.Decompress(@iBuffer,iCount,@oBuffer,oMaxCount);
-  finally
-    c.Free;
-  end;
+  if fAlg=acDeflate then begin c1:=TRNLCompressorDeflate.Create; try n:=c1.Decompress(@iBuffer,iCount,@oBuffer,oMaxCount) finally c1.Free end; end else
+  if fAlg=acLZBRRC then begin c2:=TRNLCompressorLZBRRC.Create; try n:=c2.Decompress(@iBuffer,iCount,@oBuffer,oMaxCount) finally c2.Free end; end else
+  if fAlg=acBRRC then begin c3:=TRNLCompressorBRRC.Create; try n:=c3.Decompress(@iBuffer,iCount,@oBuffer,oMaxCount) finally c3.Free end; end;
   result:=n;
 end;
 
@@ -150,6 +155,7 @@ begin
   stream:=TMemoryStream.Create;
   fMode:=aMode;
   fNag:=aDodawajNaglowki;
+  fAlg:=acNone;
   fCount:=0;
   fAutoClear:=false;
 end;
@@ -205,6 +211,13 @@ var
   a,n,n2: integer;
   s: string;
 begin
+  if fAlg=acNone then
+  begin
+    stream.Position:=0;
+    result:=oStream.CopyFrom(stream,stream.Size);
+    if fAutoClear then Clear;
+    exit;
+  end;
   stream.Position:=0;
   n:=stream.Read(buf,stream.Size);
   if fMode=moCompress then
@@ -248,12 +261,19 @@ begin
   end;
 end;
 
-function TKompresjaRamek.Execute(var oBuffer): integer;
+function TKompresjaRamek.Execute(out oBuffer): integer;
 var
   buf: TBufferNetwork;
   a,n,n2: integer;
   s: string;
 begin
+  if fAlg=acNone then
+  begin
+    stream.Position:=0;
+    result:=stream.Read(oBuffer,BUFFER_SIZE_COMPRESSED);
+    if fAutoClear then Clear;
+    exit;
+  end;
   stream.Position:=0;
   n:=stream.Read(buf,stream.Size);
   if fMode=moCompress then
@@ -304,6 +324,8 @@ begin
   rd:=TKompresjaRamek.Create(moDecompress,true);
   rc.AutoClear:=true;
   rd.AutoClear:=true;
+  rc.Algorithm:=acNone; //(default: acNone, acDeflate,acLZBRRC,acBRRC);
+  rd.Algorithm:=rc.Algorithm;
 end;
 
 procedure Tdm.DataModuleDestroy(Sender: TObject);
@@ -403,6 +425,20 @@ function Tdm.DecryptString(aStr: string): string;
 begin
   result:=ecode.DecryptString(aStr,'ghs673uh7d8sd68y32euyeuhe287hujhd');
 end;
+
+procedure Tdm.SetAlgCompression(aAlg: integer);
+begin
+  case aAlg of
+    0: rc.Algorithm:=acNone;
+    1: rc.Algorithm:=acDeflate;
+    2: rc.Algorithm:=acLZBRRC;
+    3: rc.Algorithm:=acBRRC;
+  end;
+  rd.Algorithm:=rc.Algorithm;
+end;
+
+initialization
+  xx:=TStopWatch.Create;
 
 end.
 

@@ -13,7 +13,7 @@ object FServer: TFServer
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
-  SessionProperties = 'GameLastModePlay.Checked;Left;PublicGame.Checked;Top;CheckTest.Checked'
+  SessionProperties = 'CheckTest.Checked;GameLastModePlay.Checked;Left;PublicGame.Checked;Top;AlgCompressionSteaming.ItemIndex'
   LCLVersion = '2.0.10.0'
   object Panel1: TPanel
     AnchorSideLeft.Control = Owner
@@ -253,6 +253,42 @@ object FServer: TFServer
       OnClick = BitBtn3Click
       ParentFont = False
       TabOrder = 5
+    end
+    object Label80: TLabel
+      AnchorSideLeft.Control = Label31
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label1
+      Left = 592
+      Height = 17
+      Top = 2
+      Width = 141
+      BorderSpacing.Left = 8
+      Caption = 'Kompresja strumieni:'
+      ParentColor = False
+    end
+    object AlgCompressionSteaming: TComboBox
+      AnchorSideLeft.Control = Label80
+      AnchorSideTop.Control = Label80
+      AnchorSideTop.Side = asrBottom
+      Left = 592
+      Height = 25
+      Top = 19
+      Width = 168
+      Font.Height = -12
+      Font.Name = 'Sans'
+      ItemHeight = 0
+      ItemIndex = 0
+      Items.Strings = (
+        'Bez kompresji'
+        'Deflate'
+        'LZBRRC (niezalecana)'
+        'BRRC'
+      )
+      OnChange = AlgCompressionSteamingChange
+      ParentFont = False
+      Style = csDropDownList
+      TabOrder = 7
+      Text = 'Bez kompresji'
     end
   end
   object GroupBox2: TGroupBox
@@ -824,11 +860,12 @@ object FServer: TFServer
         Width = 260
       end    
       item
-        Text = 'Komunikacja:'
+        Text = 'Buforowanie:'
         Width = 220
       end    
       item
-        Width = 250
+        Text = 'Prędkość:'
+        Width = 50
       end>
     SimplePanel = False
   end
@@ -19963,8 +20000,8 @@ object FServer: TFServer
         Name = 't2'
         ParamType = ptUnknown
       end>
-    Left = 680
-    Top = 8
+    Left = 160
+    Top = 184
     ParamData = <    
       item
         DataType = ftUnknown
@@ -20073,8 +20110,8 @@ object FServer: TFServer
   object dspyt: TDataSource
     AutoEdit = False
     DataSet = dbpyt
-    Left = 720
-    Top = 8
+    Left = 200
+    Top = 184
   end
   object tGra: TTimer
     Enabled = False
@@ -20141,8 +20178,8 @@ object FServer: TFServer
     Top = 128
   end
   object zegar: TLiveTimer
-    Left = 600
-    Top = 8
+    Left = 64
+    Top = 184
   end
   object ser: TNetSocket
     Mode = smServer
@@ -20157,15 +20194,15 @@ object FServer: TFServer
     OnStatus = serStatus
     OnCryptString = serCryptString
     OnDecryptString = serDecryptString
-    Left = 760
-    Top = 8
+    Left = 264
+    Top = 184
   end
   object ps: TXMLPropStorage
     StoredValues = <>
     RootNodePath = 'server'
     Active = False
-    Left = 640
-    Top = 8
+    Left = 112
+    Top = 184
   end
   object tSer: TTimer
     OnTimer = tSerTimer
@@ -20201,10 +20238,9 @@ object FServer: TFServer
     ReuseAddress = True
     Timeout = 0
     SSLMethod = msSSLv2or3
-    OnProcessMessage = glosnikProcessMessage
     OnReceive = museReceive
-    Left = 800
-    Top = 8
+    Left = 304
+    Top = 184
   end
   object tpings: TTimer
     Enabled = False

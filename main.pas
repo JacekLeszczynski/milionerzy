@@ -1,7 +1,7 @@
 unit main;
 
 {$mode objfpc}{$H+}
-{ $define DEBUG}
+{$define DEBUG}
 
 interface
 
@@ -24,6 +24,7 @@ type
     CheckBox3: TCheckBox;
     CheckBox4: TCheckBox;
     CheckTest: TCheckBox;
+    AlgCompressionSteaming: TComboBox;
     dbpyttrudnosc: TLargeintField;
     dbpytuzyte: TMemoField;
     gl5: TplGauge;
@@ -90,6 +91,7 @@ type
     Label77: TLabel;
     Label78: TLabel;
     Label79: TLabel;
+    Label80: TLabel;
     ListBox1: TListBox;
     ListBox2: TListBox;
     MenuItem1: TMenuItem;
@@ -214,6 +216,7 @@ type
     tInfo: TTimer;
     uos: TUOSEngine;
     play1: TUOSPlayer;
+    procedure AlgCompressionSteamingChange(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
@@ -225,11 +228,11 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure glosnikProcessMessage;
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure museReceive(aSocket: TLSocket);
-    procedure glosnikProcessMessage;
     procedure serCryptString(var aText: string);
     procedure serDecryptString(var aText: string);
     procedure serReceiveString(aMsg: string; aSocket: TLSocket);
@@ -274,7 +277,7 @@ type
     procedure nomusic;
     procedure sound(aNr: integer = 0; aLoop: boolean = false; aVolume: integer = 100);
     procedure nosound;
-    procedure synchronizuj(aSocket: TLSocket; aKey: string);
+    procedure synchronizuj(aSocket: TLSocket; const aKey: string);
     procedure test(aTryb: integer);
     procedure test_info(aPytanie: integer);
     procedure ekran_info(aLp: integer = 0);
@@ -286,13 +289,13 @@ type
     procedure glosy_wyniki(var a,b,c,d: integer);
     procedure glosy_aktualizacja;
     procedure glosy_clear;
-    procedure users_add(aImie,aKey: string);
-    procedure users_edit(aImie,aKey: string);
-    procedure pings_add(aKey: string);
+    procedure users_add(const aImie,aKey: string);
+    procedure users_edit(const aImie,aKey: string);
+    procedure pings_add(const aKey: string);
     function user2socket(aItemIndex: integer; var aKey: string; var aSocket: TLSocket): boolean;
-    function user2send(aItemIndex: integer; aStr: string): boolean;
-    function user2send(aItemIndex: integer; aStr: string; var aSocket: TLSocket): boolean;
-    function user2send(aItemIndex: integer; aStr: string; var aKey: string; var aSocket: TLSocket): boolean;
+    function user2send(aItemIndex: integer; const aStr: string): boolean;
+    function user2send(aItemIndex: integer; const aStr: string; var aSocket: TLSocket): boolean;
+    function user2send(aItemIndex: integer; const aStr: string; var aKey: string; var aSocket: TLSocket): boolean;
     function user2disconnect(aItemIndex: integer): boolean;
     procedure odpowiedz(aStr: string);
   public
@@ -362,6 +365,11 @@ begin
   Key:=0;
 end;
 
+procedure TFServer.glosnikProcessMessage;
+begin
+  application.ProcessMessages;
+end;
+
 procedure TFServer.MenuItem1Click(Sender: TObject);
 begin
   user2send(ListBox1.ItemIndex,'ping');
@@ -389,12 +397,6 @@ begin
   n1:=dm.rd.Add(buf,n1);
   n2:=dm.rd.Execute(muse_in);
   //n2:=dm.rd.Execute(muse_full);
-  {$IFDEF DEBUG} writeln('server.museReceive.muse_on: ',muse_on,' count: ',n1,' -> ',n2); {$ENDIF}
-  application.ProcessMessages;
-end;
-
-procedure TFServer.glosnikProcessMessage;
-begin
   application.ProcessMessages;
 end;
 
@@ -637,24 +639,44 @@ begin
   Timer1.Enabled:=false;
 end;
 
+var
+  komunikacja: array [1..2,1..10] of integer;
+
 procedure TFServer.tloopTimer(Sender: TObject);
 var
   cc,n1,n2: integer;
   buf: TBufferNetwork;
-  a,b: integer;
+  a,b,i: integer;
 begin
   cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
   if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
   //n2:=muse2_out.Read(buf,cc);
   //n2:=dm.Compress(muse2_out,buf,cc);
+  xx.Start;
   n1:=dm.rc.Add(muse2_out,cc); //dodanie strumienia
   n2:=dm.rc.Execute(buf);  //kompresja strumienia
+  xx.Stop;
+  StatusBar.Panels[2].Text:='Prędkość: '+IntToStr(xx.ElapsedTicks)+' taktów.';
   if n2>0 then muse.SendBinary(buf,n2);
-  {$IFDEF DEBUG} writeln('server.tloop.count: ',n1,' -> ',n2); {$ENDIF}
-  a:=trunc(100*n1/BUFFER_SIZE);
-  b:=trunc(100*n2/BUFFER_SIZE_COMPRESSED);
-  StatusBar.Panels[1].Text:='Komunikacja: '+IntToStr(a)+'/'+IntToStr(b);
+  (* bufory *)
+  for i:=2 to KOMUNIKACJA_LAST do
+  begin
+    komunikacja[1,i-1]:=komunikacja[1,i];
+    komunikacja[2,i-1]:=komunikacja[2,i];
+  end;
+  komunikacja[1,KOMUNIKACJA_LAST]:=round(100*n1/BUFFER_SIZE);
+  komunikacja[2,KOMUNIKACJA_LAST]:=round(100*n2/BUFFER_SIZE_COMPRESSED);
+  a:=0;
+  b:=0;
+  for i:=1 to KOMUNIKACJA_LAST do
+  begin
+    a:=a+komunikacja[1,i];
+    b:=b+komunikacja[2,i];
+  end;
+  a:=round(a/KOMUNIKACJA_LAST);
+  b:=round(b/KOMUNIKACJA_LAST);
+  StatusBar.Panels[1].Text:='Buforowanie: '+IntToStr(a)+'/'+IntToStr(b)+' (%)';
 end;
 
 procedure TFServer.tmuseTimer(Sender: TObject);
@@ -663,6 +685,10 @@ begin
   if tmuse.Tag=1 then
   begin
     {$IFDEF DEBUG} writeln('server.tmuse.1'); {$ENDIF}
+    uELED2.Color:=clRed;
+    uELED2.Active:=true;
+    dm.rc.Clear;
+    dm.rd.Clear;
     (* połączenie zestawione - uruchamiam komunikację *)
     BitBtn3.Enabled:=true;
     //muse_full:=TMemoryStream.Create;
@@ -671,6 +697,7 @@ begin
     muse_on:=true;
     BitBtn3.Enabled:=true;
     MenuItem4.Enabled:=false;
+    AlgCompressionSteaming.Enabled:=false;
     (* nakazuję zrobić to samo stronie drugiej *)
     ser.SendString('o$'+key_muse+'$muse$on',soket_muse);
   end else
@@ -680,12 +707,12 @@ begin
     tloop.Enabled:=true;
     mic.Start(TMemoryStream(muse2_in));
     uELED2.Color:=clBlue;
-    uELED2.Active:=true;
     ser.SendString('o$'+key_muse+'$muse$start',soket_muse);
   end else
   if tmuse.Tag=3 then
   begin
     {$IFDEF DEBUG} writeln('server.tmuse.3'); {$ENDIF}
+    uELED2.Color:=clRed;
     glosnik.Stop;
     while glosnik.Busy do begin application.ProcessMessages; end;
     mic.Stop;
@@ -703,6 +730,9 @@ begin
     {$IFDEF DEBUG} writeln('server.tmuse.4'); {$ENDIF}
     BitBtn3.Enabled:=false;
     MenuItem4.Enabled:=true;
+    AlgCompressionSteaming.Enabled:=true;
+    StatusBar.Panels[1].Text:='Buforowanie:';
+    StatusBar.Panels[2].Text:='Prędkość:';
     uELED2.Active:=false;
   end;
 end;
@@ -932,12 +962,12 @@ begin
   play2.Stop(true);
 end;
 
-procedure TFServer.synchronizuj(aSocket: TLSocket; aKey: string);
+procedure TFServer.synchronizuj(aSocket: TLSocket; const aKey: string);
 var
   s: string;
   s0,s1,s2,s3,s4: string;
   s5,s6: string;
-  uo,o,ok,glos: string;
+  uo,o,ok,glos,aks: string;
   b: boolean;
   a: integer;
 begin
@@ -964,7 +994,13 @@ begin
   glos:='';
   b:=glosy.Find(aKey,a);
   if b and (a>-1) then glos:=GetLineToStr(glosy2[a],2,';');
-  s:=IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s0+'$'+s1+'$'+s2+'$'+s3+'$'+s4+'$'+uo+'$'+o+'$'+s5+'$'+s6+'$'+ok+'$'+glos;
+  case AlgCompressionSteaming.ItemIndex of
+    0: aks:='none';
+    1: aks:='deflate';
+    2: aks:='lzbrrc';
+    3: aks:='brrc';
+  end;
+  s:=IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s0+'$'+s1+'$'+s2+'$'+s3+'$'+s4+'$'+uo+'$'+o+'$'+s5+'$'+s6+'$'+ok+'$'+glos+'$'+aks;
   ser.SendString('o$'+aKey+'$synchronizacja$'+s,aSocket);
 end;
 
@@ -1223,6 +1259,17 @@ begin
   BitBtn1.Enabled:=false;
   BitBtn2.Enabled:=true;
   tTel.Enabled:=true;
+end;
+
+procedure TFServer.AlgCompressionSteamingChange(Sender: TObject);
+begin
+  dm.SetAlgCompression(AlgCompressionSteaming.ItemIndex);
+  case AlgCompressionSteaming.ItemIndex of
+    0: ser.SendString('o$all$algcompression$none');
+    1: ser.SendString('o$all$algcompression$deflate');
+    2: ser.SendString('o$all$algcompression$lzbrrc');
+    3: ser.SendString('o$all$algcompression$brrc');
+  end;
 end;
 
 procedure TFServer.BitBtn2Click(Sender: TObject);
@@ -1486,12 +1533,12 @@ begin
   gl4.Progress:=0;
 end;
 
-procedure TFServer.users_add(aImie, aKey: string);
+procedure TFServer.users_add(const aImie, aKey: string);
 begin
   ListBox1.Items.Add(aImie+CL_SPACE+aKey);
 end;
 
-procedure TFServer.users_edit(aImie, aKey: string);
+procedure TFServer.users_edit(const aImie, aKey: string);
 var
   i: integer;
   s: string;
@@ -1508,7 +1555,7 @@ begin
   ListBox1.Items.Add(aImie+CL_SPACE+aKey);
 end;
 
-procedure TFServer.pings_add(aKey: string);
+procedure TFServer.pings_add(const aKey: string);
 var
   i: integer;
   s,imie: string;
@@ -1547,7 +1594,7 @@ begin
   end else result:=false;
 end;
 
-function TFServer.user2send(aItemIndex: integer; aStr: string): boolean;
+function TFServer.user2send(aItemIndex: integer; const aStr: string): boolean;
 var
   key: string;
   socket: TLSocket;
@@ -1555,7 +1602,7 @@ begin
   result:=user2send(aItemIndex,aStr,key,socket);
 end;
 
-function TFServer.user2send(aItemIndex: integer; aStr: string;
+function TFServer.user2send(aItemIndex: integer; const aStr: string;
   var aSocket: TLSocket): boolean;
 var
   key: string;
@@ -1563,7 +1610,7 @@ begin
   result:=user2send(aItemIndex,aStr,key,aSocket);
 end;
 
-function TFServer.user2send(aItemIndex: integer; aStr: string;
+function TFServer.user2send(aItemIndex: integer; const aStr: string;
   var aKey: string; var aSocket: TLSocket): boolean;
 var
   b: boolean;
