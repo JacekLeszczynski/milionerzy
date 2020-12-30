@@ -1,7 +1,7 @@
 unit main;
 
 {$mode objfpc}{$H+}
-{$define DEBUG}
+{ $define DEBUG}
 
 interface
 

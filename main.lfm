@@ -258,11 +258,11 @@ object FServer: TFServer
       AnchorSideLeft.Control = Label31
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Label1
-      Left = 592
+      Left = 600
       Height = 17
       Top = 2
       Width = 141
-      BorderSpacing.Left = 8
+      BorderSpacing.Left = 16
       Caption = 'Kompresja strumieni:'
       ParentColor = False
     end
@@ -270,7 +270,7 @@ object FServer: TFServer
       AnchorSideLeft.Control = Label80
       AnchorSideTop.Control = Label80
       AnchorSideTop.Side = asrBottom
-      Left = 592
+      Left = 600
       Height = 25
       Top = 19
       Width = 168

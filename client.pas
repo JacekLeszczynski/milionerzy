@@ -1,7 +1,7 @@
 unit client;
 
 {$mode objfpc}{$H+}
-{$define DEBUG}
+{ $define DEBUG}
 
 interface
 
