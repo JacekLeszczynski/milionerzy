@@ -19399,7 +19399,7 @@ object FClient: TFClient
   end
   object tloop: TTimer
     Enabled = False
-    Interval = 100
+    Interval = 80
     OnTimer = tloopTimer
     Left = 720
     Top = 264

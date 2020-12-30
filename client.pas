@@ -217,7 +217,7 @@ type
     procedure odp_activate(aOn: boolean);
     procedure offkey(aStr: string);
     procedure clear;
-    procedure send(aStr: string; aOdpowiedz: boolean = false); virtual;
+    procedure send(aStr: string; aOdpowiedz: boolean = false);
   public
 
   end;

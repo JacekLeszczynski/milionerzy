@@ -27,17 +27,17 @@ type
     fMode: TKompresjaRamekMode;
     fNag: boolean;
     stream: TMemoryStream;
-    function wCompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer; virtual;
-    function wDecompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer; virtual;
+    function wCompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer;
+    function wDecompress(const iBuffer; iCount: integer; var oBuffer; oMaxCount: integer): integer;
   public
     constructor Create(aMode: TKompresjaRamekMode = moCompress; aDodawajNaglowki: boolean = false);
     destructor Destroy; override;
-    procedure Clear; virtual;
-    function Add(iStream: TStream; iCount: integer = 0): integer; virtual;
-    function Add(const iBuffer; iCount: integer): integer; virtual;
-    function Test: boolean; virtual;
-    function Execute(oStream: TStream): integer; virtual;
-    function Execute(var oBuffer): integer; virtual;
+    procedure Clear;
+    function Add(iStream: TStream; iCount: integer = 0): integer;
+    function Add(const iBuffer; iCount: integer): integer;
+    function Test: boolean;
+    function Execute(oStream: TStream): integer;
+    function Execute(var oBuffer): integer;
   published
     property Naglowek: boolean read fNag default false;
     property Mode: TKompresjaRamekMode read fMode default moCompress;
@@ -61,8 +61,8 @@ type
     procedure zysk_i_strata(aPytanie: integer; var gra_o,zysk,strata: integer);
     procedure KeySave(aKey: string);
     function KeyLoad: string;
-    function CryptString(aStr: string): string; virtual;
-    function DecryptString(aStr: string): string; virtual;
+    function CryptString(aStr: string): string;
+    function DecryptString(aStr: string): string;
   end;
 
 const

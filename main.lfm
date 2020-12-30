@@ -20243,7 +20243,7 @@ object FServer: TFServer
   end
   object tloop: TTimer
     Enabled = False
-    Interval = 100
+    Interval = 80
     OnTimer = tloopTimer
     Left = 858
     Top = 168
