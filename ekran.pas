@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  XMLPropStorage, LiveTimer, TplGaugeUnit, ZDataset;
+  XMLPropStorage, LiveTimer, TplGaugeUnit, ZDataset, ueled;
 
 type
 
@@ -65,12 +65,28 @@ type
     Label47: TLabel;
     Label48: TLabel;
     Label49: TLabel;
+    Label50: TLabel;
+    Label51: TLabel;
+    Label52: TLabel;
+    Label53: TLabel;
     livekolo: TLiveTimer;
     Panel10: TPanel;
     Panel11: TPanel;
     Panel12: TPanel;
     Panel9: TPanel;
     tinfokolo: TTimer;
+    uELED19: TuELED;
+    uELED20: TuELED;
+    uELED21: TuELED;
+    uELED22: TuELED;
+    uELED23: TuELED;
+    uELED24: TuELED;
+    uELED25: TuELED;
+    uELED26: TuELED;
+    uELED27: TuELED;
+    uELED28: TuELED;
+    uELED29: TuELED;
+    uELED30: TuELED;
     x1: TLabel;
     x2: TLabel;
     Label3: TLabel;
@@ -193,7 +209,7 @@ begin
   (* czekam określoną ilość czasu *)
   if tinfokolo.Tag=2 then
   begin
-    if a>livekolo.Tag+4000 then
+    if a>livekolo.Tag+3000 then
     begin
       tinfokolo.Tag:=3;
       livekolo.Tag:=a;

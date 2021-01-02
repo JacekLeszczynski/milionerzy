@@ -1,7 +1,7 @@
 unit client;
 
 {$mode objfpc}{$H+}
-{ $define DEBUG}
+{$define DEBUG}
 
 interface
 
@@ -52,6 +52,7 @@ type
     Label47: TLabel;
     Label48: TLabel;
     Label49: TLabel;
+    Label5: TLabel;
     Label50: TLabel;
     Label51: TLabel;
     Label52: TLabel;
@@ -62,6 +63,7 @@ type
     Label57: TLabel;
     Label58: TLabel;
     Label59: TLabel;
+    Label6: TLabel;
     Label60: TLabel;
     Label61: TLabel;
     Label62: TLabel;
@@ -72,6 +74,7 @@ type
     Label67: TLabel;
     Label68: TLabel;
     Label69: TLabel;
+    Label7: TLabel;
     Label70: TLabel;
     Label71: TLabel;
     Label72: TLabel;
@@ -80,6 +83,7 @@ type
     Label75: TLabel;
     Label76: TLabel;
     Label77: TLabel;
+    Label8: TLabel;
     Label_a: TLabel;
     Label_b: TLabel;
     Label_c: TLabel;
@@ -95,6 +99,18 @@ type
     tmuse: TTimer;
     tloop: TTimer;
     uELED1: TuELED;
+    uELED19: TuELED;
+    uELED20: TuELED;
+    uELED21: TuELED;
+    uELED22: TuELED;
+    uELED23: TuELED;
+    uELED24: TuELED;
+    uELED25: TuELED;
+    uELED26: TuELED;
+    uELED27: TuELED;
+    uELED28: TuELED;
+    uELED29: TuELED;
+    uELED30: TuELED;
     uELED4: TuELED;
     z1: TLiveTimer;
     t30: TTimer;
@@ -182,12 +198,14 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure ListBox1Click(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem9Click(Sender: TObject);
     procedure museDisconnect;
     procedure museReceive(aSocket: TLSocket);
+    procedure RadioGroup1Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
@@ -232,6 +250,7 @@ type
     procedure clear;
     procedure send(const aStr: string; aOdpowiedz: boolean = false);
     procedure przelicz(aBledy: integer);
+    function user2key(aItemIndex: integer; var aKey: string): boolean;
   public
 
   end;
@@ -326,6 +345,9 @@ end;
 procedure TFClient.clear;
 begin
   eOff;
+  t30.Enabled:=false;
+  zegar.Stop;
+  eCzas30(false);
   linfo.Caption:='';
   SpeedButton1.Caption:='';
   SpeedButton2.Caption:='';
@@ -336,6 +358,14 @@ begin
   SpeedButton3.Enabled:=false;
   SpeedButton4.Enabled:=false;
   Label14.Caption:='';
+  Panel3.Enabled:=false;
+  RadioGroup1.ItemIndex:=0;
+  RadioGroup2.ItemIndex:=0;
+  RadioGroup3.ItemIndex:=0;
+  RadioGroup4.ItemIndex:=0;
+  Label4.Enabled:=false;
+  ListBox1.Clear;
+  ListBox1.Enabled:=false;
 end;
 
 procedure TFClient.send(const aStr: string; aOdpowiedz: boolean);
@@ -374,6 +404,21 @@ begin
     Label65.Caption:=Label66.Caption;
     Label66.Caption:=Label67.Caption;
     Label67.Caption:='0';
+  end;
+end;
+
+function TFClient.user2key(aItemIndex: integer; var aKey: string): boolean;
+var
+  a: integer;
+  vkey: string;
+begin
+  vkey:=ListBox1.Items[aItemIndex];
+  a:=pos('{',vkey);
+  delete(vkey,1,a-1);
+  if vkey='' then result:=false else
+  begin
+    aKey:=vkey;
+    result:=true;
   end;
 end;
 
@@ -456,7 +501,8 @@ end;
 
 procedure TFClient.cliReceiveString(aMsg: string; aSocket: TLSocket);
 var
-  s,s1,s2,odp,w: string;
+  s,s1,s2,odp,w,w1,w2: string;
+  s3: string;
 begin
   s:=aMsg;
   {$IFDEF DEBUG} writeln('client.ramka: ',s); {$ENDIF}
@@ -483,6 +529,14 @@ begin
     end;
   end else
   if odp='synchronizacja' then synchronizuj(s) else
+  if odp='telupdate' then
+  begin
+    w:=GetLineToStr(s,4,'$');
+    RadioGroup1.ItemIndex:=StrToInt(w[1]);
+    RadioGroup2.ItemIndex:=StrToInt(w[2]);
+    RadioGroup3.ItemIndex:=StrToInt(w[3]);
+    RadioGroup4.ItemIndex:=StrToInt(w[4]);
+  end else
   if odp='goactive' then odp_activate(true) else
   if odp='godeactive' then odp_activate(false) else
   if odp='goblock' then odp_przyciski(false) else
@@ -533,6 +587,58 @@ begin
       if w='lzbrrc' then dm.SetAlgCompression(2) else
       if w='brrc' then dm.SetAlgCompression(3);
     end;
+  end else
+  if odp='userbegin' then
+  begin
+    ListBox1.Clear;
+    Label4.Enabled:=true;
+    ListBox1.Enabled:=true;
+  end else
+  if odp='user' then ListBox1.Items.Add(GetLineToStr(s,4,'$')) else
+  if odp='userblock' then
+  begin
+    Label4.Enabled:=false;
+    ListBox1.Enabled:=false;
+  end else
+  if odp='userend' then
+  begin
+    ListBox1.Clear;
+  end else
+  if odp='userprzyjacielstart' then Panel3.Enabled:=true else
+  if odp='userprzyjacielstop' then Panel3.Enabled:=false else
+  if odp='przyjacielodpowiada' then
+  begin
+    w1:=GetLineToStr(s,4,'$','0');
+    w2:=GetLineToStr(s,5,'$','0');
+    s3:='000';
+    if w2='0' then begin s3[1]:='0'; s3[2]:='0'; s3[3]:='0'; end else
+    if w2='1' then begin s3[1]:='1'; s3[2]:='0'; s3[3]:='0'; end else
+    if w2='2' then begin s3[1]:='1'; s3[2]:='1'; s3[3]:='0'; end else
+    begin s3[1]:='1'; s3[2]:='1'; s3[3]:='1'; end;
+    if w1='1' then
+    begin
+      uELED19.Active:=s3[1]='1';
+      uELED20.Active:=s3[2]='1';
+      uELED21.Active:=s3[3]='1';
+    end else
+    if w1='2' then
+    begin
+      uELED22.Active:=s3[1]='1';
+      uELED23.Active:=s3[2]='1';
+      uELED24.Active:=s3[3]='1';
+    end else
+    if w1='3' then
+    begin
+      uELED25.Active:=s3[1]='1';
+      uELED26.Active:=s3[2]='1';
+      uELED27.Active:=s3[3]='1';
+    end else
+    if w1='4' then
+    begin
+      uELED28.Active:=s3[1]='1';
+      uELED29.Active:=s3[2]='1';
+      uELED30.Active:=s3[3]='1';
+    end;
   end;
 end;
 
@@ -551,7 +657,7 @@ end;
 
 procedure TFClient.eImieKeyPress(Sender: TObject; var Key: char);
 begin
-  if Key='$' then Key:=#9;
+  if Key in ['$',';',','] then Key:=#9;
 end;
 
 procedure TFClient.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -592,6 +698,16 @@ procedure TFClient.FormDestroy(Sender: TObject);
 begin
   if uELED4.Active then uos.UnLoadLibrary;
   dm.Free;
+end;
+
+procedure TFClient.ListBox1Click(Sender: TObject);
+var
+  i: integer;
+  s: string;
+begin
+  i:=ListBox1.ItemIndex;
+  if i=-1 then exit;
+  if user2key(i,s) then send('przyjaciel$'+s);
 end;
 
 procedure TFClient.MenuItem3Click(Sender: TObject);
@@ -657,6 +773,21 @@ begin
   n2:=dm.rd.Execute(muse_in);
 end;
 
+procedure TFClient.RadioGroup1Click(Sender: TObject);
+var
+  i: integer;
+  a: TRadioGroup;
+begin
+  i:=TRadioGroup(Sender).Tag;
+  case i of
+    1: a:=RadioGroup1;
+    2: a:=RadioGroup2;
+    3: a:=RadioGroup3;
+    4: a:=RadioGroup4;
+  end;
+  send('przyjacielodpowiada$'+IntToStr(i)+'$'+IntToStr(a.ItemIndex));
+end;
+
 procedure TFClient.SpeedButton1Click(Sender: TObject);
 begin
   Label14.Caption:='A';
@@ -689,7 +820,6 @@ end;
 procedure TFClient.t30StopTimer(Sender: TObject);
 begin
   zegar.Stop;
-  eCzas30(false);
 end;
 
 procedure TFClient.t30Timer(Sender: TObject);
@@ -1014,7 +1144,7 @@ TRY
     vUdzielonaOdpowiedz:=StrToInt(GetLineToStr(aCiag,11,'$','0'));
     odp_activate(true);
     if pol<>'' then offkey(pol);
-    Label14.Caption:=vGlos;
+    Label14.Caption:=UpCase(vGlos);
     set_zaznacz(vUdzielonaOdpowiedz,0);
   end;
   if vTryb>=16 then
@@ -1101,6 +1231,11 @@ end;
 
 procedure TFClient.set_zaznacz(aN1, aN2: integer);
 begin
+  if Panel15.Visible then
+  begin
+    ListBox1.Clear;
+    eCzas30(false);
+  end;
   case aN1 of
     1: Panel7.Color:=CL_ZAZNACZENIE;
     2: Panel8.Color:=CL_ZAZNACZENIE;

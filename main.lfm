@@ -84,6 +84,7 @@ object FServer: TFServer
       Alignment = taCenter
       AutoSize = False
       Caption = '0'
+      Font.Color = clRed
       Font.Height = -19
       Font.Name = 'Sans'
       Font.Style = [fsBold]
@@ -912,12 +913,8 @@ object FServer: TFServer
         Width = 260
       end    
       item
-        Text = 'Buforowanie:'
+        Text = 'Status:'
         Width = 220
-      end    
-      item
-        Text = 'Prędkość:'
-        Width = 50
       end>
     SimplePanel = False
   end
@@ -943,12 +940,11 @@ object FServer: TFServer
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = Label18
       AnchorSideTop.Side = asrCenter
-      AnchorSideRight.Control = Label22
-      AnchorSideRight.Side = asrBottom
+      AnchorSideRight.Control = Panel16
       Left = 28
       Height = 18
       Top = 5
-      Width = 317
+      Width = 241
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -981,7 +977,7 @@ object FServer: TFServer
       Left = 28
       Height = 18
       Top = 28
-      Width = 317
+      Width = 241
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -1014,7 +1010,7 @@ object FServer: TFServer
       Left = 28
       Height = 18
       Top = 51
-      Width = 317
+      Width = 241
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -1047,7 +1043,7 @@ object FServer: TFServer
       Left = 28
       Height = 18
       Top = 74
-      Width = 317
+      Width = 241
       Color = clDefault
       BarColor = clSilver
       Progress = 0
@@ -1082,6 +1078,228 @@ object FServer: TFServer
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 8
       ParentColor = False
+    end
+    object Panel16: TPanel
+      AnchorSideTop.Control = GroupBox5
+      AnchorSideRight.Control = GroupBox5
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = GroupBox5
+      AnchorSideBottom.Side = asrBottom
+      Left = 269
+      Height = 99
+      Top = 0
+      Width = 84
+      Anchors = [akTop, akRight, akBottom]
+      AutoSize = True
+      BevelOuter = bvNone
+      ClientHeight = 99
+      ClientWidth = 84
+      TabOrder = 0
+      object uELED7: TuELED
+        AnchorSideTop.Control = uELED5
+        AnchorSideRight.Control = uELED6
+        Left = 4
+        Height = 24
+        Top = 3
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        BorderSpacing.Left = 4
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED6: TuELED
+        AnchorSideTop.Control = uELED5
+        AnchorSideRight.Control = uELED5
+        Left = 28
+        Height = 24
+        Top = 3
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED5: TuELED
+        AnchorSideTop.Control = Panel16
+        AnchorSideRight.Control = Panel16
+        AnchorSideRight.Side = asrBottom
+        Left = 52
+        Height = 24
+        Top = 3
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        BorderSpacing.Top = 3
+        BorderSpacing.Right = 8
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED8: TuELED
+        AnchorSideTop.Control = uELED10
+        AnchorSideRight.Control = uELED9
+        Left = 4
+        Height = 24
+        Top = 27
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED9: TuELED
+        AnchorSideTop.Control = uELED10
+        AnchorSideRight.Control = uELED10
+        Left = 28
+        Height = 24
+        Top = 27
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED10: TuELED
+        AnchorSideTop.Control = uELED7
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel16
+        AnchorSideRight.Side = asrBottom
+        Left = 52
+        Height = 24
+        Top = 27
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 8
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED11: TuELED
+        AnchorSideTop.Control = uELED13
+        AnchorSideRight.Control = uELED12
+        Left = 4
+        Height = 24
+        Top = 51
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED12: TuELED
+        AnchorSideTop.Control = uELED13
+        AnchorSideRight.Control = uELED13
+        Left = 28
+        Height = 24
+        Top = 51
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED13: TuELED
+        AnchorSideTop.Control = uELED10
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel16
+        AnchorSideRight.Side = asrBottom
+        Left = 52
+        Height = 24
+        Top = 51
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 8
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED14: TuELED
+        AnchorSideTop.Control = uELED16
+        AnchorSideRight.Control = uELED15
+        Left = 4
+        Height = 24
+        Top = 75
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED15: TuELED
+        AnchorSideTop.Control = uELED16
+        AnchorSideRight.Control = uELED16
+        Left = 28
+        Height = 24
+        Top = 75
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        Color = clYellow
+        ParentColor = False
+      end
+      object uELED16: TuELED
+        AnchorSideTop.Control = uELED13
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Panel16
+        AnchorSideRight.Side = asrBottom
+        Left = 52
+        Height = 24
+        Top = 75
+        Width = 24
+        Debug = False
+        Active = False
+        LedType = ledRound
+        Bright = True
+        Reflection = True
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 8
+        Color = clYellow
+        ParentColor = False
+      end
     end
   end
   object GameLastModePlay: TCheckBox
@@ -1356,78 +1574,6 @@ object FServer: TFServer
           Anchors = [akTop, akRight]
           BorderSpacing.Right = 8
           ParentColor = False
-        end
-      end
-    end
-    object Panel14: TPanel
-      AnchorSideLeft.Control = Panel2
-      AnchorSideTop.Control = Panel2
-      Left = 28
-      Height = 79
-      Top = 22
-      Width = 80
-      BorderSpacing.Left = 27
-      BorderSpacing.Top = 21
-      BevelOuter = bvNone
-      ClientHeight = 79
-      ClientWidth = 80
-      TabOrder = 4
-      Visible = False
-      object Panel15: TPanel
-        AnchorSideLeft.Control = Panel14
-        AnchorSideLeft.Side = asrCenter
-        AnchorSideTop.Control = Panel14
-        AnchorSideTop.Side = asrCenter
-        Left = 8
-        Height = 62
-        Top = 8
-        Width = 64
-        ClientHeight = 62
-        ClientWidth = 64
-        Color = clBlue
-        ParentColor = False
-        TabOrder = 0
-        object Label77: TLabel
-          AnchorSideLeft.Control = Panel15
-          AnchorSideLeft.Side = asrCenter
-          AnchorSideTop.Control = Panel15
-          AnchorSideTop.Side = asrCenter
-          Left = 2
-          Height = 55
-          Top = 4
-          Width = 60
-          Alignment = taCenter
-          Caption = '30'
-          Color = clBlue
-          Constraints.MinHeight = 55
-          Constraints.MinWidth = 60
-          Font.Color = clYellow
-          Font.Height = -37
-          Font.Name = 'System-ui'
-          Layout = tlBottom
-          ParentColor = False
-          ParentFont = False
-          Transparent = False
-        end
-        object Label76: TLabel
-          AnchorSideLeft.Control = Panel15
-          AnchorSideTop.Control = Panel15
-          AnchorSideRight.Control = Panel15
-          AnchorSideRight.Side = asrBottom
-          Left = 1
-          Height = 15
-          Top = 5
-          Width = 62
-          Alignment = taCenter
-          Anchors = [akTop, akLeft, akRight]
-          BorderSpacing.Top = 4
-          Caption = 'CZAS'
-          Font.Color = clCream
-          Font.Height = -13
-          Font.Name = 'Sans'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
         end
       end
     end
@@ -19987,27 +20133,78 @@ object FServer: TFServer
         Visible = False
       end
     end
-  end
-  object ListBox1: TListBox
-    AnchorSideLeft.Control = Label79
-    AnchorSideTop.Control = Label79
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = GameLastModePlay
-    AnchorSideBottom.Side = asrBottom
-    Left = 816
-    Height = 275
-    Top = 77
-    Width = 171
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Right = 8
-    ItemHeight = 0
-    PopupMenu = PopupMenu1
-    ScrollWidth = 169
-    Sorted = True
-    TabOrder = 9
-    TopIndex = -1
+    object Panel14: TPanel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Panel2
+      Left = 28
+      Height = 79
+      Top = 22
+      Width = 80
+      BorderSpacing.Left = 27
+      BorderSpacing.Top = 21
+      BevelOuter = bvNone
+      ClientHeight = 79
+      ClientWidth = 80
+      TabOrder = 4
+      Visible = False
+      object Panel15: TPanel
+        AnchorSideLeft.Control = Panel14
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Panel14
+        AnchorSideTop.Side = asrCenter
+        Left = 8
+        Height = 62
+        Top = 8
+        Width = 64
+        ClientHeight = 62
+        ClientWidth = 64
+        Color = clBlue
+        ParentColor = False
+        TabOrder = 0
+        object Label77: TLabel
+          AnchorSideLeft.Control = Panel15
+          AnchorSideLeft.Side = asrCenter
+          AnchorSideTop.Control = Panel15
+          AnchorSideTop.Side = asrCenter
+          Left = 2
+          Height = 55
+          Top = 4
+          Width = 60
+          Alignment = taCenter
+          Caption = '30'
+          Color = clBlue
+          Constraints.MinHeight = 55
+          Constraints.MinWidth = 60
+          Font.Color = clYellow
+          Font.Height = -37
+          Font.Name = 'System-ui'
+          Layout = tlBottom
+          ParentColor = False
+          ParentFont = False
+          Transparent = False
+        end
+        object Label76: TLabel
+          AnchorSideLeft.Control = Panel15
+          AnchorSideTop.Control = Panel15
+          AnchorSideRight.Control = Panel15
+          AnchorSideRight.Side = asrBottom
+          Left = 1
+          Height = 15
+          Top = 5
+          Width = 62
+          Alignment = taCenter
+          Anchors = [akTop, akLeft, akRight]
+          BorderSpacing.Top = 4
+          Caption = 'CZAS'
+          Font.Color = clCream
+          Font.Height = -13
+          Font.Name = 'Sans'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+      end
+    end
   end
   object Label79: TLabel
     Left = 816
@@ -20020,22 +20217,43 @@ object FServer: TFServer
   end
   object ListBox2: TListBox
     AnchorSideLeft.Control = Label79
-    AnchorSideTop.Control = ListBox1
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GameLastModePlay
+    AnchorSideBottom.Side = asrBottom
+    Left = 816
+    Height = 95
+    Top = 362
+    Width = 171
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
+    ItemHeight = 0
+    ScrollWidth = 169
+    TabOrder = 10
+    TopIndex = -1
+    Visible = False
+  end
+  object ListBox1: TListBox
+    AnchorSideLeft.Control = Label79
+    AnchorSideTop.Control = Label79
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = GameLastModePlay
     AnchorSideBottom.Side = asrBottom
     Left = 816
-    Height = 103
-    Top = 354
+    Height = 380
+    Top = 77
     Width = 171
     Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Top = 2
     BorderSpacing.Right = 8
     ItemHeight = 0
+    OnDrawItem = ListBox1DrawItem
+    PopupMenu = PopupMenu1
     ScrollWidth = 169
-    TabOrder = 10
+    Sorted = True
+    Style = lbOwnerDrawFixed
+    TabOrder = 9
     TopIndex = -1
   end
   object dbpyt: TZQuery
@@ -20267,7 +20485,7 @@ object FServer: TFServer
   end
   object PopupMenu1: TPopupMenu
     Left = 858
-    Top = 104
+    Top = 103
     object MenuItem1: TMenuItem
       Caption = 'Ping'
       OnClick = MenuItem1Click
@@ -20278,6 +20496,13 @@ object FServer: TFServer
       OnClick = MenuItem4Click
     end
     object MenuItem3: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem5: TMenuItem
+      Caption = 'To jest gracz!'
+      OnClick = MenuItem5Click
+    end
+    object MenuItem6: TMenuItem
       Caption = '-'
     end
     object MenuItem2: TMenuItem

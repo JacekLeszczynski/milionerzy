@@ -85,6 +85,7 @@ begin
   if (aButton=2) or (aButton=3) then aTestDblClick:=true;
   if (TRYB=15) and (litera=4) then g_rezygnacja:=true;
   if ON_pause then exit;
+  if g_gracz_key='' then exit;
   case TRYB of
     (* PUSTY EKRAN *)
     0: if litera=1 then FMilionerzyTest(1);

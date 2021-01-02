@@ -1,14 +1,14 @@
 unit main;
 
 {$mode objfpc}{$H+}
-{ $define DEBUG}
+{$define DEBUG}
 
 interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, XMLPropStorage, ComCtrls, Menus, TplGaugeUnit, Presentation,
-  UOSEngine, UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled, pipes;
+  UOSEngine, UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled, pipes, Types;
 
 type
 
@@ -99,12 +99,15 @@ type
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
     mic2: TUOSPlayer;
     muse: TNetSocket;
     Panel12: TPanel;
     Panel13: TPanel;
     Panel14: TPanel;
     Panel15: TPanel;
+    Panel16: TPanel;
     PopupMenu1: TPopupMenu;
     ppodsumowanie: TLabel;
     Label_a: TLabel;
@@ -194,9 +197,21 @@ type
     uELED1: TuELED;
     led_null_screen: TuELED;
     led_rozgrywka: TuELED;
+    uELED10: TuELED;
+    uELED11: TuELED;
+    uELED12: TuELED;
+    uELED13: TuELED;
+    uELED14: TuELED;
+    uELED15: TuELED;
+    uELED16: TuELED;
     uELED2: TuELED;
     uELED3: TuELED;
     uELED4: TuELED;
+    uELED5: TuELED;
+    uELED6: TuELED;
+    uELED7: TuELED;
+    uELED8: TuELED;
+    uELED9: TuELED;
     x1: TLabel;
     x2: TLabel;
     x3: TLabel;
@@ -231,9 +246,12 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure ListBox1DrawItem(Control: TWinControl; Index: Integer;
+      ARect: TRect; State: TOwnerDrawState);
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
+    procedure MenuItem5Click(Sender: TObject);
     procedure museDisconnect;
     procedure museReceive(aSocket: TLSocket);
     procedure serCryptString(var aText: string);
@@ -271,6 +289,7 @@ type
     muse_out,muse2_out: TInputPipeStream;
     muse_on: boolean;
     mmmm: TMemoryStream;
+    procedure wybor_gracza;
     procedure wProcessMessage;
     procedure eOff;
     procedure ePytanie;
@@ -299,13 +318,17 @@ type
     procedure users_add(const aImie,aKey: string);
     procedure users_edit(const aImie,aKey: string);
     procedure pings_add(const aKey: string);
-    function user2socket(aItemIndex: integer; var aKey: string; var aSocket: TLSocket): boolean;
+    function user2key(aItemIndex: integer; var aKey: string): boolean;
+    function user2socket(aItemIndex: integer; var aImie, aKey: string; var aSocket: TLSocket): boolean;
+    function user2socket(aItemIndex: integer; var aSocket: TLSocket): boolean;
+    function user2socket(aKey: string; var aSocket: TLSocket): boolean;
     function user2send(aItemIndex: integer; const aStr: string): boolean;
     function user2send(aItemIndex: integer; const aStr: string; var aSocket: TLSocket): boolean;
     function user2send(aItemIndex: integer; const aStr: string; var aKey: string; var aSocket: TLSocket): boolean;
     function user2disconnect(aItemIndex: integer): boolean;
     procedure odpowiedz(aStr: string);
     procedure przelicz;
+    procedure wyslij_liste_graczy(aSynchronizacja: boolean = false);
   public
 
   end;
@@ -381,6 +404,21 @@ begin
   Key:=0;
 end;
 
+procedure TFServer.ListBox1DrawItem(Control: TWinControl; Index: Integer;
+  ARect: TRect; State: TOwnerDrawState);
+var
+  a: integer;
+  s,key: string;
+begin
+  user2key(Index,key);
+  if key=g_przyjaciel_key then ListBox1.Canvas.Font.Color:=clGreen else
+  if key=g_gracz_key then ListBox1.Canvas.Font.Color:=clBlue else
+  ListBox1.Canvas.Font.Color:=clBlack;
+  a:=StringToItemIndex(ListBox2.Items,ListBox1.Items[Index]);
+  if a>-1 then ListBox1.Canvas.Font.Bold:=true else ListBox1.Canvas.Font.Bold:=false;
+  ListBox1.Canvas.TextOut(ARect.Left+4,ARect.Top+4,ListBox1.Items[Index]);
+end;
+
 procedure TFServer.MenuItem1Click(Sender: TObject);
 begin
   user2send(ListBox1.ItemIndex,'ping');
@@ -395,6 +433,16 @@ procedure TFServer.MenuItem4Click(Sender: TObject);
 begin
   muse.Connect;
   user2send(ListBox1.ItemIndex,'muse$connect',key_muse,soket_muse);
+end;
+
+procedure TFServer.MenuItem5Click(Sender: TObject);
+begin
+  if user2key(ListBox1.ItemIndex,g_gracz_key) then
+  begin
+    ListBox1.Repaint;
+    MenuItem5.Enabled:=false;
+    StatusBar.Panels[1].Text:='';
+  end;
 end;
 
 procedure TFServer.museDisconnect;
@@ -452,7 +500,7 @@ end;
 
 procedure TFServer.serReceiveString(aMsg: string; aSocket: TLSocket);
 var
-  s,s1,key,nkey,kom,w,pom,pom2: string;
+  s,s1,key,nkey,kom,w,w1,w2,pom,pom2,s3: string;
   b: boolean;
   i: integer;
 begin
@@ -537,6 +585,59 @@ begin
     if (pom='connect') and (pom2='nosound') then odpowiedz('System dźwięku u użytkownika nieaktywny.') else
     if (pom='on') and (pom2='ok') then begin tmuse.Tag:=2; tmuse.Enabled:=true; muse.SendCanSendMessage(aSocket,key); end else
     if pom='disconnect' then muse.Disconnect;
+  end else
+  if kom='przyjaciel' then
+  begin
+    g_przyjaciel_key:=GetLineToStr(s,4,'$');
+    ListBox1.Repaint;
+    BitBtn1.Enabled:=true;
+  end else
+  if kom='przyjacielodpowiada' then
+  begin
+    w1:=GetLineToStr(s,4,'$');
+    w2:=GetLineToStr(s,5,'$');
+    ser.SendString('o$all$przyjacielodpowiada$'+w1+'$'+w2);
+    s3:='000';
+    if w2='0' then begin s3[1]:='0'; s3[2]:='0'; s3[3]:='0'; end else
+    if w2='1' then begin s3[1]:='1'; s3[2]:='0'; s3[3]:='0'; end else
+    if w2='2' then begin s3[1]:='1'; s3[2]:='1'; s3[3]:='0'; end else
+    begin s3[1]:='1'; s3[2]:='1'; s3[3]:='1'; end;
+    if w1='1' then
+    begin
+      uELED7.Active:=s3[1]='1';
+      uELED6.Active:=s3[2]='1';
+      uELED5.Active:=s3[3]='1';
+      fEkran.uELED19.Active:=uEled7.Active;
+      fEkran.uELED20.Active:=uEled6.Active;
+      fEkran.uELED21.Active:=uEled5.Active;
+    end else
+    if w1='2' then
+    begin
+      uELED8.Active:=s3[1]='1';
+      uELED9.Active:=s3[2]='1';
+      uELED10.Active:=s3[3]='1';
+      fEkran.uELED22.Active:=uEled8.Active;
+      fEkran.uELED23.Active:=uEled9.Active;
+      fEkran.uELED24.Active:=uEled10.Active;
+    end else
+    if w1='3' then
+    begin
+      uELED11.Active:=s3[1]='1';
+      uELED12.Active:=s3[2]='1';
+      uELED13.Active:=s3[3]='1';
+      fEkran.uELED25.Active:=uEled11.Active;
+      fEkran.uELED26.Active:=uEled12.Active;
+      fEkran.uELED27.Active:=uEled13.Active;
+    end else
+    if w1='4' then
+    begin
+      uELED14.Active:=s3[1]='1';
+      uELED15.Active:=s3[2]='1';
+      uELED16.Active:=s3[3]='1';
+      fEkran.uELED28.Active:=uEled14.Active;
+      fEkran.uELED29.Active:=uEled15.Active;
+      fEkran.uELED30.Active:=uEled16.Active;
+    end;
   end;
 end;
 
@@ -570,17 +671,20 @@ end;
 
 procedure TFServer.SpeedButton7Click(Sender: TObject);
 begin
+  sound(10);
   ePub(false);
   fEkran.ePub(false);
   ser.SendString('o$all$puboff');
   g_kolo_3:=false;
   aktywacja_odpowiedzi(false,true);
   GroupBox4.Enabled:=true;
-  BitBtn1.Enabled:=true;
+  BitBtn1.Enabled:=false;
   BitBtn2.Enabled:=false;
   eCzas30;
   fEkran.eCzas30;
   ser.SendString('o$all$telon');
+  (* wysyłka podłączonej aktualnie listy graczy *)
+  wyslij_liste_graczy;
 end;
 
 procedure TFServer.t50StartTimer(Sender: TObject);
@@ -653,7 +757,8 @@ end;
 
 procedure TFServer.tGraTimer(Sender: TObject);
 begin
-  lInfo.Caption:=IntToStr(g_bledy);
+  //lInfo.Caption:=IntToStr(g_bledy);
+  lInfo.Caption:=IntToStr(TRYB);
   if g_rezygnacja then
   begin
     uELED3.Active:=not uELED3.Active;
@@ -769,6 +874,7 @@ procedure TFServer.tpingsTimer(Sender: TObject);
 begin
   if ListBox2.Count>0 then ListBox2.Items.Delete(0);
   if ListBox2.Count=0 then tpings.Enabled:=false;
+  ListBox1.Repaint;
 end;
 
 procedure TFServer.tSerTimer(Sender: TObject);
@@ -783,13 +889,10 @@ begin
 end;
 
 procedure TFServer.tTelStartTimer(Sender: TObject);
-var
-  czas: TTime;
 begin
-  czas:=time;
   zegar.tag:=0;
   zegar.Start;
-  ser.SendString('o$all$tel30start$'+IntToStr(TimeToInteger(czas)));
+  ser.SendString('o$all$tel30start$'+IntToStr(zegar.GetIndexStartTime));
 end;
 
 procedure TFServer.tTelStopTimer(Sender: TObject);
@@ -797,10 +900,8 @@ begin
   zegar.Stop;
   zegar.tag:=0;
   GroupBox4.Enabled:=false;
-  eCzas30(false);
-  fEkran.eCzas30(false);
+  ser.SendString('o$all$userprzyjacielstop');
   ser.SendString('o$all$tel30stop');
-  BitBtn3.Click;
 end;
 
 procedure TFServer.tTelTimer(Sender: TObject);
@@ -828,6 +929,11 @@ end;
 procedure TFServer.uELED1Click(Sender: TObject);
 begin
   if ser.Active then ser.Disconnect else ser.Connect;
+end;
+
+procedure TFServer.wybor_gracza;
+begin
+  StatusBar.Panels[1].Text:='Status: WYBOR GRACZA';
 end;
 
 procedure TFServer.wProcessMessage;
@@ -1034,6 +1140,38 @@ begin
   if g_blad then czy_blad:='1' else czy_blad:='0';
   s:=IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s0+'$'+s1+'$'+s2+'$'+s3+'$'+s4+'$'+uo+'$'+o+'$'+s5+'$'+s6+'$'+ok+'$'+glos+'$'+aks+'$'+IntToStr(g_bledy)+'$'+czy_blad;
   ser.SendString('o$'+aKey+'$synchronizacja$'+s,aSocket);
+  if TRYB=15 then
+  begin
+    (* telefon do przyjaciela *)
+    if Panel14.Visible then
+    begin
+      ser.SendString('o$all$telon');
+      if g_przyjaciel_key='' then if aKey=g_gracz_key then wyslij_liste_graczy;
+      if tTel.Enabled then
+      begin
+        if aKey=g_gracz_key then ser.SendString('o$'+aKey+'$userblock',aSocket);
+        if aKey=g_przyjaciel_key then ser.SendString('o$'+aKey+'$userprzyjacielstart',aSocket);
+        ser.SendString('o$'+aKey+'$tel30start$'+IntToStr(zegar.GetIndexStartTime),aSocket);
+        if aKey=g_przyjaciel_key then
+        begin
+          s:='0000';
+          if uELED7.Active then s[1]:='1';
+          if uELED6.Active then s[1]:='2';
+          if uELED5.Active then s[1]:='3';
+          if uELED8.Active then s[2]:='1';
+          if uELED9.Active then s[2]:='2';
+          if uELED10.Active then s[2]:='3';
+          if uELED11.Active then s[3]:='1';
+          if uELED12.Active then s[3]:='2';
+          if uELED13.Active then s[3]:='3';
+          if uELED14.Active then s[4]:='1';
+          if uELED15.Active then s[4]:='2';
+          if uELED16.Active then s[4]:='3';
+          ser.SendString('o$'+aKey+'$telupdate$'+s);
+        end;
+      end;
+    end;
+  end;
 end;
 
 procedure TFServer.test(aTryb: integer; aZmiana: boolean);
@@ -1045,6 +1183,7 @@ begin
   {* lecimy *}
   if TRYB=1 then
   begin
+    //music;
     eTabInfo;
     fEkran.eTabInfo;
     test_info(0);
@@ -1084,7 +1223,11 @@ begin
     ekran_pytanie(g_pytanie,TRYB-10);
     ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
   end;
-  if TRYB=14 then TRYB:=15;
+  if TRYB=14 then
+  begin
+    ON_pause:=true;
+    TRYB:=15;
+  end;
   if TRYB=15 then
   begin
     if g_pytanie=12 then g_stop:=true;
@@ -1103,7 +1246,7 @@ begin
     if g_udzielona_odpowiedz=g_odpowiedz then
     begin
       dm.oblicz_wygrana(g_pytanie,true,g_wygrana,g_wygrana_gwarantowana);
-      sound(2);
+      if not g_rezygnacja then sound(2);
       music;
     end else begin
       ser.SendString('o$all$ogolne_zaznacz$'+IntToStr(g_odpowiedz)+'$'+IntToStr(g_udzielona_odpowiedz));
@@ -1196,9 +1339,8 @@ begin
     ePodsumowanie(g_wygrana,true);
     fEkran.ePodsumowanie(g_wygrana,true);
     ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+ppodsumowanie.Caption);
-    if g_wygrana=1000000 then sound(5) else
-    if g_wygrana=0 then sound(6) else sound(4);
-    if g_wygrana=1000000 then music(5) else music(4);
+    if g_wygrana=0 then sound(4) else sound(5);
+    if g_wygrana=0 then music(4) else music(5);
     ON_pause:=false;
   end;
   if TRYB=22 then
@@ -1305,13 +1447,20 @@ end;
 
 procedure TFServer.ButtOdpNow(Sender: TObject);
 begin
+  sound(11); sleep(500);
   zaznacz_odpowiedz(TSpeedButton(Sender).Tag);
 end;
 
 procedure TFServer.BitBtn1Click(Sender: TObject);
+var
+  soket,soket2: TLSocket;
 begin
+  user2socket(g_gracz_key,soket);
+  user2socket(g_przyjaciel_key,soket2);
+  ser.SendString('o$'+g_gracz_key+'$userblock',soket);
+  ser.SendString('o$'+g_przyjaciel_key+'$userprzyjacielstart',soket2);
   BitBtn1.Enabled:=false;
-  BitBtn2.Enabled:=true;
+  BitBtn2.Enabled:=false;
   tTel.Enabled:=true;
 end;
 
@@ -1371,7 +1520,8 @@ begin
     fEkran.eOff;
     g_pytanie:=1;
     g_odpowiedz:=0;
-    music(11);
+    music;
+    wybor_gracza;
   end else begin
     play1.Stop;
     play2.Stop;
@@ -1508,7 +1658,6 @@ end;
 
 procedure TFServer.aktywacja_odpowiedzi(b: boolean; aIgnoreServ: boolean);
 begin
-  ON_pause:=b;
   SpeedButton1.Enabled:=b and fEkran.odp_a.Visible;
   SpeedButton2.Enabled:=b and fEkran.odp_b.Visible;
   SpeedButton3.Enabled:=b and fEkran.odp_c.Visible;
@@ -1523,6 +1672,12 @@ procedure TFServer.zaznacz_odpowiedz(aNr: integer);
 var
   s: string;
 begin
+  ON_pause:=false;
+  if Panel14.Visible then
+  begin
+    eCzas30(false);
+    fEkran.eCzas30(false);
+  end;
   aktywacja_odpowiedzi(false);
   g_udzielona_odpowiedz:=aNr;
   if aNr=g_odpowiedz then
@@ -1617,7 +1772,7 @@ var
   i: integer;
   s,imie: string;
 begin
-  i:=ecode.StringToItemIndex(sesje,aKey);
+  i:=StringToItemIndex(sesje,aKey);
   if i=-1 then exit;
   imie:=nazwy[i];
   for i:=0 to ListBox2.Items.Count-1 do
@@ -1631,10 +1786,10 @@ begin
   end;
   ListBox2.Items.Add(imie+CL_SPACE+aKey);
   if (ListBox2.Count>0) and (not tpings.Enabled) then tpings.Enabled:=true;
+  ListBox1.Repaint;
 end;
 
-function TFServer.user2socket(aItemIndex: integer; var aKey: string;
-  var aSocket: TLSocket): boolean;
+function TFServer.user2key(aItemIndex: integer; var aKey: string): boolean;
 var
   a: integer;
   key: string;
@@ -1642,10 +1797,47 @@ begin
   key:=ListBox1.Items[aItemIndex];
   a:=pos('{',key);
   delete(key,1,a-1);
+  if key='' then result:=false else
+  begin
+    aKey:=key;
+    result:=true;
+  end;
+end;
+
+function TFServer.user2socket(aItemIndex: integer; var aImie, aKey: string;
+  var aSocket: TLSocket): boolean;
+var
+  a: integer;
+  key: string;
+begin
+  key:=ListBox1.Items[aItemIndex];
+  aImie:=trim(GetLineToStr(key,1,'{'));
+  a:=pos('{',key);
+  delete(key,1,a-1);
   a:=StringToItemIndex(sesje,key);
   if a>-1 then
   begin
     aKey:=key;
+    aSocket:=TLSocket(sokety[a]);
+    if aSocket.Handle=-1 then result:=false else result:=true;
+  end else result:=false;
+end;
+
+function TFServer.user2socket(aItemIndex: integer; var aSocket: TLSocket
+  ): boolean;
+var
+  imie,key: string;
+begin
+  result:=user2socket(aItemIndex,imie,key,aSocket);
+end;
+
+function TFServer.user2socket(aKey: string; var aSocket: TLSocket): boolean;
+var
+  a: integer;
+begin
+  a:=StringToItemIndex(sesje,aKey);
+  if a>-1 then
+  begin
     aSocket:=TLSocket(sokety[a]);
     if aSocket.Handle=-1 then result:=false else result:=true;
   end else result:=false;
@@ -1671,10 +1863,10 @@ function TFServer.user2send(aItemIndex: integer; const aStr: string;
   var aKey: string; var aSocket: TLSocket): boolean;
 var
   b: boolean;
-  key: string;
+  imie,key: string;
   a: TLSocket;
 begin
-  b:=user2socket(aItemIndex,key,a);
+  b:=user2socket(aItemIndex,imie,key,a);
   if b then
   begin
     aKey:=key;
@@ -1687,11 +1879,11 @@ end;
 function TFServer.user2disconnect(aItemIndex: integer): boolean;
 var
   b: boolean;
-  key: string;
+  imie,key: string;
   a: TLSocket;
 begin
   result:=true;
-  b:=user2socket(aItemIndex,key,a);
+  b:=user2socket(aItemIndex,imie,key,a);
   if b then a.Disconnect else result:=false;
 end;
 
@@ -1727,6 +1919,19 @@ begin
   fEkran.Label22.Caption:=fEkran.Label23.Caption;
   fEkran.Label23.Caption:=fEkran.Label24.Caption;
   fEkran.Label24.Caption:='0 ♦';
+end;
+
+procedure TFServer.wyslij_liste_graczy(aSynchronizacja: boolean);
+var
+  i: integer;
+  soket,pom: TLSocket;
+begin
+  if user2socket(g_gracz_key,soket) then
+  begin
+    ser.SendString('o$'+g_gracz_key+'$userbegin',soket);
+    for i:=0 to ListBox1.Count-1 do if user2socket(i,pom) then if pom.Handle<>-1 then ser.SendString('o$'+g_gracz_key+'$user$'+ListBox1.Items[i],soket);
+    if not aSynchronizacja then StatusBar.Panels[1].Text:='Status: Lista potencjalnych przyjaciół wysłana.';
+  end;
 end;
 
 end.

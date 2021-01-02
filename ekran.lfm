@@ -11,59 +11,6 @@ object fEkran: TfEkran
   OnCreate = FormCreate
   SessionProperties = 'Top;Left'
   LCLVersion = '2.0.10.0'
-  object Panel9: TPanel
-    Left = 40
-    Height = 98
-    Top = 32
-    Width = 106
-    BevelOuter = bvNone
-    ClientHeight = 98
-    ClientWidth = 106
-    TabOrder = 3
-    Visible = False
-    object Label28: TLabel
-      AnchorSideLeft.Control = Panel9
-      AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = Panel9
-      AnchorSideTop.Side = asrCenter
-      Left = 23
-      Height = 55
-      Top = 22
-      Width = 60
-      Alignment = taCenter
-      Caption = '30'
-      Color = clBlue
-      Constraints.MinHeight = 55
-      Constraints.MinWidth = 60
-      Font.Color = clYellow
-      Font.Height = -37
-      Font.Name = 'System-ui'
-      Layout = tlBottom
-      ParentColor = False
-      ParentFont = False
-      Transparent = False
-    end
-    object Label29: TLabel
-      AnchorSideLeft.Control = Label28
-      AnchorSideTop.Control = Label28
-      AnchorSideRight.Control = Label28
-      AnchorSideRight.Side = asrBottom
-      Left = 23
-      Height = 15
-      Top = 24
-      Width = 60
-      Alignment = taCenter
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Top = 2
-      Caption = 'CZAS'
-      Font.Color = clCream
-      Font.Height = -13
-      Font.Name = 'Sans'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
-  end
   object Panel10: TPanel
     Left = 32
     Height = 128
@@ -36522,6 +36469,319 @@ object fEkran: TfEkran
       ParentColor = False
       ParentFont = False
       Visible = False
+    end
+  end
+  object Panel9: TPanel
+    Left = 40
+    Height = 96
+    Top = 32
+    Width = 163
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 96
+    ClientWidth = 163
+    TabOrder = 3
+    Visible = False
+    object Label28: TLabel
+      AnchorSideLeft.Control = Panel9
+      AnchorSideTop.Control = Panel9
+      AnchorSideTop.Side = asrCenter
+      Left = 0
+      Height = 55
+      Top = 21
+      Width = 60
+      Alignment = taCenter
+      Caption = '30'
+      Color = clBlue
+      Constraints.MinHeight = 55
+      Constraints.MinWidth = 60
+      Font.Color = clYellow
+      Font.Height = -37
+      Font.Name = 'System-ui'
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+    end
+    object Label29: TLabel
+      AnchorSideLeft.Control = Label28
+      AnchorSideTop.Control = Label28
+      AnchorSideRight.Control = Label28
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 15
+      Top = 23
+      Width = 60
+      Alignment = taCenter
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 2
+      Caption = 'CZAS'
+      Font.Color = clCream
+      Font.Height = -13
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label50: TLabel
+      AnchorSideLeft.Control = Label28
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel9
+      Left = 68
+      Height = 21
+      Top = 0
+      Width = 23
+      BorderSpacing.Left = 8
+      Caption = 'A:'
+      Font.Color = clWhite
+      Font.Height = -19
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label51: TLabel
+      AnchorSideLeft.Control = Label50
+      AnchorSideTop.Control = Label50
+      AnchorSideTop.Side = asrBottom
+      Left = 68
+      Height = 21
+      Top = 21
+      Width = 22
+      Caption = 'B:'
+      Font.Color = clWhite
+      Font.Height = -19
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label52: TLabel
+      AnchorSideLeft.Control = Label50
+      AnchorSideTop.Control = Label51
+      AnchorSideTop.Side = asrBottom
+      Left = 68
+      Height = 21
+      Top = 42
+      Width = 22
+      Caption = 'C:'
+      Font.Color = clWhite
+      Font.Height = -19
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label53: TLabel
+      AnchorSideLeft.Control = Label50
+      AnchorSideTop.Control = Label52
+      AnchorSideTop.Side = asrBottom
+      Left = 68
+      Height = 21
+      Top = 63
+      Width = 24
+      Caption = 'D:'
+      Font.Color = clWhite
+      Font.Height = -19
+      Font.Name = 'Sans'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object uELED19: TuELED
+      AnchorSideLeft.Control = Label50
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label50
+      Left = 91
+      Height = 24
+      Top = 0
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED20: TuELED
+      AnchorSideLeft.Control = uELED19
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label50
+      Left = 115
+      Height = 24
+      Top = 0
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED21: TuELED
+      AnchorSideLeft.Control = uELED20
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label50
+      Left = 139
+      Height = 24
+      Top = 0
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED22: TuELED
+      AnchorSideLeft.Control = Label50
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED19
+      AnchorSideTop.Side = asrBottom
+      Left = 91
+      Height = 24
+      Top = 24
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED23: TuELED
+      AnchorSideLeft.Control = uELED22
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED22
+      Left = 115
+      Height = 24
+      Top = 24
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED24: TuELED
+      AnchorSideLeft.Control = uELED23
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED22
+      Left = 139
+      Height = 24
+      Top = 24
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED25: TuELED
+      AnchorSideLeft.Control = Label50
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED23
+      AnchorSideTop.Side = asrBottom
+      Left = 91
+      Height = 24
+      Top = 48
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED26: TuELED
+      AnchorSideLeft.Control = uELED25
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED25
+      Left = 115
+      Height = 24
+      Top = 48
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED27: TuELED
+      AnchorSideLeft.Control = uELED26
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED25
+      Left = 139
+      Height = 24
+      Top = 48
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED28: TuELED
+      AnchorSideLeft.Control = Label50
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED26
+      AnchorSideTop.Side = asrBottom
+      Left = 91
+      Height = 24
+      Top = 72
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED29: TuELED
+      AnchorSideLeft.Control = uELED28
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED28
+      Left = 115
+      Height = 24
+      Top = 72
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
+    end
+    object uELED30: TuELED
+      AnchorSideLeft.Control = uELED29
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = uELED28
+      Left = 139
+      Height = 24
+      Top = 72
+      Width = 24
+      Debug = False
+      Active = False
+      LedType = ledRound
+      Bright = True
+      Reflection = True
+      Color = clYellow
+      ParentColor = False
     end
   end
   object ps: TXMLPropStorage

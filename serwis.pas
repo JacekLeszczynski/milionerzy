@@ -87,6 +87,12 @@ var (* program *)
   ON_gra: boolean = false;
   ON_pause: boolean = false;
   TRYB: integer = 0;
+  g_gracz_key: string = '';
+  g_przyjaciel_key: string = '';
+  g_tel_a: integer = 0;
+  g_tel_b: integer = 0;
+  g_tel_c: integer = 0;
+  g_tel_d: integer = 0;
   g_pytanie: integer = 1;
   g_bledy: integer = 0;
   g_blad: boolean = false;
