@@ -15,16 +15,41 @@ uses
   Classes, SysUtils, ZConnection, ZSqlProcessor, Graphics, RNL,
   systemtimer, CompressionFlyUnit;
 
+  {NetSocket, lNet, UOSEngine, UOSPlayer,
+  pipes, {StdCtrls,} ExtCtrls;}
+
 const
   BUFFER_SIZE = 100000;
   BUFFER_SIZE_COMPRESSED = 65536;
-  KOMUNIKACJA_LAST = 5;
+  KOMUNIKACJA_LAST = 10;
 
 type
   TBufferNetwork = array [0..BUFFER_SIZE-1] of byte;
 
 
 type
+
+  { TSTelefon }
+
+  {TSTelefon = class(TThread)
+  private
+    muse: TNetSocket;
+    muse_on: boolean;
+    muse_in,muse2_in: TOutputPipeStream;
+    muse_out,muse2_out: TInputPipeStream;
+    uos: TUOSEngine;
+    mic,glosnik: TUOSPlayer;
+    rc,rd: TCompressionFly;
+    loop: TTimer;
+    procedure museReceive(aSocket: TLSocket);
+    procedure wOnTimer(Sender: TObject);
+  protected
+    procedure Execute; override;
+  public
+    constructor Create;
+    destructor Destroy; override;
+  published
+  end;}
 
   { Tdm }
 
@@ -47,7 +72,7 @@ type
   end;
 
 const
-  CL_SPACE = '                    ';
+  CL_SPACE = '                                                  ';
   CL_ZAZNACZENIE = clGray;
   //CL_KOLO_0 = '○';
   CL_KOLO_0 = '';
@@ -55,6 +80,7 @@ const
   CL_DIAMENT = '♦';
 
 var (* program *)
+  licznik_zegarowy: integer = 0;
   dm: Tdm;
   xx: TStopWatch;
   ON_ekran: boolean = false;
@@ -62,11 +88,14 @@ var (* program *)
   ON_pause: boolean = false;
   TRYB: integer = 0;
   g_pytanie: integer = 1;
+  g_bledy: integer = 0;
+  g_blad: boolean = false;
   g_odpowiedz: integer = 0;
   g_udzielona_odpowiedz: integer = 0;
   g_wygrana: integer = 0;
   g_wygrana_gwarantowana: integer = 0;
   g_stop: boolean = false;
+  g_rezygnacja: boolean = false;
   g_kolo_1: boolean = true;
   g_kolo_2: boolean = true;
   g_kolo_3: boolean = true;
@@ -94,6 +123,109 @@ begin
   result:=StringReplace(trim(s),' ','.',[rfReplaceAll]);
 end;
 
+{ TSTelefon }
+
+{procedure TSTelefon.museReceive(aSocket: TLSocket);
+var
+  n1,n2,i: integer;
+  buf: TBufferNetwork;
+begin
+  n1:=aSocket.Get(buf,BUFFER_SIZE);
+  if n1=0 then exit;
+  if not muse_on then exit;
+  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
+  n1:=rd.Add(buf,n1);
+  n2:=rd.Execute(muse_in);
+end;
+
+procedure TSTelefon.wOnTimer(Sender: TObject);
+var
+  cc,n1,n2: integer;
+  buf: TBufferNetwork;
+  a,b,i: integer;
+begin
+  //application.ProcessMessages;
+  cc:=muse2_out.NumBytesAvailable;
+  if cc=0 then exit;
+  if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
+  n1:=rc.Add(muse2_out,cc); //dodanie strumienia
+  n2:=rc.Execute(buf); //kompresja strumienia
+  if n2>0 then muse.SendBinary(buf,n2);
+end;
+
+procedure TSTelefon.Execute;
+begin
+  while not terminated do
+  begin
+
+    //ProcessMessage;
+    sleep(100);
+  end;
+end;
+
+constructor TSTelefon.Create;
+begin
+  inherited Create(true);
+  uos:=TUOSEngine.Create(nil);
+  uos.DriversLoad:=[dlPortAudio,dlSndAudio];
+  uos.LoadLibrary;
+  rc:=TCompressionFly.Create(nil);
+  rc.AutoClear:=true;
+  rc.Mode:=moCompress;
+  rc.Taging:=true;
+  rd:=TCompressionFly.Create(nil);
+  rd.AutoClear:=true;
+  rd.Mode:=moDecompress;
+  rd.Taging:=true;
+  muse:=TNetSocket.Create(nil);
+  muse.BinaryMode:=true;
+  muse.Host:='127.0.0.1';
+  muse.Mode:=smServer;
+  muse.Port:=4681;
+  muse.Protocol:=spUDP;
+  muse.ReuseAddress:=true;
+  muse.OnReceive:=@museReceive;
+  CreatePipeStreams(muse_out,muse_in);
+  CreatePipeStreams(muse2_out,muse2_in);
+  mic:=TUOSPlayer.Create(nil);
+  mic.DeviceEngine:=uos;
+  mic.DeviceIndex:=0;
+  mic.Mode:=moRecord;
+  glosnik:=TUOSPlayer.Create(nil);
+  glosnik.DeviceEngine:=uos;
+  glosnik.DeviceIndex:=1;
+  glosnik.Mode:=moPlay;
+  glosnik.PlayRawMode:=true;
+  loop:=TTimer.Create(nil);
+  loop.Enabled:=false;
+  loop.Interval:=150;
+  loop.OnTimer:=@wOnTimer;
+  muse.Connect;
+  Start;
+end;
+
+destructor TSTelefon.Destroy;
+begin
+  glosnik.Stop;
+  mic.Stop;
+  loop.Enabled:=false;
+  loop.Free;
+  mic.Free;
+  glosnik.Free;
+  muse.Disconnect;
+  sleep(250);
+  muse_in.Free;
+  muse_out.Free;
+  muse2_in.Free;
+  muse2_out.Free;
+  muse.Free;
+  rc.Free;
+  rd.Free;
+  uos.UnLoadLibrary;
+  uos.Free;
+  inherited Destroy;
+end;}
+
 { Tdm }
 
 procedure Tdm.db_open;
@@ -115,7 +247,7 @@ procedure Tdm.oblicz_wygrana(aPytanie: integer; aWygrana: boolean; var kwota,
 begin
   if aWygrana then
   begin
-    case aPytanie of
+    case aPytanie-g_bledy of
       1: kwota:=500;
       2: kwota:=1000; //gwarantowane
       3: kwota:=2000;
@@ -180,12 +312,12 @@ end;
 
 function Tdm.CryptString(aStr: string): string;
 begin
-  result:=EncryptString(aStr,'ghs673uh7d8sd68y32euyeuhe287hujhd');
+  result:=EncryptString(aStr,'ghs673utrytrh7d8sd68y32euyeuhe287hujhd');
 end;
 
 function Tdm.DecryptString(aStr: string): string;
 begin
-  result:=ecode.DecryptString(aStr,'ghs673uh7d8sd68y32euyeuhe287hujhd');
+  result:=ecode.DecryptString(aStr,'ghs673utrytrh7d8sd68y32euyeuhe287hujhd');
 end;
 
 procedure Tdm.SetAlgCompression(aAlg: integer);

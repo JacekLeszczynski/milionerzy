@@ -11,7 +11,7 @@ type
 
   { Tuu }
 
-  TuuMilionerzyTest = procedure(aTryb: integer) of object;
+  TuuMilionerzyTest = procedure(aTryb: integer; aZmiana: boolean = false) of object;
   TuuMilionerzyVar = procedure(var aTryb,aGPytanie: integer; var aOnPause,aGStop: boolean) of object;
   TuuMilionerzySetGPytanie = procedure(aGPytanie: integer) of object;
 
@@ -36,6 +36,9 @@ var
   uu: Tuu;
 
 implementation
+
+uses
+  serwis;
 
 {$R *.lfm}
 
@@ -80,7 +83,7 @@ begin
     5: litera:=4;
   end;
   if (aButton=2) or (aButton=3) then aTestDblClick:=true;
-  if (TRYB=15) and (litera=4) then FMilionerzyTest(20);
+  if (TRYB=15) and (litera=4) then g_rezygnacja:=true;
   if ON_pause then exit;
   case TRYB of
     (* PUSTY EKRAN *)
@@ -102,17 +105,18 @@ begin
     12: if litera=1 then FMilionerzyTest(13);
     13: if litera=1 then FMilionerzyTest(14);
     14: if litera=1 then FMilionerzyTest(15);
-    15: if litera=1 then FMilionerzyTest(16) else if litera=4 then FMilionerzyTest(20);
-    16: if litera=1 then if g_stop then FMilionerzyTest(20) else FMilionerzyTest(17);
+    15: if litera=1 then FMilionerzyTest(16) else if litera=4 then g_rezygnacja:=true;
+    16: if litera=1 then if g_stop then FMilionerzyTest(21) else FMilionerzyTest(17);
     17: if litera=1 then FMilionerzyTest(18);
     18: if litera=1 then FMilionerzyTest(19);
-    19: if litera=1 then
+    19: if litera=1 then FMilionerzyTest(20);
+    20: if litera=1 then
         begin
           inc(g_pytanie);
           FMilionerzySetGPytanie(g_pytanie);
           FMilionerzyTest(8);
-        end else if litera=4 then FMilionerzyTest(20);
-    20: if litera=1 then FMilionerzyTest(21);
+        end else if litera=4 then FMilionerzyTest(21);
+    21: if litera=1 then FMilionerzyTest(22);
   end;
 end;
 

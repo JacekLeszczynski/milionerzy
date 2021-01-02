@@ -1,12 +1,12 @@
 object FClient: TFClient
-  Left = 351
-  Height = 551
-  Top = 157
+  Left = 348
+  Height = 695
+  Top = 129
   Width = 800
   Caption = 'Jahu - Milionerzy (client)'
-  ClientHeight = 524
+  ClientHeight = 668
   ClientWidth = 800
-  Constraints.MinHeight = 551
+  Constraints.MinHeight = 695
   Constraints.MinWidth = 800
   Menu = MainMenu1
   OnClose = FormClose
@@ -17,7 +17,7 @@ object FClient: TFClient
   object StatusBar: TStatusBar
     Left = 0
     Height = 20
-    Top = 504
+    Top = 648
     Width = 800
     Font.Height = -13
     Font.Name = 'Monospace'
@@ -47,7 +47,6 @@ object FClient: TFClient
     Top = 0
     Width = 800
     Align = alTop
-    AutoSize = True
     BevelOuter = bvNone
     ClientHeight = 54
     ClientWidth = 800
@@ -138,7 +137,7 @@ object FClient: TFClient
       AnchorSideRight.Control = uELED3
       Left = 201
       Height = 24
-      Hint = 'Połączenie głosowe'
+      Hint = 'Jesteś graczem w grze'
       Top = -1
       Width = 24
       Debug = False
@@ -211,6 +210,39 @@ object FClient: TFClient
       ParentShowHint = False
       ShowHint = True
     end
+    object BitBtn4: TBitBtn
+      AnchorSideLeft.Control = BitBtn2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn2
+      Left = 407
+      Height = 30
+      Top = 23
+      Width = 173
+      BorderSpacing.Left = 2
+      Caption = 'Koniec rozmowy'
+      Enabled = False
+      OnClick = BitBtn4Click
+      TabOrder = 4
+      Visible = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = BitBtn4
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideBottom.Control = BitBtn4
+      Left = 410
+      Height = 12
+      Top = 11
+      Width = 167
+      Anchors = [akLeft, akBottom]
+      Caption = 'Awaryjne kończenie rozmowy'
+      Font.Color = clGray
+      Font.Height = -11
+      Font.Name = 'Sans'
+      Font.Style = [fsItalic]
+      ParentColor = False
+      ParentFont = False
+      Visible = False
+    end
   end
   object Panel2: TPanel
     AnchorSideLeft.Control = Panel1
@@ -220,7 +252,7 @@ object FClient: TFClient
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar
     Left = 8
-    Height = 442
+    Height = 586
     Top = 58
     Width = 784
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -229,7 +261,7 @@ object FClient: TFClient
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
     BevelOuter = bvNone
-    ClientHeight = 442
+    ClientHeight = 586
     ClientWidth = 784
     TabOrder = 2
     object SpeedButton1: TSpeedButton
@@ -1319,11 +1351,15 @@ object FClient: TFClient
           AnchorSideLeft.Control = Label32
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Label32
+          AnchorSideRight.Control = Shape12
+          AnchorSideRight.Side = asrBottom
           Left = 133
           Height = 22
           Top = 8
           Width = 69
+          Anchors = [akTop, akRight]
           BorderSpacing.Left = 97
+          BorderSpacing.Right = 5
           Caption = 'MILION'
           Font.Color = clYellow
           Font.Height = -19
@@ -19215,14 +19251,216 @@ object FClient: TFClient
       AnchorSideTop.Control = SpeedButton4
       AnchorSideRight.Control = Panel2
       AnchorSideRight.Side = asrBottom
-      Left = 704
-      Height = 30
+      AnchorSideBottom.Control = SpeedButton4
+      AnchorSideBottom.Side = asrBottom
+      Left = 720
+      Height = 37
       Top = 404
-      Width = 80
-      Anchors = [akTop, akRight]
+      Width = 64
+      Anchors = [akTop, akRight, akBottom]
       Caption = 'PING'
       OnClick = BitBtn3Click
       TabOrder = 1
+    end
+    object Panel3: TPanel
+      AnchorSideLeft.Control = SpeedButton1
+      AnchorSideTop.Control = SpeedButton1
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 143
+      Top = 445
+      Width = 578
+      AutoSize = True
+      BorderSpacing.Top = 4
+      BevelOuter = bvNone
+      ClientHeight = 143
+      ClientWidth = 578
+      Enabled = False
+      TabOrder = 2
+      object Label3: TLabel
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = Panel3
+        Left = 2
+        Height = 17
+        Top = 2
+        Width = 157
+        BorderSpacing.Left = 2
+        BorderSpacing.Top = 2
+        Caption = 'Odpowiedź przyjaciela:'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object RadioGroup1: TRadioGroup
+        AnchorSideLeft.Control = Label3
+        AnchorSideTop.Control = Label3
+        AnchorSideTop.Side = asrBottom
+        Left = 2
+        Height = 108
+        Top = 27
+        Width = 136
+        AutoFill = True
+        AutoSize = True
+        BorderSpacing.Top = 8
+        BorderSpacing.Bottom = 8
+        Caption = 'Odpowiedź A'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 92
+        ClientWidth = 134
+        Font.Height = -12
+        Font.Name = 'Sans'
+        ItemIndex = 0
+        Items.Strings = (
+          'Raczej nie ta'
+          'Być może ta'
+          'Pół na pół'
+          'Z pewnością ta!'
+        )
+        ParentFont = False
+        TabOrder = 0
+      end
+      object RadioGroup2: TRadioGroup
+        AnchorSideLeft.Control = RadioGroup1
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = RadioGroup1
+        Left = 146
+        Height = 108
+        Top = 27
+        Width = 136
+        AutoFill = True
+        AutoSize = True
+        BorderSpacing.Left = 8
+        Caption = 'Odpowiedź B'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 92
+        ClientWidth = 134
+        Font.Height = -12
+        Font.Name = 'Sans'
+        ItemIndex = 0
+        Items.Strings = (
+          'Raczej nie ta'
+          'Być może ta'
+          'Pół na pół'
+          'Z pewnością ta!'
+        )
+        ParentFont = False
+        TabOrder = 1
+      end
+      object RadioGroup3: TRadioGroup
+        AnchorSideLeft.Control = RadioGroup2
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = RadioGroup1
+        Left = 290
+        Height = 108
+        Top = 27
+        Width = 136
+        AutoFill = True
+        AutoSize = True
+        BorderSpacing.Left = 8
+        Caption = 'Odpowiedź C'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 92
+        ClientWidth = 134
+        Font.Height = -12
+        Font.Name = 'Sans'
+        ItemIndex = 0
+        Items.Strings = (
+          'Raczej nie ta'
+          'Być może ta'
+          'Pół na pół'
+          'Z pewnością ta!'
+        )
+        ParentFont = False
+        TabOrder = 2
+      end
+      object RadioGroup4: TRadioGroup
+        AnchorSideLeft.Control = RadioGroup3
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = RadioGroup1
+        Left = 434
+        Height = 108
+        Top = 27
+        Width = 136
+        AutoFill = True
+        AutoSize = True
+        BorderSpacing.Left = 8
+        BorderSpacing.Right = 8
+        Caption = 'Odpowiedź D'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 92
+        ClientWidth = 134
+        Font.Height = -12
+        Font.Name = 'Sans'
+        ItemIndex = 0
+        Items.Strings = (
+          'Raczej nie ta'
+          'Być może ta'
+          'Pół na pół'
+          'Z pewnością ta!'
+        )
+        ParentFont = False
+        TabOrder = 3
+      end
+    end
+    object ListBox1: TListBox
+      AnchorSideLeft.Control = Label4
+      AnchorSideTop.Control = Label4
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Label4
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel3
+      AnchorSideBottom.Side = asrBottom
+      Left = 578
+      Height = 115
+      Top = 465
+      Width = 206
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Bottom = 8
+      Enabled = False
+      ItemHeight = 0
+      ScrollWidth = 204
+      TabOrder = 3
+      TopIndex = -1
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = Panel3
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel3
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      Left = 578
+      Height = 20
+      Top = 445
+      Width = 206
+      Anchors = [akTop, akLeft, akRight]
+      Caption = 'Przyjaciel:'
+      Constraints.MinHeight = 20
+      Enabled = False
+      ParentColor = False
     end
   end
   object cli: TNetSocket
@@ -19241,7 +19479,7 @@ object FClient: TFClient
     OnCryptString = cliCryptString
     OnDecryptString = cliDecryptString
     OnTimeVector = cliTimeVector
-    Left = 544
+    Left = 296
     Top = 8
   end
   object mess: TExtMessage
@@ -19251,7 +19489,7 @@ object FClient: TFClient
     PosTop = 0
     PosLeft = 0
     StringToCR = '^'
-    Left = 504
+    Left = 112
     Top = 8
   end
   object autorun: TTimer
@@ -19265,7 +19503,7 @@ object FClient: TFClient
     StoredValues = <>
     RootNodePath = 'client'
     Active = False
-    Left = 464
+    Left = 80
     Top = 8
   end
   object tCzas: TTimer
@@ -19321,7 +19559,7 @@ object FClient: TFClient
     Top = 8
   end
   object zegar: TLiveTimer
-    Left = 424
+    Left = 48
     Top = 8
   end
   object t30: TTimer
@@ -19338,26 +19576,6 @@ object FClient: TFClient
     DriversLoad = [dlPortAudio, dlSndAudio]
     Left = 678
     Top = 87
-  end
-  object mic: TUOSPlayer
-    DeviceEngine = uos
-    Mode = moRecord
-    Volume = 1
-    VolumeGlobal = 1
-    Left = 720
-    Top = 87
-  end
-  object glosnik: TUOSPlayer
-    DeviceEngine = uos
-    Mode = moPlay
-    DeviceIndex = 1
-    Volume = 1
-    VolumeGlobal = 1
-    PlayRawMode = True
-    SleepForPlay = 2
-    OnProcessMessage = cliProcessMessage
-    Left = 720
-    Top = 144
   end
   object tconn: TTimer
     Enabled = False
@@ -19390,8 +19608,9 @@ object FClient: TFClient
     Timeout = 0
     SSLMethod = msSSLv2or3
     OnProcessMessage = cliProcessMessage
+    OnDisconnect = museDisconnect
     OnReceive = museReceive
-    Left = 584
+    Left = 336
     Top = 8
   end
   object tmuse: TTimer

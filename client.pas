@@ -19,6 +19,7 @@ type
     BitBtn2: TBitBtn;
     Autoconnect: TCheckBox;
     BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     cli: TNetSocket;
     eImie: TEdit;
     gl5: TplGauge;
@@ -30,6 +31,8 @@ type
     Image3: TImage;
     Label13: TLabel;
     Label14: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
     Label32: TLabel;
     Label33: TLabel;
     Label34: TLabel;
@@ -38,6 +41,7 @@ type
     Label37: TLabel;
     Label38: TLabel;
     Label39: TLabel;
+    Label4: TLabel;
     Label40: TLabel;
     Label41: TLabel;
     Label42: TLabel;
@@ -81,7 +85,13 @@ type
     Label_c: TLabel;
     Label_d: TLabel;
     lInfo: TLabel;
+    ListBox1: TListBox;
     muse: TNetSocket;
+    Panel3: TPanel;
+    RadioGroup1: TRadioGroup;
+    RadioGroup2: TRadioGroup;
+    RadioGroup3: TRadioGroup;
+    RadioGroup4: TRadioGroup;
     tmuse: TTimer;
     tloop: TTimer;
     uELED1: TuELED;
@@ -93,8 +103,6 @@ type
     uELED2: TuELED;
     uELED3: TuELED;
     uos: TUOSEngine;
-    mic: TUOSPlayer;
-    glosnik: TUOSPlayer;
     zegar: TLiveTimer;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
@@ -162,6 +170,7 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
     procedure cliConnect(aSocket: TLSocket);
     procedure cliCryptString(var aText: string);
     procedure cliDecryptString(var aText: string);
@@ -177,6 +186,7 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem9Click(Sender: TObject);
+    procedure museDisconnect;
     procedure museReceive(aSocket: TLSocket);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
@@ -196,12 +206,15 @@ type
     procedure tpingTimer(Sender: TObject);
   private
     key: string;
+    nasluch: boolean;
+    mic,glosnik: TUOSPlayer;
     muse_in,muse2_in: TOutputPipeStream;
     muse_out,muse2_out: TInputPipeStream;
     muse_on: boolean;
+    procedure wProcessMessage;
     procedure eOff;
     procedure ePytanie;
-    procedure eTabInfo;
+    procedure eTabInfo(aBledy: integer = 0);
     procedure ePodsumowanie(const aText: string);
     procedure eCzas30(aPokaz: boolean = true);
     procedure ePub(aPokaz: boolean = true);
@@ -209,7 +222,7 @@ type
     procedure ekran_info(aLp: integer = 0);
     procedure ekran_pytanie(aNr: integer; aLp: integer = -1);
     procedure synchronizuj(const aCiag: string);
-    procedure set_ogolne(aTryb,aPytanie: integer; aPom: string = '');
+    procedure set_ogolne(aTryb,aPytanie: integer; aPom: string = ''; aBledy: integer = 0);
     procedure set_dane(const aPytanie,aOdp1,aOdp2,aOdp3,aOdp4: string);
     procedure set_zaznacz(aN1,aN2: integer);
     procedure connect;
@@ -218,6 +231,7 @@ type
     procedure offkey(aStr: string);
     procedure clear;
     procedure send(const aStr: string; aOdpowiedz: boolean = false);
+    procedure przelicz(aBledy: integer);
   public
 
   end;
@@ -330,6 +344,39 @@ begin
   if aOdpowiedz then cli.SendString('o$'+key+'$'+aStr) else cli.SendString('c$'+key+'$'+aStr);
 end;
 
+procedure TFClient.przelicz(aBledy: integer);
+var
+  i: integer;
+begin
+  Label56.Caption:='MILION';
+  Label57.Caption:='500.000';
+  Label58.Caption:='250.000';
+  Label59.Caption:='125.000';
+  Label60.Caption:='75.000';
+  Label61.Caption:='40.000';
+  Label62.Caption:='20.000';
+  Label63.Caption:='10.000';
+  Label64.Caption:='5.000';
+  Label65.Caption:='2.000';
+  Label66.Caption:='1.000';
+  Label67.Caption:='500';
+  for i:=1 to aBledy do
+  begin
+    Label56.Caption:=Label57.Caption;
+    Label57.Caption:=Label58.Caption;
+    Label58.Caption:=Label59.Caption;
+    Label59.Caption:=Label60.Caption;
+    Label60.Caption:=Label61.Caption;
+    Label61.Caption:=Label62.Caption;
+    Label62.Caption:=Label63.Caption;
+    Label63.Caption:=Label64.Caption;
+    Label64.Caption:=Label65.Caption;
+    Label65.Caption:=Label66.Caption;
+    Label66.Caption:=Label67.Caption;
+    Label67.Caption:='0';
+  end;
+end;
+
 procedure TFClient.cliCryptString(var aText: string);
 begin
   aText:=dm.CryptString(aText);
@@ -389,6 +436,11 @@ begin
   send('ping');
 end;
 
+procedure TFClient.BitBtn4Click(Sender: TObject);
+begin
+  muse.Disconnect;
+end;
+
 procedure TFClient.cliConnect(aSocket: TLSocket);
 begin
   tconn.Enabled:=false;
@@ -444,7 +496,7 @@ begin
     gl7.Progress:=StrToInt(GetLineToStr(s,6,'$','0'));
     gl8.Progress:=StrToInt(GetLineToStr(s,7,'$','0'));
   end else
-  if odp='ogolne' then set_ogolne(StrToInt(GetLineToStr(s,4,'$','0')),StrToInt(GetLineToStr(s,5,'$','0')),GetLineToStr(s,6,'$')) else
+  if odp='ogolne' then set_ogolne(StrToInt(GetLineToStr(s,4,'$','0')),StrToInt(GetLineToStr(s,5,'$','0')),GetLineToStr(s,6,'$'),StrToInt(GetLineToStr(s,7,'$','0'))) else
   if odp='dane' then set_dane(GetLineToStr(s,4,'$'),GetLineToStr(s,5,'$'),GetLineToStr(s,6,'$'),GetLineToStr(s,7,'$'),GetLineToStr(s,8,'$')) else
   if odp='ogolne_zaznacz' then set_zaznacz(StrToInt(GetLineToStr(s,4,'$','0')),StrToInt(GetLineToStr(s,5,'$','0'))) else
   if odp='puboff' then ePub(false) else
@@ -472,8 +524,7 @@ begin
     end else
     if w='on' then begin tmuse.Tag:=2; tmuse.Enabled:=true; end else
     if w='start' then begin tmuse.Tag:=3; tmuse.Enabled:=true; muse.SendCanSendMessage(aSocket,'server'); end else
-    if w='off' then begin tmuse.Tag:=4; tmuse.Enabled:=true; end else
-    if w='off2' then begin tmuse.Tag:=5; tmuse.Enabled:=true; end else
+    if w='disconnect' then muse.Disconnect else
     if w='algcompression' then
     begin
       w:=GetLineToStr(s,4,'$');
@@ -520,6 +571,7 @@ begin
   dm:=Tdm.Create(self);
   ps.FileName:=MyConfDir('client.xml');
   ps.Active:=true;
+  nasluch:=false;
   muse_on:=false;
   (* uos *)
   if DirectoryExists(MyDir('uos')) then
@@ -563,18 +615,46 @@ begin
   FAbout.ShowModal;
 end;
 
+procedure TFClient.museDisconnect;
+begin
+  if not muse_on then exit;
+  muse_on:=false;
+  send('muse$disconnect');
+  BitBtn4.Enabled:=false;
+  uELED2.Color:=clRed;
+  mic.Stop;
+  glosnik.Stop;
+  tloop.Enabled:=false;
+  sleep(250);
+  (* zwalniam obiekty *)
+  if nasluch then
+  begin
+    mic.Free;
+    glosnik.Free;
+    nasluch:=false;
+  end;
+  muse_in.Free;
+  muse_out.Free;
+  muse2_in.Free;
+  muse2_out.Free;
+  muse.Disconnect;
+  (* ustawiam kontrolki *)
+  uELED2.Active:=false;
+  StatusBar.Panels[3].Text:='Buforowanie:';
+end;
+
 procedure TFClient.museReceive(aSocket: TLSocket);
 var
   n1,n2,i: integer;
   buf: TBufferNetwork;
 begin
+  inc(licznik_zegarowy);
   n1:=aSocket.Get(buf,BUFFER_SIZE);
   if n1=0 then exit;
   if not muse_on then exit;
   if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
   n1:=dm.rd.Add(buf,n1);
   n2:=dm.rd.Execute(muse_in);
-  application.ProcessMessages;
 end;
 
 procedure TFClient.SpeedButton1Click(Sender: TObject);
@@ -633,6 +713,7 @@ begin
   if tmuse.Tag=1 then
   begin
     {$IFDEF DEBUG} writeln('client.tmuse.1'); {$ENDIF}
+    BitBtn4.Enabled:=true;
     uELED2.Color:=clRed;
     dm.rc.Clear;
     dm.rd.Clear;
@@ -642,6 +723,18 @@ begin
   if tmuse.Tag=2 then
   begin
     {$IFDEF DEBUG} writeln('client.tmuse.2'); {$ENDIF}
+    nasluch:=true;
+    mic:=TUOSPlayer.Create(self);
+    mic.DeviceEngine:=uos;
+    mic.DeviceIndex:=0;
+    mic.Mode:=moRecord;
+    glosnik:=TUOSPlayer.Create(self);
+    glosnik.DeviceEngine:=uos;
+    glosnik.DeviceIndex:=1;
+    glosnik.Mode:=moPlay;
+    glosnik.SleepForPlay:=2;
+    glosnik.Option:=[soRaw];
+    glosnik.OnProcessMessage:=@wProcessMessage;
     CreatePipeStreams(muse_out,muse_in);
     CreatePipeStreams(muse2_out,muse2_in);
     muse_on:=true;
@@ -653,29 +746,6 @@ begin
   begin
     {$IFDEF DEBUG} writeln('client.tmuse.3'); {$ENDIF}
     uELED2.Color:=clBlue;
-  end else
-  if tmuse.Tag=4 then
-  begin
-    {$IFDEF DEBUG} writeln('client.tmuse.4'); {$ENDIF}
-    uELED2.Color:=clRed;
-    muse_on:=false;
-    glosnik.Stop;
-    while glosnik.Busy do begin application.ProcessMessages; end;
-    send('muse$off$ok');
-  end else
-  if tmuse.Tag=5 then
-  begin
-    {$IFDEF DEBUG} writeln('client.tmuse.5'); {$ENDIF}
-    mic.Stop;
-    tloop.Enabled:=false;
-    muse_in.Free;
-    muse_out.Free;
-    muse2_in.Free;
-    muse2_out.Free;
-    muse.Disconnect;
-    uELED2.Active:=false;
-    StatusBar.Panels[3].Text:='Buforowanie:';
-    send('muse$off2$ok');
   end;
 end;
 
@@ -707,10 +777,8 @@ begin
   cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
   if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
-  //n2:=muse2_out.Read(buf,cc);
-  //n2:=dm.Compress(muse2_out,buf,cc);
   n1:=dm.rc.Add(muse2_out,cc); //dodanie strumienia
-  n2:=dm.rc.Execute(buf);  //kompresja strumienia
+  n2:=dm.rc.Execute(buf); //kompresja strumienia
   if n2>0 then muse.SendBinary(buf,n2);
   (* bufory *)
   for i:=2 to KOMUNIKACJA_LAST do
@@ -718,7 +786,7 @@ begin
     komunikacja[1,i-1]:=komunikacja[1,i];
     komunikacja[2,i-1]:=komunikacja[2,i];
   end;
-  komunikacja[1,KOMUNIKACJA_LAST]:=round(100*n1/BUFFER_SIZE);
+  komunikacja[1,KOMUNIKACJA_LAST]:=round(100*n1/BUFFER_SIZE_COMPRESSED);
   komunikacja[2,KOMUNIKACJA_LAST]:=round(100*n2/BUFFER_SIZE_COMPRESSED);
   a:=0;
   b:=0;
@@ -756,6 +824,11 @@ begin
   if a>3000 then tping.Enabled:=false;
 end;
 
+procedure TFClient.wProcessMessage;
+begin
+  application.ProcessMessages;
+end;
+
 procedure TFClient.eOff;
 begin
   Panel5.Visible:=false;
@@ -779,9 +852,10 @@ begin
   odp_d.Visible:=false;
 end;
 
-procedure TFClient.eTabInfo;
+procedure TFClient.eTabInfo(aBledy: integer);
 begin
   eOff;
+  przelicz(aBledy);
   Panel17.Visible:=true;
   Shape1.Visible:=false;
   Shape2.Visible:=false;
@@ -900,7 +974,7 @@ end;
 
 procedure TFClient.synchronizuj(const aCiag: string);
 var
-  vTryb,vPytanie: integer;
+  a,vTryb,vPytanie,vLBledow,vBlad: integer;
   s0,s1,s2,s3,s4: string;
   vOdpowiedz,vUdzielonaOdpowiedz: integer;
   vPodsumowanie,vKola,pol: string;
@@ -955,24 +1029,37 @@ TRY
     set_ogolne(17,vPytanie,vPodsumowanie);
   end;
   if vTryb>=18 then set_ogolne(18,vPytanie);
+  (* błędy - begin *)
+  vLBledow:=StrToInt(GetLineToStr(aCiag,18,'$','0'));
+  vBlad:=StrToInt(GetLineToStr(aCiag,19,'$','0'));
+  if vBlad=1 then a:=vLBledow-1 else a:=vLBledow;
+  if a<0 then a:=0;
+  (* błędy - end *)
   if vTryb>=19 then
   begin
     vKola:=GetLineToStr(aCiag,14,'$');
-    set_ogolne(19,vPytanie,vKola);
+    set_ogolne(19,vPytanie,vKola,a);
   end;
-  if vTryb>=20 then set_ogolne(20,vPytanie,vPodsumowanie);
-  if vTryb>=21 then set_ogolne(21,vPytanie);
+  if vTryb>=20 then
+  begin
+    vKola:=GetLineToStr(aCiag,14,'$');
+    set_ogolne(20,vPytanie,vKola,vLBledow);
+  end;
+  if vTryb>=21 then set_ogolne(21,vPytanie,vPodsumowanie);
+  if vTryb>=22 then set_ogolne(22,vPytanie);
   vAlgCompression:=GetLineToStr(aCiag,17,'$');
   if vAlgCompression='none' then dm.SetAlgCompression(0) else
   if vAlgCompression='deflate' then dm.SetAlgCompression(1) else
   if vAlgCompression='lzbrrc' then dm.SetAlgCompression(2) else
   if vAlgCompression='brrc' then dm.SetAlgCompression(3);
+  (* Wolna pozycja = 20 *)
 EXCEPT
   on E: Exception do mess.ShowError('Wystąpił błąd:^  TRYB='+IntToStr(vTryb)+', RUNDA='+IntToStr(vPytanie)+'^  Treść błędu: '+E.Message);
 END;
 end;
 
-procedure TFClient.set_ogolne(aTryb, aPytanie: integer; aPom: string);
+procedure TFClient.set_ogolne(aTryb, aPytanie: integer; aPom: string;
+  aBledy: integer);
 begin
   if aTryb=1 then
   begin
@@ -991,16 +1078,16 @@ begin
   if (aTryb>=10) and (aTryb<=14) then ekran_pytanie(g_pytanie,aTryb-10);
   if aTryb=17 then ePodsumowanie(aPom);
   if aTryb=18 then eOff;
-  if aTryb=19 then
+  if aTryb in [19,20] then
   begin
-    eTabInfo;
+    eTabInfo(aBledy);
     test_info(aPytanie);
     x1.Visible:=aPom[1]='0';
     x2.Visible:=aPom[2]='0';
     x3.Visible:=aPom[3]='0';
   end;
-  if aTryb=20 then ePodsumowanie(aPom);
-  if TRYB=21 then eOff;
+  if aTryb=21 then ePodsumowanie(aPom);
+  if TRYB=22 then eOff;
 end;
 
 procedure TFClient.set_dane(const aPytanie, aOdp1, aOdp2, aOdp3, aOdp4: string);

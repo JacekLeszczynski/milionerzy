@@ -19,6 +19,7 @@ type
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
@@ -98,6 +99,7 @@ type
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
+    mic2: TUOSPlayer;
     muse: TNetSocket;
     Panel12: TPanel;
     Panel13: TPanel;
@@ -165,7 +167,6 @@ type
     Label8: TLabel;
     Label9: TLabel;
     gl1: TplGauge;
-    mic: TUOSPlayer;
     ser: TNetSocket;
     ps: TXMLPropStorage;
     Shape1: TShape;
@@ -194,7 +195,8 @@ type
     led_null_screen: TuELED;
     led_rozgrywka: TuELED;
     uELED2: TuELED;
-    glosnik: TUOSPlayer;
+    uELED3: TuELED;
+    uELED4: TuELED;
     x1: TLabel;
     x2: TLabel;
     x3: TLabel;
@@ -221,6 +223,7 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
     procedure ButtOdpNow(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
@@ -228,10 +231,10 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure glosnikProcessMessage;
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
+    procedure museDisconnect;
     procedure museReceive(aSocket: TLSocket);
     procedure serCryptString(var aText: string);
     procedure serDecryptString(var aText: string);
@@ -257,6 +260,8 @@ type
     procedure tTelTimer(Sender: TObject);
     procedure uELED1Click(Sender: TObject);
   private
+    nasluch: boolean;
+    mic,glosnik: TUOSPlayer;
     sesje,nazwy,glosy,glosy2: TStringList;
     sokety: TList;
     key_muse: string;
@@ -265,6 +270,8 @@ type
     muse_in,muse2_in: TOutputPipeStream;
     muse_out,muse2_out: TInputPipeStream;
     muse_on: boolean;
+    mmmm: TMemoryStream;
+    procedure wProcessMessage;
     procedure eOff;
     procedure ePytanie;
     procedure eTabInfo;
@@ -278,7 +285,7 @@ type
     procedure sound(aNr: integer = 0; aLoop: boolean = false; aVolume: integer = 100);
     procedure nosound;
     procedure synchronizuj(aSocket: TLSocket; const aKey: string);
-    procedure test(aTryb: integer);
+    procedure test(aTryb: integer; aZmiana: boolean = false);
     procedure test_info(aPytanie: integer);
     procedure ekran_info(aLp: integer = 0);
     procedure ekran_pytanie(aNr: integer; aLp: integer = -1);
@@ -298,6 +305,7 @@ type
     function user2send(aItemIndex: integer; const aStr: string; var aKey: string; var aSocket: TLSocket): boolean;
     function user2disconnect(aItemIndex: integer): boolean;
     procedure odpowiedz(aStr: string);
+    procedure przelicz;
   public
 
   end;
@@ -317,6 +325,7 @@ uses
 procedure TFServer.FormCreate(Sender: TObject);
 begin
   randomize;
+  mmmm:=TMemoryStream.Create;
   sesje:=TStringList.Create;
   sokety:=TList.Create;
   nazwy:=TStringList.Create;
@@ -324,6 +333,7 @@ begin
   glosy.Sorted:=true;
   glosy2:=TStringList.Create;
   glosy2.Sorted:=true;
+  nasluch:=false;
   muse_on:=false;
   //imie_muse:='';
   key_muse:='';
@@ -344,6 +354,12 @@ end;
 
 procedure TFServer.FormDestroy(Sender: TObject);
 begin
+  mmmm.Free;
+  if nasluch then
+  begin
+    mic.Free;
+    glosnik.Free;
+  end;
   sesje.Free;
   sokety.Free;
   nazwy.Free;
@@ -365,11 +381,6 @@ begin
   Key:=0;
 end;
 
-procedure TFServer.glosnikProcessMessage;
-begin
-  application.ProcessMessages;
-end;
-
 procedure TFServer.MenuItem1Click(Sender: TObject);
 begin
   user2send(ListBox1.ItemIndex,'ping');
@@ -382,7 +393,38 @@ end;
 
 procedure TFServer.MenuItem4Click(Sender: TObject);
 begin
+  muse.Connect;
   user2send(ListBox1.ItemIndex,'muse$connect',key_muse,soket_muse);
+end;
+
+procedure TFServer.museDisconnect;
+begin
+  if not muse_on then exit;
+  muse_on:=false;
+  ser.SendString('o$'+key_muse+'$muse$disconnect',soket_muse);
+  uELED2.Color:=clRed;
+  mic.Stop;
+  glosnik.Stop;
+  tloop.Enabled:=false;
+  sleep(250);
+  (* zwalniam obiekty *)
+  if nasluch then
+  begin
+    mic.Free;
+    glosnik.Free;
+    nasluch:=false;
+  end;
+  muse_in.Free;
+  muse_out.Free;
+  muse2_in.Free;
+  muse2_out.Free;
+  (* ustawiam kontrolki *)
+  BitBtn3.Enabled:=false;
+  MenuItem4.Enabled:=true;
+  AlgCompressionSteaming.Enabled:=true;
+  StatusBar.Panels[1].Text:='Buforowanie:';
+  StatusBar.Panels[2].Text:='Prędkość:';
+  uELED2.Active:=false;
 end;
 
 procedure TFServer.museReceive(aSocket: TLSocket);
@@ -396,8 +438,6 @@ begin
   if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
   n1:=dm.rd.Add(buf,n1);
   n2:=dm.rd.Execute(muse_in);
-  //n2:=dm.rd.Execute(muse_full);
-  application.ProcessMessages;
 end;
 
 procedure TFServer.serCryptString(var aText: string);
@@ -496,8 +536,7 @@ begin
     if (pom='connect') and (pom2='error') then odpowiedz('Zdalny host nie połączył się!') else
     if (pom='connect') and (pom2='nosound') then odpowiedz('System dźwięku u użytkownika nieaktywny.') else
     if (pom='on') and (pom2='ok') then begin tmuse.Tag:=2; tmuse.Enabled:=true; muse.SendCanSendMessage(aSocket,key); end else
-    if (pom='off') and (pom2='ok') then begin tmuse.Tag:=3; tmuse.Enabled:=true; end else
-    if (pom='off2') and (pom2='ok') then begin tmuse.Tag:=4; tmuse.Enabled:=true; end;
+    if pom='disconnect' then muse.Disconnect;
   end;
 end;
 
@@ -614,22 +653,23 @@ end;
 
 procedure TFServer.tGraTimer(Sender: TObject);
 begin
-  lInfo.Caption:=IntToStr(TRYB);
+  lInfo.Caption:=IntToStr(g_bledy);
+  if g_rezygnacja then
+  begin
+    uELED3.Active:=not uELED3.Active;
+    uELED4.Active:=not uELED3.Active;
+  end;
 end;
-
-var
-  mmmm: TMemoryStream;
 
 procedure TFServer.Timer1StartTimer(Sender: TObject);
 begin
-  mmmm:=TMemoryStream.Create;
-  mic.Start(mmmm);
+  mic2.Start(mmmm);
   uELED1.Active:=true;
 end;
 
 procedure TFServer.Timer1StopTimer(Sender: TObject);
 begin
-  mic.Stop;
+  mic2.Stop;
   mmmm.SaveToFile('/home/tao/test.wav');
   uELED1.Active:=false;
 end;
@@ -651,13 +691,9 @@ begin
   cc:=muse2_out.NumBytesAvailable;
   if cc=0 then exit;
   if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
-  //n2:=muse2_out.Read(buf,cc);
-  //n2:=dm.Compress(muse2_out,buf,cc);
-  xx.Start;
   n1:=dm.rc.Add(muse2_out,cc); //dodanie strumienia
-  n2:=dm.rc.Execute(buf);  //kompresja strumienia
-  xx.Stop;
-  StatusBar.Panels[2].Text:='Prędkość: '+IntToStr(xx.ElapsedTicks)+' taktów.';
+  StatusBar.Panels[2].Text:='Ramka: '+IntToStr(n1)+'b.';
+  n2:=dm.rc.Execute(buf); //kompresja strumienia
   if n2>0 then muse.SendBinary(buf,n2);
   (* bufory *)
   for i:=2 to KOMUNIKACJA_LAST do
@@ -665,7 +701,7 @@ begin
     komunikacja[1,i-1]:=komunikacja[1,i];
     komunikacja[2,i-1]:=komunikacja[2,i];
   end;
-  komunikacja[1,KOMUNIKACJA_LAST]:=round(100*n1/BUFFER_SIZE);
+  komunikacja[1,KOMUNIKACJA_LAST]:=round(100*n1/BUFFER_SIZE_COMPRESSED);
   komunikacja[2,KOMUNIKACJA_LAST]:=round(100*n2/BUFFER_SIZE_COMPRESSED);
   a:=0;
   b:=0;
@@ -704,36 +740,22 @@ begin
   if tmuse.Tag=2 then
   begin
     {$IFDEF DEBUG} writeln('server.tmuse.2'); {$ENDIF}
+    nasluch:=true;
     tloop.Enabled:=true;
+    mic:=TUOSPlayer.Create(self);
+    mic.DeviceEngine:=uos;
+    mic.DeviceIndex:=3;
+    mic.Mode:=moRecord;
+    glosnik:=TUOSPlayer.Create(self);
+    glosnik.DeviceEngine:=uos;
+    glosnik.DeviceIndex:=4;
+    glosnik.Mode:=moPlay;
+    glosnik.SleepForPlay:=2;
+    glosnik.Option:=[soRaw];
+    glosnik.OnProcessMessage:=@wProcessMessage;
     mic.Start(TMemoryStream(muse2_in));
     uELED2.Color:=clBlue;
     ser.SendString('o$'+key_muse+'$muse$start',soket_muse);
-  end else
-  if tmuse.Tag=3 then
-  begin
-    {$IFDEF DEBUG} writeln('server.tmuse.3'); {$ENDIF}
-    uELED2.Color:=clRed;
-    glosnik.Stop;
-    while glosnik.Busy do begin application.ProcessMessages; end;
-    mic.Stop;
-    tloop.Enabled:=false;
-    //muse_full.SaveToFile('/home/tao/test.wav');
-    //muse_full.Free;
-    muse_in.Free;
-    muse_out.Free;
-    muse2_in.Free;
-    muse2_out.Free;
-    ser.SendString('o$'+key_muse+'$muse$off2',soket_muse);
-  end else
-  if tmuse.Tag=4 then
-  begin
-    {$IFDEF DEBUG} writeln('server.tmuse.4'); {$ENDIF}
-    BitBtn3.Enabled:=false;
-    MenuItem4.Enabled:=true;
-    AlgCompressionSteaming.Enabled:=true;
-    StatusBar.Panels[1].Text:='Buforowanie:';
-    StatusBar.Panels[2].Text:='Prędkość:';
-    uELED2.Active:=false;
   end;
 end;
 
@@ -778,6 +800,7 @@ begin
   eCzas30(false);
   fEkran.eCzas30(false);
   ser.SendString('o$all$tel30stop');
+  BitBtn3.Click;
 end;
 
 procedure TFServer.tTelTimer(Sender: TObject);
@@ -804,9 +827,12 @@ end;
 
 procedure TFServer.uELED1Click(Sender: TObject);
 begin
-  if ser.Active then exit;
-  ser.Connect;
-  muse.Connect;
+  if ser.Active then ser.Disconnect else ser.Connect;
+end;
+
+procedure TFServer.wProcessMessage;
+begin
+  application.ProcessMessages;
 end;
 
 procedure TFServer.eOff;
@@ -898,12 +924,13 @@ begin
   try
     mem:=TMemoryStream.Create;
     case aNr of
-      0: res:=TResourceStream.Create(hInstance,'PODSTAWA',RT_RCDATA);
-      1: res:=TResourceStream.Create(hInstance,'PYTANIE1',RT_RCDATA);
-      2: res:=TResourceStream.Create(hInstance,'PYTANIE2',RT_RCDATA);
-      3: res:=TResourceStream.Create(hInstance,'PYTANIE3',RT_RCDATA);
-      4: res:=TResourceStream.Create(hInstance,'WYGRANA',RT_RCDATA);
-      5: res:=TResourceStream.Create(hInstance,'WYGRANA2',RT_RCDATA);
+       0: res:=TResourceStream.Create(hInstance,'M_PODSTAWA',RT_RCDATA);
+       1: res:=TResourceStream.Create(hInstance,'M_PYTANIE1',RT_RCDATA);
+       2: res:=TResourceStream.Create(hInstance,'M_PYTANIE2',RT_RCDATA);
+       3: res:=TResourceStream.Create(hInstance,'M_PYTANIE3',RT_RCDATA);
+       4: res:=TResourceStream.Create(hInstance,'M_WYGRANA',RT_RCDATA);
+       5: res:=TResourceStream.Create(hInstance,'M_WYGRANA2',RT_RCDATA);
+      11: res:=TResourceStream.Create(hInstance,'M_MUSIC01',RT_RCDATA);
       else begin mem.Free; exit; end;
     end;
     mem.LoadFromStream(res);
@@ -931,15 +958,19 @@ begin
   try
     mem:=TMemoryStream.Create;
     case aNr of
-      0: res:=TResourceStream.Create(hInstance,'BEEP',RT_RCDATA);
-      1: res:=TResourceStream.Create(hInstance,'BOOM',RT_RCDATA);
-      2: res:=TResourceStream.Create(hInstance,'OK',RT_RCDATA);
-      3: res:=TResourceStream.Create(hInstance,'ERROR',RT_RCDATA);
-      4: res:=TResourceStream.Create(hInstance,'BRAWA',RT_RCDATA);
-      5: res:=TResourceStream.Create(hInstance,'BRAWA_MILION',RT_RCDATA);
-      6: res:=TResourceStream.Create(hInstance,'PRZEGRANA',RT_RCDATA);
-      7: res:=TResourceStream.Create(hInstance,'ZEGAR',RT_RCDATA);
-      8: res:=TResourceStream.Create(hInstance,'STRUNA',RT_RCDATA);
+       0: res:=TResourceStream.Create(hInstance,'BEEP',RT_RCDATA);
+       1: res:=TResourceStream.Create(hInstance,'BOOM',RT_RCDATA);
+       2: res:=TResourceStream.Create(hInstance,'BRAWA1',RT_RCDATA);
+       3: res:=TResourceStream.Create(hInstance,'ERROR',RT_RCDATA);
+       4: res:=TResourceStream.Create(hInstance,'BRAWA2',RT_RCDATA);
+       5: res:=TResourceStream.Create(hInstance,'BRAWA3',RT_RCDATA);
+       //6: res:=TResourceStream.Create(hInstance,'PRZEGRANA',RT_RCDATA);
+       7: res:=TResourceStream.Create(hInstance,'ZEGAR',RT_RCDATA);
+       8: res:=TResourceStream.Create(hInstance,'UWAGA',RT_RCDATA);
+       9: res:=TResourceStream.Create(hInstance,'CHOR',RT_RCDATA);
+      10: res:=TResourceStream.Create(hInstance,'KOLO_TELEFON',RT_RCDATA);
+      11: res:=TResourceStream.Create(hInstance,'UDZIELONA_ODPOWIEDZ',RT_RCDATA); //GONG
+      12: res:=TResourceStream.Create(hInstance,'WYGRANA',RT_RCDATA);
       else begin mem.Free; exit; end;
     end;
     mem.LoadFromStream(res);
@@ -967,7 +998,7 @@ var
   s: string;
   s0,s1,s2,s3,s4: string;
   s5,s6: string;
-  uo,o,ok,glos,aks: string;
+  uo,o,ok,glos,aks,czy_blad: string;
   b: boolean;
   a: integer;
 begin
@@ -1000,13 +1031,15 @@ begin
     2: aks:='lzbrrc';
     3: aks:='brrc';
   end;
-  s:=IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s0+'$'+s1+'$'+s2+'$'+s3+'$'+s4+'$'+uo+'$'+o+'$'+s5+'$'+s6+'$'+ok+'$'+glos+'$'+aks;
+  if g_blad then czy_blad:='1' else czy_blad:='0';
+  s:=IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s0+'$'+s1+'$'+s2+'$'+s3+'$'+s4+'$'+uo+'$'+o+'$'+s5+'$'+s6+'$'+ok+'$'+glos+'$'+aks+'$'+IntToStr(g_bledy)+'$'+czy_blad;
   ser.SendString('o$'+aKey+'$synchronizacja$'+s,aSocket);
 end;
 
-procedure TFServer.test(aTryb: integer);
+procedure TFServer.test(aTryb: integer; aZmiana: boolean);
 var
   s: string;
+  a: integer;
 begin
   TRYB:=aTryb;
   {* lecimy *}
@@ -1024,6 +1057,7 @@ begin
   end;
   if TRYB=8 then
   begin
+    g_blad:=false;
     tInfo.Enabled:=false; eOff; fEkran.eOff;
     ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie));
   end;
@@ -1073,8 +1107,13 @@ begin
       music;
     end else begin
       ser.SendString('o$all$ogolne_zaznacz$'+IntToStr(g_odpowiedz)+'$'+IntToStr(g_udzielona_odpowiedz));
-      g_stop:=not GameLastModePlay.Checked;
-      dm.oblicz_wygrana(g_pytanie,GameLastModePlay.Checked,g_wygrana,g_wygrana_gwarantowana);
+      g_stop:=(not GameLastModePlay.Checked) and (not g_rezygnacja);
+      if GameLastModePlay.Checked and (not g_rezygnacja) then
+      begin
+        g_blad:=true;
+        inc(g_bledy);
+      end;
+      dm.oblicz_wygrana(g_pytanie,GameLastModePlay.Checked or g_rezygnacja,g_wygrana,g_wygrana_gwarantowana);
       case g_udzielona_odpowiedz of
         1: begin Panel6.Color:=clRed; fEkran.Panel1.Color:=clRed; end;
         2: begin Panel7.Color:=clRed; fEkran.Panel2.Color:=clRed; end;
@@ -1097,7 +1136,7 @@ begin
       music;
     end;
     //if g_stop then ON_pause:=false else TRYB:=17;
-    if g_stop then TRYB:=20 else TRYB:=17;
+    if g_stop or g_rezygnacja then TRYB:=21 else TRYB:=17;
     g_blokada_glosowania:=false;
     g_wylaczenie_odpowiedzi:='';
     glosy_clear;
@@ -1120,6 +1159,8 @@ begin
   end;
   if TRYB=19 then
   begin
+    if g_blad then a:=g_bledy-1 else a:=g_bledy;
+    if a<0 then a:=0;
     eTabInfo;
     fEkran.eTabInfo;
     test_info(g_pytanie);
@@ -1133,9 +1174,22 @@ begin
     if g_kolo_1 then s[1]:='1';
     if g_kolo_2 then s[2]:='1';
     if g_kolo_3 then s[3]:='1';
-    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s);
+    ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s+'$'+IntToStr(a));
+    if not g_blad then TRYB:=20;
   end;
   if TRYB=20 then
+  begin
+    if g_blad then
+    begin
+      przelicz;
+      s:='000';
+      if g_kolo_1 then s[1]:='1';
+      if g_kolo_2 then s[2]:='1';
+      if g_kolo_3 then s[3]:='1';
+      ser.SendString('o$all$ogolne$'+IntToStr(TRYB)+'$'+IntToStr(g_pytanie)+'$'+s+'$'+IntToStr(g_bledy));
+    end;
+  end;
+  if TRYB=21 then
   begin
     Label14.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana))+' '+CL_DIAMENT;
     Label16.Caption:=SpacesToPoints(FormatFloat('### ### ##0',g_wygrana_gwarantowana))+' '+CL_DIAMENT;
@@ -1147,7 +1201,7 @@ begin
     if g_wygrana=1000000 then music(5) else music(4);
     ON_pause:=false;
   end;
-  if TRYB=21 then
+  if TRYB=22 then
   begin
     eOff;
     fEkran.eOff;
@@ -1295,14 +1349,17 @@ end;
 
 procedure TFServer.BitBtn3Click(Sender: TObject);
 begin
-  {$IFDEF DEBUG} writeln('server."button zamknij połączenie rozmowy głosowej"'); {$ENDIF}
-  muse_on:=false;
-  ser.SendString('o$'+key_muse+'$muse$off',soket_muse);
+  if muse.Active then muse.Disconnect;
 end;
 
 procedure TFServer.BitBtn4Click(Sender: TObject);
 begin
   Timer1.Enabled:=true;
+end;
+
+procedure TFServer.BitBtn5Click(Sender: TObject);
+begin
+  fEkran.eInfoKola;
 end;
 
 procedure TFServer.CheckBox2Change(Sender: TObject);
@@ -1314,7 +1371,7 @@ begin
     fEkran.eOff;
     g_pytanie:=1;
     g_odpowiedz:=0;
-    music;
+    music(11);
   end else begin
     play1.Stop;
     play2.Stop;
@@ -1442,7 +1499,7 @@ procedure TFServer.zysk_i_strata;
 var
   a,b,c: integer;
 begin
-  dm.zysk_i_strata(g_pytanie,a,b,c);
+  dm.zysk_i_strata(g_pytanie-g_bledy,a,b,c);
   Label29.Caption:=IntToStr(g_pytanie)+'/12';
   Label30.Caption:=SpacesToPoints(FormatFloat('### ### ##0',a))+' '+CL_DIAMENT;
   Label25.Caption:=SpacesToPoints(FormatFloat('### ### ##0',b))+' '+CL_DIAMENT;
@@ -1642,6 +1699,34 @@ procedure TFServer.odpowiedz(aStr: string);
 begin
   StatusBar.Panels[2].Text:='Informacja: '+aStr;
   todpowiedz.Enabled:=true;
+end;
+
+procedure TFServer.przelicz;
+begin
+  Label56.Caption:=Label57.Caption;
+  Label57.Caption:=Label58.Caption;
+  Label58.Caption:=Label59.Caption;
+  Label59.Caption:=Label60.Caption;
+  Label60.Caption:=Label61.Caption;
+  Label61.Caption:=Label62.Caption;
+  Label62.Caption:=Label63.Caption;
+  Label63.Caption:=Label64.Caption;
+  Label64.Caption:=Label65.Caption;
+  Label65.Caption:=Label66.Caption;
+  Label66.Caption:=Label67.Caption;
+  Label67.Caption:='0';
+  fEkran.Label2.Caption:=fEkran.Label14.Caption;
+  fEkran.Label14.Caption:=fEkran.Label15.Caption;
+  fEkran.Label15.Caption:=fEkran.Label16.Caption;
+  fEkran.Label16.Caption:=fEkran.Label17.Caption;
+  fEkran.Label17.Caption:=fEkran.Label18.Caption;
+  fEkran.Label18.Caption:=fEkran.Label19.Caption;
+  fEkran.Label19.Caption:=fEkran.Label20.Caption;
+  fEkran.Label20.Caption:=fEkran.Label21.Caption;
+  fEkran.Label21.Caption:=fEkran.Label22.Caption;
+  fEkran.Label22.Caption:=fEkran.Label23.Caption;
+  fEkran.Label23.Caption:=fEkran.Label24.Caption;
+  fEkran.Label24.Caption:='0 ♦';
 end;
 
 end.

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  XMLPropStorage, TplGaugeUnit, ZDataset;
+  XMLPropStorage, LiveTimer, TplGaugeUnit, ZDataset;
 
 type
 
@@ -20,6 +20,9 @@ type
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Image6: TImage;
     Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
@@ -59,9 +62,15 @@ type
     Label44: TLabel;
     Label45: TLabel;
     Label46: TLabel;
+    Label47: TLabel;
+    Label48: TLabel;
+    Label49: TLabel;
+    livekolo: TLiveTimer;
     Panel10: TPanel;
     Panel11: TPanel;
+    Panel12: TPanel;
     Panel9: TPanel;
+    tinfokolo: TTimer;
     x1: TLabel;
     x2: TLabel;
     Label3: TLabel;
@@ -107,7 +116,13 @@ type
     Shape5: TShape;
     Shape6: TShape;
     ps: TXMLPropStorage;
+    x4: TLabel;
+    x5: TLabel;
+    x6: TLabel;
     procedure FormCreate(Sender: TObject);
+    procedure tinfokoloStartTimer(Sender: TObject);
+    procedure tinfokoloStopTimer(Sender: TObject);
+    procedure tinfokoloTimer(Sender: TObject);
   private
   public
     procedure eOff;
@@ -116,6 +131,7 @@ type
     procedure ePodsumowanie(aKwota: integer; aKoniec: boolean = false);
     procedure eCzas30(aPokaz: boolean = true);
     procedure ePub(aPokaz: boolean = true);
+    procedure eInfoKola;
   end;
 
 var
@@ -134,6 +150,65 @@ procedure TfEkran.FormCreate(Sender: TObject);
 begin
   ps.FileName:=MyConfDir('server.xml');
   ps.Active:=true;
+end;
+
+procedure TfEkran.tinfokoloStartTimer(Sender: TObject);
+begin
+  tinfokolo.Tag:=1;
+  livekolo.Tag:=0;
+  livekolo.Start;
+  Panel12.Left:=1290;
+  Panel12.Visible:=true;
+  x4.Visible:=not g_kolo_1;
+  x5.Visible:=not g_kolo_2;
+  x6.Visible:=not g_kolo_3;
+end;
+
+procedure TfEkran.tinfokoloStopTimer(Sender: TObject);
+begin
+  tinfokolo.Tag:=0;
+  livekolo.Tag:=0;
+  livekolo.Stop;
+  Panel12.Visible:=false;
+end;
+
+procedure TfEkran.tinfokoloTimer(Sender: TObject);
+var
+  a,x: integer;
+  w: double;
+begin
+  a:=livekolo.GetIndexTime;
+  w:=3000/1216;
+  (* przesuwam się do środka *)
+  if tinfokolo.Tag=1 then
+  begin
+    x:=round(a*w);
+    if x>1216 then
+    begin
+      Panel12.Left:=1290-1216;
+      tinfokolo.Tag:=2;
+      livekolo.Tag:=a;
+    end else Panel12.Left:=1290-x;
+  end else
+  (* czekam określoną ilość czasu *)
+  if tinfokolo.Tag=2 then
+  begin
+    if a>livekolo.Tag+4000 then
+    begin
+      tinfokolo.Tag:=3;
+      livekolo.Tag:=a;
+    end;
+  end else
+  (* przesuwam się dalej w lewo aż do zniknięcia panelu za ekranem *)
+  if tinfokolo.Tag=3 then
+  begin
+    x:=round((a-livekolo.Tag)*w);
+    if x>1216 then
+    begin
+      Panel12.Left:=74-1216;
+      tinfokolo.Enabled:=false;
+    end else Panel12.Left:=74-x;
+  end;
 end;
 
 procedure TfEkran.eOff;
@@ -201,6 +276,11 @@ end;
 procedure TfEkran.ePub(aPokaz: boolean);
 begin
   Panel10.Visible:=aPokaz;
+end;
+
+procedure TfEkran.eInfoKola;
+begin
+  tinfokolo.Enabled:=true;
 end;
 
 end.

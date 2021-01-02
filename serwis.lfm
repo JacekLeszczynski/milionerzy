@@ -1,8 +1,8 @@
 object dm: Tdm
   OldCreateOrder = False
-  Height = 348
-  HorizontalOffset = 350
-  VerticalOffset = 133
+  Height = 306
+  HorizontalOffset = 345
+  VerticalOffset = 118
   Width = 383
   object db: TZConnection
     ControlsCodePage = cCP_UTF8
@@ -44,6 +44,7 @@ object dm: Tdm
     Top = 16
   end
   object rd: TCompressionFly
+    Mode = moDecompress
     Taging = True
     Left = 264
     Top = 16
