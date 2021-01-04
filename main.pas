@@ -1,7 +1,7 @@
 unit main;
 
 {$mode objfpc}{$H+}
-{$define DEBUG}
+{ $define DEBUG}
 
 interface
 
@@ -17,8 +17,6 @@ type
   TFServer = class(TForm)
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
-    BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
     BitBtn5: TBitBtn;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
@@ -98,11 +96,8 @@ type
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
-    MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
-    mic2: TUOSPlayer;
-    muse: TNetSocket;
     Panel12: TPanel;
     Panel13: TPanel;
     Panel14: TPanel;
@@ -188,9 +183,6 @@ type
     Shape8: TShape;
     Shape9: TShape;
     StatusBar: TStatusBar;
-    Timer1: TTimer;
-    tloop: TTimer;
-    tmuse: TTimer;
     todpowiedz: TTimer;
     tpings: TTimer;
     tSer: TTimer;
@@ -236,8 +228,6 @@ type
     procedure AlgCompressionSteamingChange(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
-    procedure BitBtn3Click(Sender: TObject);
-    procedure BitBtn4Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
     procedure ButtOdpNow(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
@@ -250,10 +240,7 @@ type
       ARect: TRect; State: TOwnerDrawState);
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
-    procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
-    procedure museDisconnect;
-    procedure museReceive(aSocket: TLSocket);
     procedure serCryptString(var aText: string);
     procedure serDecryptString(var aText: string);
     procedure serReceiveString(aMsg: string; aSocket: TLSocket);
@@ -264,11 +251,6 @@ type
     procedure t50StartTimer(Sender: TObject);
     procedure t50Timer(Sender: TObject);
     procedure tGraTimer(Sender: TObject);
-    procedure Timer1StartTimer(Sender: TObject);
-    procedure Timer1StopTimer(Sender: TObject);
-    procedure Timer1Timer(Sender: TObject);
-    procedure tloopTimer(Sender: TObject);
-    procedure tmuseTimer(Sender: TObject);
     procedure todpowiedzTimer(Sender: TObject);
     procedure tpingsTimer(Sender: TObject);
     procedure tSerTimer(Sender: TObject);
@@ -429,12 +411,6 @@ begin
   user2disconnect(ListBox1.ItemIndex);
 end;
 
-procedure TFServer.MenuItem4Click(Sender: TObject);
-begin
-  muse.Connect;
-  user2send(ListBox1.ItemIndex,'muse$connect',key_muse,soket_muse);
-end;
-
 procedure TFServer.MenuItem5Click(Sender: TObject);
 begin
   if user2key(ListBox1.ItemIndex,g_gracz_key) then
@@ -443,49 +419,6 @@ begin
     MenuItem5.Enabled:=false;
     StatusBar.Panels[1].Text:='';
   end;
-end;
-
-procedure TFServer.museDisconnect;
-begin
-  if not muse_on then exit;
-  muse_on:=false;
-  ser.SendString('o$'+key_muse+'$muse$disconnect',soket_muse);
-  uELED2.Color:=clRed;
-  mic.Stop;
-  glosnik.Stop;
-  tloop.Enabled:=false;
-  sleep(250);
-  (* zwalniam obiekty *)
-  if nasluch then
-  begin
-    mic.Free;
-    glosnik.Free;
-    nasluch:=false;
-  end;
-  muse_in.Free;
-  muse_out.Free;
-  muse2_in.Free;
-  muse2_out.Free;
-  (* ustawiam kontrolki *)
-  BitBtn3.Enabled:=false;
-  MenuItem4.Enabled:=true;
-  AlgCompressionSteaming.Enabled:=true;
-  StatusBar.Panels[1].Text:='Buforowanie:';
-  StatusBar.Panels[2].Text:='Prędkość:';
-  uELED2.Active:=false;
-end;
-
-procedure TFServer.museReceive(aSocket: TLSocket);
-var
-  n1,n2,i: integer;
-  buf: TBufferNetwork;
-begin
-  n1:=aSocket.Get(buf,BUFFER_SIZE);
-  if n1=0 then exit;
-  if not muse_on then exit;
-  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
-  n1:=dm.rd.Add(buf,n1);
-  n2:=dm.rd.Execute(muse_in);
 end;
 
 procedure TFServer.serCryptString(var aText: string);
@@ -517,8 +450,6 @@ begin
   if s1<>'c' then exit;
   key:=GetLineToStr(s,2,'$');
   kom:=GetLineToStr(s,3,'$');
-  (* żądanie wysłania ramki danych *)
-  if (kom='cansend') then muse.SendCanSendMessage(aSocket,key) else
   (* rejestracja lub logowanie *)
   if (key='new') and (kom='register') then
   begin
@@ -576,16 +507,6 @@ begin
     ser.SendString('o$'+key+'$zaznaczono$'+w,aSocket);
     glosy_aktualizacja;
   end else if kom='ping' then pings_add(key) else
-  if kom='muse' then
-  begin
-    pom:=GetLineToStr(s,4,'$');
-    pom2:=GetLineToStr(s,5,'$');
-    if (pom='connect') and (pom2='ok') then begin tmuse.Tag:=1; tmuse.Enabled:=true; end else
-    if (pom='connect') and (pom2='error') then odpowiedz('Zdalny host nie połączył się!') else
-    if (pom='connect') and (pom2='nosound') then odpowiedz('System dźwięku u użytkownika nieaktywny.') else
-    if (pom='on') and (pom2='ok') then begin tmuse.Tag:=2; tmuse.Enabled:=true; muse.SendCanSendMessage(aSocket,key); end else
-    if pom='disconnect' then muse.Disconnect;
-  end else
   if kom='przyjaciel' then
   begin
     g_przyjaciel_key:=GetLineToStr(s,4,'$');
@@ -757,8 +678,8 @@ end;
 
 procedure TFServer.tGraTimer(Sender: TObject);
 begin
-  //lInfo.Caption:=IntToStr(g_bledy);
-  lInfo.Caption:=IntToStr(TRYB);
+  lInfo.Caption:=IntToStr(g_bledy);
+  //lInfo.Caption:=IntToStr(TRYB);
   if g_rezygnacja then
   begin
     uELED3.Active:=not uELED3.Active;
@@ -766,103 +687,8 @@ begin
   end;
 end;
 
-procedure TFServer.Timer1StartTimer(Sender: TObject);
-begin
-  mic2.Start(mmmm);
-  uELED1.Active:=true;
-end;
-
-procedure TFServer.Timer1StopTimer(Sender: TObject);
-begin
-  mic2.Stop;
-  mmmm.SaveToFile('/home/tao/test.wav');
-  uELED1.Active:=false;
-end;
-
-procedure TFServer.Timer1Timer(Sender: TObject);
-begin
-  Timer1.Enabled:=false;
-end;
-
 var
   komunikacja: array [1..2,1..10] of integer;
-
-procedure TFServer.tloopTimer(Sender: TObject);
-var
-  cc,n1,n2: integer;
-  buf: TBufferNetwork;
-  a,b,i: integer;
-begin
-  cc:=muse2_out.NumBytesAvailable;
-  if cc=0 then exit;
-  if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
-  n1:=dm.rc.Add(muse2_out,cc); //dodanie strumienia
-  StatusBar.Panels[2].Text:='Ramka: '+IntToStr(n1)+'b.';
-  n2:=dm.rc.Execute(buf); //kompresja strumienia
-  if n2>0 then muse.SendBinary(buf,n2);
-  (* bufory *)
-  for i:=2 to KOMUNIKACJA_LAST do
-  begin
-    komunikacja[1,i-1]:=komunikacja[1,i];
-    komunikacja[2,i-1]:=komunikacja[2,i];
-  end;
-  komunikacja[1,KOMUNIKACJA_LAST]:=round(100*n1/BUFFER_SIZE_COMPRESSED);
-  komunikacja[2,KOMUNIKACJA_LAST]:=round(100*n2/BUFFER_SIZE_COMPRESSED);
-  a:=0;
-  b:=0;
-  for i:=1 to KOMUNIKACJA_LAST do
-  begin
-    a:=a+komunikacja[1,i];
-    b:=b+komunikacja[2,i];
-  end;
-  a:=round(a/KOMUNIKACJA_LAST);
-  b:=round(b/KOMUNIKACJA_LAST);
-  StatusBar.Panels[1].Text:='Buforowanie: '+IntToStr(a)+'/'+IntToStr(b)+' (%)';
-end;
-
-procedure TFServer.tmuseTimer(Sender: TObject);
-begin
-  tmuse.Enabled:=false;
-  if tmuse.Tag=1 then
-  begin
-    {$IFDEF DEBUG} writeln('server.tmuse.1'); {$ENDIF}
-    uELED2.Color:=clRed;
-    uELED2.Active:=true;
-    dm.rc.Clear;
-    dm.rd.Clear;
-    (* połączenie zestawione - uruchamiam komunikację *)
-    BitBtn3.Enabled:=true;
-    //muse_full:=TMemoryStream.Create;
-    CreatePipeStreams(muse_out,muse_in);
-    CreatePipeStreams(muse2_out,muse2_in);
-    muse_on:=true;
-    BitBtn3.Enabled:=true;
-    MenuItem4.Enabled:=false;
-    AlgCompressionSteaming.Enabled:=false;
-    (* nakazuję zrobić to samo stronie drugiej *)
-    ser.SendString('o$'+key_muse+'$muse$on',soket_muse);
-  end else
-  if tmuse.Tag=2 then
-  begin
-    {$IFDEF DEBUG} writeln('server.tmuse.2'); {$ENDIF}
-    nasluch:=true;
-    tloop.Enabled:=true;
-    mic:=TUOSPlayer.Create(self);
-    mic.DeviceEngine:=uos;
-    mic.DeviceIndex:=3;
-    mic.Mode:=moRecord;
-    glosnik:=TUOSPlayer.Create(self);
-    glosnik.DeviceEngine:=uos;
-    glosnik.DeviceIndex:=4;
-    glosnik.Mode:=moPlay;
-    glosnik.SleepForPlay:=2;
-    glosnik.Option:=[soRaw];
-    glosnik.OnProcessMessage:=@wProcessMessage;
-    mic.Start(TMemoryStream(muse2_in));
-    uELED2.Color:=clBlue;
-    ser.SendString('o$'+key_muse+'$muse$start',soket_muse);
-  end;
-end;
 
 procedure TFServer.todpowiedzTimer(Sender: TObject);
 begin
@@ -1496,19 +1322,16 @@ begin
   aktywacja_odpowiedzi(true,true);
 end;
 
-procedure TFServer.BitBtn3Click(Sender: TObject);
-begin
-  if muse.Active then muse.Disconnect;
-end;
-
-procedure TFServer.BitBtn4Click(Sender: TObject);
-begin
-  Timer1.Enabled:=true;
-end;
-
 procedure TFServer.BitBtn5Click(Sender: TObject);
+var
+  s: string;
 begin
+  s:='000';
+  if g_kolo_1 then s[1]:='1';
+  if g_kolo_2 then s[2]:='1';
+  if g_kolo_3 then s[3]:='1';
   fEkran.eInfoKola;
+  ser.SendString('o$all$showinfo$'+s);
 end;
 
 procedure TFServer.CheckBox2Change(Sender: TObject);
@@ -1925,11 +1748,12 @@ procedure TFServer.wyslij_liste_graczy(aSynchronizacja: boolean);
 var
   i: integer;
   soket,pom: TLSocket;
+  pom1,pom2: string;
 begin
   if user2socket(g_gracz_key,soket) then
   begin
     ser.SendString('o$'+g_gracz_key+'$userbegin',soket);
-    for i:=0 to ListBox1.Count-1 do if user2socket(i,pom) then if pom.Handle<>-1 then ser.SendString('o$'+g_gracz_key+'$user$'+ListBox1.Items[i],soket);
+    for i:=0 to ListBox1.Count-1 do if user2socket(i,pom1,pom2,pom) then if pom2<>g_gracz_key then if pom.Handle<>-1 then ser.SendString('o$'+g_gracz_key+'$user$'+ListBox1.Items[i],soket);
     if not aSynchronizacja then StatusBar.Panels[1].Text:='Status: Lista potencjalnych przyjaciół wysłana.';
   end;
 end;

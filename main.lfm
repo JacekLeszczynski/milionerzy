@@ -222,41 +222,6 @@ object FServer: TFServer
       Color = clBlue
       ParentColor = False
     end
-    object BitBtn4: TBitBtn
-      AnchorSideTop.Control = uELED1
-      AnchorSideRight.Control = uELED1
-      AnchorSideBottom.Control = uELED1
-      AnchorSideBottom.Side = asrBottom
-      Left = 834
-      Height = 24
-      Top = 0
-      Width = 75
-      Anchors = [akTop, akRight, akBottom]
-      Caption = 'TEST'
-      OnClick = BitBtn4Click
-      TabOrder = 6
-      Visible = False
-    end
-    object BitBtn3: TBitBtn
-      AnchorSideTop.Control = uELED2
-      AnchorSideRight.Control = uELED2
-      AnchorSideBottom.Control = uELED2
-      AnchorSideBottom.Side = asrBottom
-      Left = 834
-      Height = 24
-      Top = 24
-      Width = 75
-      Anchors = [akTop, akRight, akBottom]
-      Caption = 'ZAMKNIJ'
-      Enabled = False
-      Font.Height = -11
-      Font.Name = 'Sans'
-      Font.Style = [fsBold]
-      OnClick = BitBtn3Click
-      ParentFont = False
-      TabOrder = 5
-      Visible = False
-    end
     object Label80: TLabel
       AnchorSideLeft.Control = Label31
       AnchorSideLeft.Side = asrBottom
@@ -291,7 +256,7 @@ object FServer: TFServer
       OnChange = AlgCompressionSteamingChange
       ParentFont = False
       Style = csDropDownList
-      TabOrder = 7
+      TabOrder = 5
       Text = 'Bez kompresji'
       Visible = False
     end
@@ -20490,11 +20455,6 @@ object FServer: TFServer
       Caption = 'Ping'
       OnClick = MenuItem1Click
     end
-    object MenuItem4: TMenuItem
-      Caption = 'Połączenie głosowe'
-      Visible = False
-      OnClick = MenuItem4Click
-    end
     object MenuItem3: TMenuItem
       Caption = '-'
     end
@@ -20510,21 +20470,6 @@ object FServer: TFServer
       OnClick = MenuItem2Click
     end
   end
-  object muse: TNetSocket
-    Mode = smServer
-    Protocol = spUDP
-    Security = ssNone
-    BinaryMode = True
-    Host = '127.0.0.1'
-    Port = 4681
-    ReuseAddress = True
-    Timeout = 0
-    SSLMethod = msSSLv2or3
-    OnDisconnect = museDisconnect
-    OnReceive = museReceive
-    Left = 752
-    Top = 72
-  end
   object tpings: TTimer
     Enabled = False
     Interval = 3000
@@ -20538,37 +20483,5 @@ object FServer: TFServer
     OnTimer = todpowiedzTimer
     Left = 920
     Top = 376
-  end
-  object tloop: TTimer
-    Enabled = False
-    Interval = 80
-    OnTimer = tloopTimer
-    Left = 858
-    Top = 168
-  end
-  object tmuse: TTimer
-    Enabled = False
-    Interval = 50
-    OnTimer = tmuseTimer
-    Left = 858
-    Top = 232
-  end
-  object Timer1: TTimer
-    Enabled = False
-    Interval = 5000
-    OnTimer = Timer1Timer
-    OnStartTimer = Timer1StartTimer
-    OnStopTimer = Timer1StopTimer
-    Left = 937
-    Top = 82
-  end
-  object mic2: TUOSPlayer
-    DeviceEngine = uos
-    Mode = moRecord
-    DeviceIndex = 6
-    Volume = 1
-    VolumeGlobal = 1
-    Left = 920
-    Top = 248
   end
 end

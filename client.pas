@@ -1,14 +1,14 @@
 unit client;
 
 {$mode objfpc}{$H+}
-{$define DEBUG}
+{ $define DEBUG}
 
 interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, ExtCtrls,
   StdCtrls, Buttons, XMLPropStorage, Menus, TplGaugeUnit, NetSocket, ExtMessage,
-  LiveTimer, UOSEngine, UOSPlayer, lNet, ueled, pipes;
+  LiveTimer, lNet, ueled;
 
 type
 
@@ -19,7 +19,6 @@ type
     BitBtn2: TBitBtn;
     Autoconnect: TCheckBox;
     BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
     cli: TNetSocket;
     eImie: TEdit;
     gl5: TplGauge;
@@ -29,9 +28,14 @@ type
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Image6: TImage;
     Label13: TLabel;
     Label14: TLabel;
-    Label2: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
     Label3: TLabel;
     Label32: TLabel;
     Label33: TLabel;
@@ -90,14 +94,14 @@ type
     Label_d: TLabel;
     lInfo: TLabel;
     ListBox1: TListBox;
-    muse: TNetSocket;
+    livekolo: TLiveTimer;
+    Panel18: TPanel;
     Panel3: TPanel;
     RadioGroup1: TRadioGroup;
     RadioGroup2: TRadioGroup;
     RadioGroup3: TRadioGroup;
     RadioGroup4: TRadioGroup;
-    tmuse: TTimer;
-    tloop: TTimer;
+    tinfokolo: TTimer;
     uELED1: TuELED;
     uELED19: TuELED;
     uELED20: TuELED;
@@ -112,13 +116,15 @@ type
     uELED29: TuELED;
     uELED30: TuELED;
     uELED4: TuELED;
+    x4: TLabel;
+    x5: TLabel;
+    x6: TLabel;
     z1: TLiveTimer;
     t30: TTimer;
     tconn: TTimer;
     tping: TTimer;
     uELED2: TuELED;
     uELED3: TuELED;
-    uos: TUOSEngine;
     zegar: TLiveTimer;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
@@ -186,7 +192,6 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
-    procedure BitBtn4Click(Sender: TObject);
     procedure cliConnect(aSocket: TLSocket);
     procedure cliCryptString(var aText: string);
     procedure cliDecryptString(var aText: string);
@@ -203,8 +208,6 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem9Click(Sender: TObject);
-    procedure museDisconnect;
-    procedure museReceive(aSocket: TLSocket);
     procedure RadioGroup1Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
@@ -214,21 +217,17 @@ type
     procedure t30StopTimer(Sender: TObject);
     procedure t30Timer(Sender: TObject);
     procedure tconnTimer(Sender: TObject);
-    procedure tmuseTimer(Sender: TObject);
     procedure tCzasStopTimer(Sender: TObject);
     procedure tCzasTimer(Sender: TObject);
+    procedure tinfokoloStartTimer(Sender: TObject);
+    procedure tinfokoloStopTimer(Sender: TObject);
+    procedure tinfokoloTimer(Sender: TObject);
     procedure tInfoTimer(Sender: TObject);
-    procedure tloopTimer(Sender: TObject);
     procedure tpingStartTimer(Sender: TObject);
     procedure tpingStopTimer(Sender: TObject);
     procedure tpingTimer(Sender: TObject);
   private
     key: string;
-    nasluch: boolean;
-    mic,glosnik: TUOSPlayer;
-    muse_in,muse2_in: TOutputPipeStream;
-    muse_out,muse2_out: TInputPipeStream;
-    muse_on: boolean;
     procedure wProcessMessage;
     procedure eOff;
     procedure ePytanie;
@@ -236,6 +235,7 @@ type
     procedure ePodsumowanie(const aText: string);
     procedure eCzas30(aPokaz: boolean = true);
     procedure ePub(aPokaz: boolean = true);
+    procedure eInfoKola(aKola: string);
     procedure test_info(aPytanie: integer);
     procedure ekran_info(aLp: integer = 0);
     procedure ekran_pytanie(aNr: integer; aLp: integer = -1);
@@ -481,11 +481,6 @@ begin
   send('ping');
 end;
 
-procedure TFClient.BitBtn4Click(Sender: TObject);
-begin
-  muse.Disconnect;
-end;
-
 procedure TFClient.cliConnect(aSocket: TLSocket);
 begin
   tconn.Enabled:=false;
@@ -511,8 +506,6 @@ begin
   s2:=GetLineToStr(s,2,'$');
   if (s2<>key) and (s2<>'all') then exit;
   odp:=GetLineToStr(s,3,'$');
-  (* żądanie wysłania ramki danych *)
-  if (odp='cansend') then muse.SendCanSendMessage(aSocket,'server') else
   (* rejestracja lub logowanie *)
   if odp='register' then
   begin
@@ -564,30 +557,14 @@ begin
   end else
   if odp='tel30stop' then t30.Enabled:=false else
   if odp='ping' then tping.Enabled:=true else
-  if odp='muse' then
+  if w='algcompression' then
   begin
     w:=GetLineToStr(s,4,'$');
-    {$IFDEF DEBUG} writeln('client.receive.muse: ',w); {$ENDIF}
-    if w='connect' then
-    begin
-      if uELED4.Active then
-      begin
-        tmuse.Tag:=1;
-        tmuse.Enabled:=true;
-      end else send('muse$connect$nosound');
-    end else
-    if w='on' then begin tmuse.Tag:=2; tmuse.Enabled:=true; end else
-    if w='start' then begin tmuse.Tag:=3; tmuse.Enabled:=true; muse.SendCanSendMessage(aSocket,'server'); end else
-    if w='disconnect' then muse.Disconnect else
-    if w='algcompression' then
-    begin
-      w:=GetLineToStr(s,4,'$');
-      if w='none' then dm.SetAlgCompression(0) else
-      if w='deflate' then dm.SetAlgCompression(1) else
-      if w='lzbrrc' then dm.SetAlgCompression(2) else
-      if w='brrc' then dm.SetAlgCompression(3);
-    end;
-  end else
+    if w='none' then dm.SetAlgCompression(0) else
+    if w='deflate' then dm.SetAlgCompression(1) else
+    if w='lzbrrc' then dm.SetAlgCompression(2) else
+    if w='brrc' then dm.SetAlgCompression(3);
+  end;
   if odp='userbegin' then
   begin
     ListBox1.Clear;
@@ -639,7 +616,8 @@ begin
       uELED29.Active:=s3[2]='1';
       uELED30.Active:=s3[3]='1';
     end;
-  end;
+  end else
+  if odp='showinfo' then eInfoKola(GetLineToStr(s,4,'$','000'));
 end;
 
 procedure TFClient.cliTimeVector(aTimeVector: integer);
@@ -677,15 +655,6 @@ begin
   dm:=Tdm.Create(self);
   ps.FileName:=MyConfDir('client.xml');
   ps.Active:=true;
-  nasluch:=false;
-  muse_on:=false;
-  (* uos *)
-  if DirectoryExists(MyDir('uos')) then
-  begin
-    uos.Tag:=1;
-    uos.LibDirectory:=MyDir('uos');
-  end;
-  if uos.Tag=1 then uELED4.Active:=uos.LoadLibrary;
   (* ver *)
   GetProgramVersion(v1,v2,v3,v4);
   if v4>0 then Caption:='Klient Jahu Milionerzy (ver.'+IntToStr(v1)+'.'+IntToStr(v2)+'.'+IntToStr(v3)+'-'+IntToStr(v4)+')' else
@@ -696,7 +665,6 @@ end;
 
 procedure TFClient.FormDestroy(Sender: TObject);
 begin
-  if uELED4.Active then uos.UnLoadLibrary;
   dm.Free;
 end;
 
@@ -729,48 +697,6 @@ procedure TFClient.MenuItem9Click(Sender: TObject);
 begin
   FAbout:=TFAbout.Create(self);
   FAbout.ShowModal;
-end;
-
-procedure TFClient.museDisconnect;
-begin
-  if not muse_on then exit;
-  muse_on:=false;
-  send('muse$disconnect');
-  BitBtn4.Enabled:=false;
-  uELED2.Color:=clRed;
-  mic.Stop;
-  glosnik.Stop;
-  tloop.Enabled:=false;
-  sleep(250);
-  (* zwalniam obiekty *)
-  if nasluch then
-  begin
-    mic.Free;
-    glosnik.Free;
-    nasluch:=false;
-  end;
-  muse_in.Free;
-  muse_out.Free;
-  muse2_in.Free;
-  muse2_out.Free;
-  muse.Disconnect;
-  (* ustawiam kontrolki *)
-  uELED2.Active:=false;
-  StatusBar.Panels[3].Text:='Buforowanie:';
-end;
-
-procedure TFClient.museReceive(aSocket: TLSocket);
-var
-  n1,n2,i: integer;
-  buf: TBufferNetwork;
-begin
-  inc(licznik_zegarowy);
-  n1:=aSocket.Get(buf,BUFFER_SIZE);
-  if n1=0 then exit;
-  if not muse_on then exit;
-  if (not glosnik.Busy) and (not glosnik.Starting) then glosnik.Start(TMemoryStream(muse_out));
-  n1:=dm.rd.Add(buf,n1);
-  n2:=dm.rd.Execute(muse_in);
 end;
 
 procedure TFClient.RadioGroup1Click(Sender: TObject);
@@ -837,48 +763,6 @@ begin
   connect;
 end;
 
-procedure TFClient.tmuseTimer(Sender: TObject);
-begin
-  tmuse.Enabled:=false;
-  if tmuse.Tag=1 then
-  begin
-    {$IFDEF DEBUG} writeln('client.tmuse.1'); {$ENDIF}
-    BitBtn4.Enabled:=true;
-    uELED2.Color:=clRed;
-    dm.rc.Clear;
-    dm.rd.Clear;
-    uELED2.Active:=muse.Connect;
-    if uELED2.Active then send('muse$connect$ok') else send('muse$connect$error');
-  end else
-  if tmuse.Tag=2 then
-  begin
-    {$IFDEF DEBUG} writeln('client.tmuse.2'); {$ENDIF}
-    nasluch:=true;
-    mic:=TUOSPlayer.Create(self);
-    mic.DeviceEngine:=uos;
-    mic.DeviceIndex:=0;
-    mic.Mode:=moRecord;
-    glosnik:=TUOSPlayer.Create(self);
-    glosnik.DeviceEngine:=uos;
-    glosnik.DeviceIndex:=1;
-    glosnik.Mode:=moPlay;
-    glosnik.SleepForPlay:=2;
-    glosnik.Option:=[soRaw];
-    glosnik.OnProcessMessage:=@wProcessMessage;
-    CreatePipeStreams(muse_out,muse_in);
-    CreatePipeStreams(muse2_out,muse2_in);
-    muse_on:=true;
-    tloop.Enabled:=true;
-    mic.Start(TMemoryStream(muse2_in));
-    send('muse$on$ok');
-  end else
-  if tmuse.Tag=3 then
-  begin
-    {$IFDEF DEBUG} writeln('client.tmuse.3'); {$ENDIF}
-    uELED2.Color:=clBlue;
-  end;
-end;
-
 procedure TFClient.tCzasStopTimer(Sender: TObject);
 begin
   StatusBar.Panels[2].Text:='--:--:--';
@@ -889,6 +773,62 @@ begin
   StatusBar.Panels[2].Text:=FormatDateTime('hh:nn:ss',ecode.IntegerToTime(TimeToInteger+vczas));
 end;
 
+procedure TFClient.tinfokoloStartTimer(Sender: TObject);
+begin
+  tinfokolo.Tag:=1;
+  livekolo.Tag:=0;
+  livekolo.Start;
+  Panel18.Left:=805;
+  Panel18.Visible:=true;
+end;
+
+procedure TFClient.tinfokoloStopTimer(Sender: TObject);
+begin
+  tinfokolo.Tag:=0;
+  livekolo.Tag:=0;
+  livekolo.Stop;
+  Panel18.Visible:=false;
+end;
+
+procedure TFClient.tinfokoloTimer(Sender: TObject);
+var
+  a,x: integer;
+  w: double;
+begin
+  a:=livekolo.GetIndexTime;
+  w:=3000/700;
+  (* przesuwam się do środka *)
+  if tinfokolo.Tag=1 then
+  begin
+    x:=round(a*w);
+    if x>700 then
+    begin
+      Panel18.Left:=805-700;
+      tinfokolo.Tag:=2;
+      livekolo.Tag:=a;
+    end else Panel18.Left:=805-x;
+  end else
+  (* czekam określoną ilość czasu *)
+  if tinfokolo.Tag=2 then
+  begin
+    if a>livekolo.Tag+3000 then
+    begin
+      tinfokolo.Tag:=3;
+      livekolo.Tag:=a;
+    end;
+  end else
+  (* przesuwam się dalej w lewo aż do zniknięcia panelu za ekranem *)
+  if tinfokolo.Tag=3 then
+  begin
+    x:=round((a-livekolo.Tag)*w);
+    if x>700 then
+    begin
+      Panel18.Left:=105-700;
+      tinfokolo.Enabled:=false;
+    end else Panel18.Left:=105-x;
+  end;
+end;
+
 procedure TFClient.tInfoTimer(Sender: TObject);
 begin
   tInfo.Enabled:=false;
@@ -897,38 +837,6 @@ end;
 
 var
   komunikacja: array [1..2,1..10] of integer;
-
-procedure TFClient.tloopTimer(Sender: TObject);
-var
-  cc,n1,n2: integer;
-  buf: TBufferNetwork;
-  a,b,i: integer;
-begin
-  cc:=muse2_out.NumBytesAvailable;
-  if cc=0 then exit;
-  if cc>BUFFER_SIZE then cc:=BUFFER_SIZE;
-  n1:=dm.rc.Add(muse2_out,cc); //dodanie strumienia
-  n2:=dm.rc.Execute(buf); //kompresja strumienia
-  if n2>0 then muse.SendBinary(buf,n2);
-  (* bufory *)
-  for i:=2 to KOMUNIKACJA_LAST do
-  begin
-    komunikacja[1,i-1]:=komunikacja[1,i];
-    komunikacja[2,i-1]:=komunikacja[2,i];
-  end;
-  komunikacja[1,KOMUNIKACJA_LAST]:=round(100*n1/BUFFER_SIZE_COMPRESSED);
-  komunikacja[2,KOMUNIKACJA_LAST]:=round(100*n2/BUFFER_SIZE_COMPRESSED);
-  a:=0;
-  b:=0;
-  for i:=1 to KOMUNIKACJA_LAST do
-  begin
-    a:=a+komunikacja[1,i];
-    b:=b+komunikacja[2,i];
-  end;
-  a:=round(a/KOMUNIKACJA_LAST);
-  b:=round(b/KOMUNIKACJA_LAST);
-  StatusBar.Panels[3].Text:='Buforowanie: '+IntToStr(a)+'/'+IntToStr(b)+' (%)';
-end;
 
 procedure TFClient.tpingStartTimer(Sender: TObject);
 begin
@@ -1022,6 +930,14 @@ end;
 procedure TFClient.ePub(aPokaz: boolean);
 begin
   Panel13.Visible:=aPokaz;
+end;
+
+procedure TFClient.eInfoKola(aKola: string);
+begin
+  x4.Visible:=aKola[1]='0';
+  x5.Visible:=aKola[2]='0';
+  x6.Visible:=aKola[3]='0';
+  tinfokolo.Enabled:=true;
 end;
 
 procedure TFClient.test_info(aPytanie: integer);

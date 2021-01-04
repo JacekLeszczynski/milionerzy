@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, ExtCtrls, DBGrids,
-  DBCtrls, StdCtrls, Buttons, DSMaster, ZDataset;
+  DBCtrls, StdCtrls, Buttons, XMLPropStorage, DSMaster, ExtDBGrid, ZDataset;
 
 type
 
@@ -19,6 +19,8 @@ type
     BitBtn4: TBitBtn;
     BitBtn5: TBitBtn;
     BitBtn6: TBitBtn;
+    BitBtn7: TBitBtn;
+    HideUseing: TCheckBox;
     DBMemo1: TDBMemo;
     DBMemo2: TDBMemo;
     DBMemo3: TDBMemo;
@@ -26,17 +28,19 @@ type
     DBMemo5: TDBMemo;
     DBRadioGroup1: TDBRadioGroup;
     DBRadioGroup2: TDBRadioGroup;
+    ExtDBGrid1: TExtDBGrid;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     master: TDSMaster;
     ds_pytania: TDataSource;
-    DBGrid1: TDBGrid;
     Label1: TLabel;
     Label2: TLabel;
     Panel1: TPanel;
     Panel2: TPanel;
+    Panel3: TPanel;
     pytania: TZQuery;
+    pytaniac_odpowiedz: TStringField;
     pytaniaid: TLargeintField;
     pytaniaodpowiedz: TLargeintField;
     pytaniaodp_1: TMemoField;
@@ -46,15 +50,22 @@ type
     pytaniapytanie: TMemoField;
     pytaniatrudnosc: TLargeintField;
     pytaniauzyte: TMemoField;
+    ps: TXMLPropStorage;
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
     procedure BitBtn6Click(Sender: TObject);
-    procedure ds_pytaniaStateChange(Sender: TObject);
+    procedure BitBtn7Click(Sender: TObject);
+    procedure HideUseingChange(Sender: TObject);
+    procedure ds_pytaniaDataChange(Sender: TObject; Field: TField);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure pytaniaBeforeOpen(DataSet: TDataSet);
+    procedure pytaniaCalcFields(DataSet: TDataSet);
   private
 
   public
@@ -66,6 +77,9 @@ var
 
 implementation
 
+uses
+  ecode;
+
 {$R *.lfm}
 
 { TFKonfiguracja }
@@ -75,15 +89,82 @@ begin
   close;
 end;
 
-procedure TFKonfiguracja.ds_pytaniaStateChange(Sender: TObject);
+procedure TFKonfiguracja.BitBtn7Click(Sender: TObject);
 var
-  a,e: boolean;
+  a,b,c,d: integer;
+  s1,s2,s3,s4: string;
+  o: integer;
 begin
-  a:=pytania.Active;
-  e:=pytania.Active and (pytania.State in [dsEdit,dsInsert]);
-  BitBtn1.Enabled:=a and (not e);
-  BitBtn2.Enabled:=(not e) and (pytania.RecordCount>0);
+  a:=random(4)+1;
+  while true do
+  begin
+    b:=random(4)+1;
+    if a<>b then break;
+  end;
+  while true do
+  begin
+    c:=random(4)+1;
+    if (a<>c) and (b<>c) then break;
+  end;
+  while true do
+  begin
+    d:=random(4)+1;
+    if (a<>d) and (b<>d) and (c<>d) then break;
+  end;
+  s1:=pytaniaodp_1.AsString;
+  s2:=pytaniaodp_2.AsString;
+  s3:=pytaniaodp_3.AsString;
+  s4:=pytaniaodp_4.AsString;
+  o:=pytaniaodpowiedz.AsInteger;
+  pytania.Edit;
+  case a of
+    1: pytaniaodp_1.AsString:=s1;
+    2: pytaniaodp_1.AsString:=s2;
+    3: pytaniaodp_1.AsString:=s3;
+    4: pytaniaodp_1.AsString:=s4;
+  end;
+  case b of
+    1: pytaniaodp_2.AsString:=s1;
+    2: pytaniaodp_2.AsString:=s2;
+    3: pytaniaodp_2.AsString:=s3;
+    4: pytaniaodp_2.AsString:=s4;
+  end;
+  case c of
+    1: pytaniaodp_3.AsString:=s1;
+    2: pytaniaodp_3.AsString:=s2;
+    3: pytaniaodp_3.AsString:=s3;
+    4: pytaniaodp_3.AsString:=s4;
+  end;
+  case d of
+    1: pytaniaodp_4.AsString:=s1;
+    2: pytaniaodp_4.AsString:=s2;
+    3: pytaniaodp_4.AsString:=s3;
+    4: pytaniaodp_4.AsString:=s4;
+  end;
+  if o=a then pytaniaodpowiedz.AsInteger:=1 else
+  if o=b then pytaniaodpowiedz.AsInteger:=2 else
+  if o=c then pytaniaodpowiedz.AsInteger:=3 else
+  if o=d then pytaniaodpowiedz.AsInteger:=4;
+  pytania.Post;
+end;
+
+procedure TFKonfiguracja.HideUseingChange(Sender: TObject);
+begin
+  ExtDBGrid1.Columns[8].Visible:=not HideUseing.Checked;
+  ExtDBGrid1.AutoScaleColumns;
+  pytania.Close;
+  pytania.Open;
+end;
+
+procedure TFKonfiguracja.ds_pytaniaDataChange(Sender: TObject; Field: TField);
+var
+  a,ne,e: boolean;
+begin
+  master.State(ds_pytania,a,ne,e);
+  BitBtn1.Enabled:=a;
+  BitBtn2.Enabled:=not e;
   BitBtn3.Enabled:=BitBtn2.Enabled;
+  BitBtn7.Enabled:=BitBtn2.Enabled;
   BitBtn4.Enabled:=e;
   BitBtn5.Enabled:=BitBtn4.Enabled;
 end;
@@ -121,9 +202,40 @@ begin
   CloseAction:=caFree;
 end;
 
+procedure TFKonfiguracja.FormCreate(Sender: TObject);
+begin
+  randomize;
+  ps.FileName:=MyConfDir('server.xml');
+  ps.Active:=true;
+end;
+
+procedure TFKonfiguracja.FormResize(Sender: TObject);
+begin
+  ExtDBGrid1.AutoScaleColumns;
+end;
+
 procedure TFKonfiguracja.FormShow(Sender: TObject);
 begin
   if not pytania.Active then master.Open;
+end;
+
+procedure TFKonfiguracja.pytaniaBeforeOpen(DataSet: TDataSet);
+begin
+  pytania.SQL.Clear;
+  pytania.SQL.Add('select * from pytania');
+  if HideUseing.Checked then pytania.SQL.Add('where uzyte is null');
+  pytania.SQL.Add('order by id');
+end;
+
+procedure TFKonfiguracja.pytaniaCalcFields(DataSet: TDataSet);
+begin
+  case pytaniaodpowiedz.AsInteger of
+    1: pytaniac_odpowiedz.AsString:='A';
+    2: pytaniac_odpowiedz.AsString:='B';
+    3: pytaniac_odpowiedz.AsString:='C';
+    4: pytaniac_odpowiedz.AsString:='D';
+    else pytaniac_odpowiedz.AsString:='';
+  end;
 end;
 
 end.

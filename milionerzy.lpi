@@ -26,6 +26,7 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="1"/>
+      <RevisionNr Value="2"/>
       <Language Value="0415"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="Studio Jahu" InternalName="milionerzy.exe" LegalCopyright="2020 Krakow" LegalTrademarks="Studio Jahu" OriginalFilename="milionerzy.exe" ProductName="Milionerzy Client Studio Jahu" ProductVersion="1.0"/>
@@ -223,7 +224,7 @@
             <CustomOptions Value="-dCLIENT"/>
             <OtherDefines Count="2">
               <Define0 Value="SERVER"/>
-              <Define1 Value="CLIENT"/>
+              <Define1 Value="DEBUG"/>
             </OtherDefines>
           </Other>
         </CompilerOptions>

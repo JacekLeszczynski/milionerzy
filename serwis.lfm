@@ -9,6 +9,7 @@ object dm: Tdm
     AutoEncodeStrings = True
     Properties.Strings = (
       'AutoEncodeStrings=ON'
+      'controls_cp=CP_UTF8'
     )
     Port = 0
     Database = '/home/tao/.config/milionerzy/db.sqlite'
