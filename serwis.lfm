@@ -29,10 +29,13 @@ object dm: Tdm
       '  odp_4 text,'
       '  odpowiedz integer,'
       '  trudnosc integer,'
-      '  uzyte text'
+      '  uzyte text,'
+      '  ignore integer not null default 0'
       ');'
       'CREATE INDEX idx_pytania_trudnosc ON pytania (trudnosc);'
       'CREATE INDEX idx_pytania_uzyte ON pytania (uzyte);'
+      'CREATE INDEX idx_pytania_ignore ON pytania (ignore);'
+      'CREATE INDEX idx_pytania_pytanie ON pytania (pytanie);'
     )
     Connection = db
     Delimiter = ';'

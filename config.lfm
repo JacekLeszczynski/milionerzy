@@ -2,12 +2,14 @@ object FKonfiguracja: TFKonfiguracja
   Left = 347
   Height = 545
   Top = 313
-  Width = 1177
+  Width = 1241
   Caption = 'Baza pytań i odpowiedzi'
   ClientHeight = 545
-  ClientWidth = 1177
+  ClientWidth = 1241
+  KeyPreview = True
   OnClose = FormClose
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
   SessionProperties = 'Height;Left;Top;Width;WindowState;HideUseing.Checked'
@@ -17,11 +19,11 @@ object FKonfiguracja: TFKonfiguracja
     Left = 0
     Height = 291
     Top = 254
-    Width = 1177
+    Width = 1241
     Align = alBottom
     BevelOuter = bvNone
     ClientHeight = 291
-    ClientWidth = 1177
+    ClientWidth = 1241
     TabOrder = 0
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
@@ -112,10 +114,10 @@ object FKonfiguracja: TFKonfiguracja
       TabOrder = 8
     end
     object BitBtn3: TBitBtn
-      AnchorSideLeft.Control = BitBtn2
+      AnchorSideLeft.Control = BitBtn8
       AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = BitBtn2
-      Left = 162
+      AnchorSideTop.Control = BitBtn8
+      Left = 239
       Height = 30
       Top = 253
       Width = 132
@@ -123,40 +125,40 @@ object FKonfiguracja: TFKonfiguracja
       Caption = 'Skasuj użycie!'
       Color = clRed
       OnClick = BitBtn3Click
-      TabOrder = 9
+      TabOrder = 10
     end
     object BitBtn4: TBitBtn
       AnchorSideLeft.Control = BitBtn7
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = BitBtn7
-      Left = 410
+      Left = 487
       Height = 30
       Top = 253
       Width = 95
       BorderSpacing.Left = 2
       Caption = 'Zatwierdź'
       OnClick = BitBtn4Click
-      TabOrder = 11
+      TabOrder = 12
     end
     object BitBtn5: TBitBtn
       AnchorSideLeft.Control = BitBtn4
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = BitBtn4
-      Left = 507
+      Left = 584
       Height = 30
       Top = 253
       Width = 75
       BorderSpacing.Left = 2
       Caption = 'Anuluj'
       OnClick = BitBtn5Click
-      TabOrder = 12
+      TabOrder = 13
     end
     object BitBtn6: TBitBtn
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
-      Left = 1094
+      Left = 1158
       Height = 30
       Top = 253
       Width = 75
@@ -165,7 +167,7 @@ object FKonfiguracja: TFKonfiguracja
       BorderSpacing.Bottom = 8
       Caption = 'Wyjście'
       OnClick = BitBtn6Click
-      TabOrder = 13
+      TabOrder = 14
     end
     object DBMemo1: TDBMemo
       AnchorSideLeft.Control = Label1
@@ -176,7 +178,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 40
       Top = 8
-      Width = 1104
+      Width = 1168
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
       BorderSpacing.Right = 8
@@ -193,7 +195,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 33
       Top = 52
-      Width = 1104
+      Width = 1168
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_1'
@@ -222,7 +224,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 33
       Top = 89
-      Width = 1104
+      Width = 1168
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_2'
@@ -251,7 +253,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 33
       Top = 126
-      Width = 1104
+      Width = 1168
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_3'
@@ -280,7 +282,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 33
       Top = 163
-      Width = 1104
+      Width = 1168
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_4'
@@ -324,37 +326,71 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideLeft.Control = BitBtn3
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = BitBtn3
-      Left = 296
+      Left = 373
       Height = 30
       Top = 253
       Width = 112
       BorderSpacing.Left = 2
       Caption = 'Przemieszaj'
       OnClick = BitBtn7Click
-      TabOrder = 10
+      TabOrder = 11
+    end
+    object DBCheckBox1: TDBCheckBox
+      AnchorSideLeft.Control = DBRadioGroup2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = DBRadioGroup2
+      AnchorSideTop.Side = asrCenter
+      Left = 608
+      Height = 23
+      Top = 207
+      Width = 127
+      AutoSize = True
+      BorderSpacing.Left = 8
+      Caption = 'Ignoruj pytanie!'
+      DataField = 'ignore'
+      DataSource = ds_pytania
+      Font.Color = clRed
+      ParentFont = False
+      TabOrder = 15
+      ValueChecked = '1'
+      ValueUnchecked = '0'
+    end
+    object BitBtn8: TBitBtn
+      AnchorSideLeft.Control = BitBtn2
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BitBtn2
+      Left = 162
+      Height = 30
+      Top = 253
+      Width = 75
+      BorderSpacing.Left = 2
+      Caption = 'Usuń'
+      OnClick = BitBtn8Click
+      TabOrder = 9
     end
   end
   object Panel2: TPanel
     Left = 0
     Height = 204
     Top = 50
-    Width = 1177
+    Width = 1241
     Align = alClient
     BevelOuter = bvNone
     ClientHeight = 204
-    ClientWidth = 1177
+    ClientWidth = 1241
     TabOrder = 1
     object ExtDBGrid1: TExtDBGrid
       Left = 0
       Height = 204
       Top = 0
-      Width = 1177
+      Width = 1241
       Align = alClient
       Color = clWindow
       Columns = <      
         item
           Title.Caption = 'ID'
-          Width = 70
+          Width = 0
+          Visible = False
           FieldName = 'id'
         end      
         item
@@ -390,6 +426,7 @@ object FKonfiguracja: TFKonfiguracja
           FieldName = 'c_odpowiedz'
         end      
         item
+          Color = 12779519
           Title.Caption = 'Trudność'
           Width = 70
           FieldName = 'trudnosc'
@@ -398,6 +435,13 @@ object FKonfiguracja: TFKonfiguracja
           Title.Caption = 'Użyte'
           Width = 140
           FieldName = 'uzyte'
+        end      
+        item
+          ButtonStyle = cbsCheckboxColumn
+          Color = 12105983
+          Title.Caption = 'Ignoruj'
+          Width = 65
+          FieldName = 'ignore'
         end>
       DataSource = ds_pytania
       Font.Height = -12
@@ -406,18 +450,18 @@ object FKonfiguracja: TFKonfiguracja
       ParentFont = False
       Scrollbars = ssVertical
       TabOrder = 0
-      BlockAutoResizeCols = '0,6,7,8'
+      BlockAutoResizeCols = '0,6,7,8,9'
     end
   end
   object Panel3: TPanel
     Left = 0
     Height = 50
     Top = 0
-    Width = 1177
+    Width = 1241
     Align = alTop
     BevelOuter = bvNone
     ClientHeight = 50
-    ClientWidth = 1177
+    ClientWidth = 1241
     TabOrder = 2
     object HideUseing: TCheckBox
       Left = 14
@@ -428,17 +472,53 @@ object FKonfiguracja: TFKonfiguracja
       OnChange = HideUseingChange
       TabOrder = 0
     end
+    object Label6: TLabel
+      AnchorSideLeft.Control = Panel3
+      AnchorSideBottom.Control = Panel3
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 13
+      Top = 37
+      Width = 138
+      Anchors = [akLeft, akBottom]
+      Caption = 'Wgranych rekordów: 0'
+      Font.Color = clGray
+      Font.Height = -12
+      Font.Name = 'Sans'
+      Font.Style = [fsItalic]
+      ParentColor = False
+      ParentFont = False
+    end
   end
-  object pytania: TZQuery
+  object ds_pytania: TDataSource
+    DataSet = pytania
+    OnDataChange = ds_pytaniaDataChange
+    Left = 264
+    Top = 107
+  end
+  object master: TDSMaster
+    DataSource = ds_pytania
+    Left = 48
+    Top = 88
+  end
+  object ps: TXMLPropStorage
+    StoredValues = <>
+    RootNodePath = 'config'
+    Left = 543
+    Top = 103
+  end
+  object pytania: TZQueryPlus
     Connection = dm.db
     BeforeOpen = pytaniaBeforeOpen
     OnCalcFields = pytaniaCalcFields
     SQL.Strings = (
       'select * from pytania'
-      'order by id'
+      'where 1=1'
+      '  --notuzyte'
+      'order by pytanie'
     )
     Params = <>
-    Left = 146
+    Left = 152
     Top = 107
     object pytaniaid: TLargeintField
       DisplayLabel = 'ID'
@@ -542,10 +622,20 @@ object FKonfiguracja: TFKonfiguracja
       BlobType = ftMemo
       Transliterate = False
     end
+    object pytaniaignore: TLargeintField
+      DisplayLabel = 'Ignoruj'
+      FieldKind = fkData
+      FieldName = 'ignore'
+      Index = 9
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = True
+    end
     object pytaniac_odpowiedz: TStringField
       FieldKind = fkCalculated
       FieldName = 'c_odpowiedz'
-      Index = 9
+      Index = 10
       LookupCache = False
       ProviderFlags = [pfInUpdate, pfInWhere]
       ReadOnly = False
@@ -553,21 +643,13 @@ object FKonfiguracja: TFKonfiguracja
       Size = 1
     end
   end
-  object ds_pytania: TDataSource
-    DataSet = pytania
-    OnDataChange = ds_pytaniaDataChange
-    Left = 264
-    Top = 107
-  end
-  object master: TDSMaster
-    DataSource = ds_pytania
-    Left = 48
-    Top = 88
-  end
-  object ps: TXMLPropStorage
-    StoredValues = <>
-    RootNodePath = 'config'
-    Left = 543
-    Top = 103
+  object mess: TExtMessage
+    Caption = '<Auto>'
+    HelpContext = 0
+    PosTop = 0
+    PosLeft = 0
+    StringToCR = '^'
+    Left = 150
+    Top = 170
   end
 end

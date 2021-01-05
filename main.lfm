@@ -20225,7 +20225,8 @@ object FServer: TFServer
     Connection = dm.db
     SQL.Strings = (
       'select * from pytania'
-      'where uzyte is null'
+      'where ignore=0'
+      '  and uzyte is null'
       '  and trudnosc>=:t1 and trudnosc<=:t2'
     )
     Params = <    
@@ -20344,6 +20345,15 @@ object FServer: TFServer
       Required = False
       BlobType = ftMemo
       Transliterate = False
+    end
+    object dbpytignore: TLargeintField
+      FieldKind = fkData
+      FieldName = 'ignore'
+      Index = 9
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = True
     end
   end
   object dspyt: TDataSource

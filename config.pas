@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, ExtCtrls, DBGrids,
-  DBCtrls, StdCtrls, Buttons, XMLPropStorage, DSMaster, ExtDBGrid, ZDataset;
+  DBCtrls, StdCtrls, Buttons, XMLPropStorage, DSMaster, ExtDBGrid, extzquery,
+  ExtMessage, ZDataset;
 
 type
 
@@ -20,6 +21,9 @@ type
     BitBtn5: TBitBtn;
     BitBtn6: TBitBtn;
     BitBtn7: TBitBtn;
+    BitBtn8: TBitBtn;
+    DBCheckBox1: TDBCheckBox;
+    mess: TExtMessage;
     HideUseing: TCheckBox;
     DBMemo1: TDBMemo;
     DBMemo2: TDBMemo;
@@ -32,6 +36,7 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    Label6: TLabel;
     master: TDSMaster;
     ds_pytania: TDataSource;
     Label1: TLabel;
@@ -39,9 +44,11 @@ type
     Panel1: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
-    pytania: TZQuery;
+    ps: TXMLPropStorage;
+    pytania: TZQueryPlus;
     pytaniac_odpowiedz: TStringField;
     pytaniaid: TLargeintField;
+    pytaniaignore: TLargeintField;
     pytaniaodpowiedz: TLargeintField;
     pytaniaodp_1: TMemoField;
     pytaniaodp_2: TMemoField;
@@ -50,7 +57,6 @@ type
     pytaniapytanie: TMemoField;
     pytaniatrudnosc: TLargeintField;
     pytaniauzyte: TMemoField;
-    ps: TXMLPropStorage;
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
@@ -58,6 +64,8 @@ type
     procedure BitBtn5Click(Sender: TObject);
     procedure BitBtn6Click(Sender: TObject);
     procedure BitBtn7Click(Sender: TObject);
+    procedure BitBtn8Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure HideUseingChange(Sender: TObject);
     procedure ds_pytaniaDataChange(Sender: TObject; Field: TField);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -78,7 +86,7 @@ var
 implementation
 
 uses
-  ecode;
+  ecode, lcltype;
 
 {$R *.lfm}
 
@@ -148,6 +156,17 @@ begin
   pytania.Post;
 end;
 
+procedure TFKonfiguracja.BitBtn8Click(Sender: TObject);
+begin
+  if mess.ShowConfirmationYesNo('Czy usunąć wybraną pozycję?') then pytania.Delete;
+end;
+
+procedure TFKonfiguracja.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key=VK_ESCAPE then close;
+end;
+
 procedure TFKonfiguracja.HideUseingChange(Sender: TObject);
 begin
   ExtDBGrid1.Columns[8].Visible:=not HideUseing.Checked;
@@ -165,8 +184,10 @@ begin
   BitBtn2.Enabled:=not e;
   BitBtn3.Enabled:=BitBtn2.Enabled;
   BitBtn7.Enabled:=BitBtn2.Enabled;
+  BitBtn8.Enabled:=BitBtn2.Enabled;
   BitBtn4.Enabled:=e;
   BitBtn5.Enabled:=BitBtn4.Enabled;
+  Label6.Caption:='Wgranych rekordów: '+IntToStr(pytania.RecordCount);
 end;
 
 procedure TFKonfiguracja.BitBtn1Click(Sender: TObject);
@@ -221,10 +242,8 @@ end;
 
 procedure TFKonfiguracja.pytaniaBeforeOpen(DataSet: TDataSet);
 begin
-  pytania.SQL.Clear;
-  pytania.SQL.Add('select * from pytania');
-  if HideUseing.Checked then pytania.SQL.Add('where uzyte is null');
-  pytania.SQL.Add('order by id');
+  pytania.ClearDefs;
+  if HideUseing.Checked then pytania.AddDef('--notuzyte','and uzyte is null');
 end;
 
 procedure TFKonfiguracja.pytaniaCalcFields(DataSet: TDataSet);

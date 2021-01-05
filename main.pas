@@ -24,6 +24,7 @@ type
     CheckBox4: TCheckBox;
     CheckTest: TCheckBox;
     AlgCompressionSteaming: TComboBox;
+    dbpytignore: TLargeintField;
     dbpyttrudnosc: TLargeintField;
     dbpytuzyte: TMemoField;
     gl5: TplGauge;
@@ -1405,7 +1406,7 @@ begin
     odp_c.Caption:=s3;   fEkran.odp_c.Caption:=s3;
     odp_d.Caption:=s4;   fEkran.odp_d.Caption:=s4;
     g_odpowiedz:=o;
-    if CheckBox3.Checked then
+    if (not CheckTest.Checked) and CheckBox3.Checked then
     begin
       dbpyt.Edit;
       dbpytuzyte.AsString:=FormatDateTime('yyyy-mm-dd hh:nn:ss',now);
