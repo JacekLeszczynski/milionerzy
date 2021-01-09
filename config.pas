@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, ExtCtrls, DBGrids,
-  DBCtrls, StdCtrls, Buttons, XMLPropStorage, DSMaster, ExtDBGrid, extzquery,
+  DBCtrls, StdCtrls, Buttons, XMLPropStorage, DSMaster, DBGridPlus, ZQueryPlus,
   ExtMessage, ZDataset;
 
 type
@@ -32,7 +32,7 @@ type
     DBMemo5: TDBMemo;
     DBRadioGroup1: TDBRadioGroup;
     DBRadioGroup2: TDBRadioGroup;
-    ExtDBGrid1: TExtDBGrid;
+    ExtDBGrid1: TDBGridPlus;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;

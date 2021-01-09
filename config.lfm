@@ -379,7 +379,7 @@ object FKonfiguracja: TFKonfiguracja
     ClientHeight = 204
     ClientWidth = 1241
     TabOrder = 1
-    object ExtDBGrid1: TExtDBGrid
+    object ExtDBGrid1: TDBGridPlus
       Left = 0
       Height = 204
       Top = 0

@@ -13,7 +13,7 @@ interface
 
 uses
   Classes, SysUtils, ZConnection, ZSqlProcessor, Graphics, RNL,
-  systemtimer, CompressionFlyUnit;
+  systemtimer, CompressionFly;
 
 const
   BUFFER_SIZE = 100000;

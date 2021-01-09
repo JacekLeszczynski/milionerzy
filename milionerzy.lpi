@@ -27,6 +27,7 @@
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="1"/>
       <RevisionNr Value="2"/>
+      <BuildNr Value="1"/>
       <Language Value="0415"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="Studio Jahu" InternalName="milionerzy.exe" LegalCopyright="2020 Krakow" LegalTrademarks="Studio Jahu" OriginalFilename="milionerzy.exe" ProductName="Milionerzy Client Studio Jahu" ProductVersion="1.0"/>
