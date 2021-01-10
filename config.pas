@@ -70,7 +70,6 @@ type
     procedure ds_pytaniaDataChange(Sender: TObject; Field: TField);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure pytaniaBeforeOpen(DataSet: TDataSet);
     procedure pytaniaCalcFields(DataSet: TDataSet);
@@ -228,11 +227,6 @@ begin
   randomize;
   ps.FileName:=MyConfDir('server.xml');
   ps.Active:=true;
-end;
-
-procedure TFKonfiguracja.FormResize(Sender: TObject);
-begin
-  ExtDBGrid1.AutoScaleColumns;
 end;
 
 procedure TFKonfiguracja.FormShow(Sender: TObject);

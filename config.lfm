@@ -10,7 +10,6 @@ object FKonfiguracja: TFKonfiguracja
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
-  OnResize = FormResize
   OnShow = FormShow
   SessionProperties = 'Height;Left;Top;Width;WindowState;HideUseing.Checked'
   ShowInTaskBar = stNever
@@ -395,27 +394,27 @@ object FKonfiguracja: TFKonfiguracja
         end      
         item
           Title.Caption = 'Pytanie'
-          Width = 200
+          Width = 218
           FieldName = 'pytanie'
         end      
         item
           Title.Caption = 'Odpowiedź A'
-          Width = 150
+          Width = 163
           FieldName = 'odp_1'
         end      
         item
           Title.Caption = 'Odpowiedź B'
-          Width = 150
+          Width = 163
           FieldName = 'odp_2'
         end      
         item
           Title.Caption = 'Odpowiedź C'
-          Width = 150
+          Width = 163
           FieldName = 'odp_3'
         end      
         item
           Title.Caption = 'Odpowiedź D'
-          Width = 150
+          Width = 163
           FieldName = 'odp_4'
         end      
         item
@@ -444,13 +443,15 @@ object FKonfiguracja: TFKonfiguracja
           FieldName = 'ignore'
         end>
       DataSource = ds_pytania
+      FixedCols = 0
       Font.Height = -12
       Font.Name = 'Sans'
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgDisableDelete, dgDisableInsert, dgDisplayMemoText]
+      Options = [dgTitles, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgDisableDelete, dgDisableInsert, dgDisplayMemoText]
       ParentFont = False
       Scrollbars = ssVertical
       TabOrder = 0
-      BlockAutoResizeCols = '0,6,7,8,9'
+      AutoScaleCols = True
+      BlockAutoScaleCols = '6,7,8,9'
     end
   end
   object Panel3: TPanel
@@ -499,13 +500,13 @@ object FKonfiguracja: TFKonfiguracja
   object master: TDSMaster
     DataSource = ds_pytania
     Left = 48
-    Top = 88
+    Top = 107
   end
   object ps: TXMLPropStorage
     StoredValues = <>
     RootNodePath = 'config'
-    Left = 543
-    Top = 103
+    Left = 536
+    Top = 107
   end
   object pytania: TZQueryPlus
     Connection = dm.db
@@ -649,7 +650,7 @@ object FKonfiguracja: TFKonfiguracja
     PosTop = 0
     PosLeft = 0
     StringToCR = '^'
-    Left = 150
-    Top = 170
+    Left = 152
+    Top = 176
   end
 end
