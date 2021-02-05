@@ -2,10 +2,10 @@ object FKonfiguracja: TFKonfiguracja
   Left = 347
   Height = 545
   Top = 313
-  Width = 1241
+  Width = 955
   Caption = 'Baza pytań i odpowiedzi'
   ClientHeight = 545
-  ClientWidth = 1241
+  ClientWidth = 955
   KeyPreview = True
   OnClose = FormClose
   OnCreate = FormCreate
@@ -18,11 +18,11 @@ object FKonfiguracja: TFKonfiguracja
     Left = 0
     Height = 291
     Top = 254
-    Width = 1241
+    Width = 955
     Align = alBottom
     BevelOuter = bvNone
     ClientHeight = 291
-    ClientWidth = 1241
+    ClientWidth = 955
     TabOrder = 0
     object Label1: TLabel
       AnchorSideLeft.Control = Panel1
@@ -157,7 +157,7 @@ object FKonfiguracja: TFKonfiguracja
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = Panel1
       AnchorSideBottom.Side = asrBottom
-      Left = 1158
+      Left = 872
       Height = 30
       Top = 253
       Width = 75
@@ -177,7 +177,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 40
       Top = 8
-      Width = 1168
+      Width = 882
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 4
       BorderSpacing.Right = 8
@@ -194,7 +194,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 33
       Top = 52
-      Width = 1168
+      Width = 882
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_1'
@@ -223,7 +223,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 33
       Top = 89
-      Width = 1168
+      Width = 882
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_2'
@@ -252,7 +252,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 33
       Top = 126
-      Width = 1168
+      Width = 882
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_3'
@@ -281,7 +281,7 @@ object FKonfiguracja: TFKonfiguracja
       Left = 65
       Height = 33
       Top = 163
-      Width = 1168
+      Width = 882
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 4
       DataField = 'odp_4'
@@ -372,17 +372,17 @@ object FKonfiguracja: TFKonfiguracja
     Left = 0
     Height = 204
     Top = 50
-    Width = 1241
+    Width = 955
     Align = alClient
     BevelOuter = bvNone
     ClientHeight = 204
-    ClientWidth = 1241
+    ClientWidth = 955
     TabOrder = 1
     object ExtDBGrid1: TDBGridPlus
       Left = 0
       Height = 204
       Top = 0
-      Width = 1241
+      Width = 955
       Align = alClient
       Color = clWindow
       Columns = <      
@@ -394,52 +394,52 @@ object FKonfiguracja: TFKonfiguracja
         end      
         item
           Title.Caption = 'Pytanie'
-          Width = 218
+          Width = 121
           FieldName = 'pytanie'
         end      
         item
           Title.Caption = 'Odpowiedź A'
-          Width = 163
+          Width = 90
           FieldName = 'odp_1'
         end      
         item
           Title.Caption = 'Odpowiedź B'
-          Width = 163
+          Width = 90
           FieldName = 'odp_2'
         end      
         item
           Title.Caption = 'Odpowiedź C'
-          Width = 163
+          Width = 90
           FieldName = 'odp_3'
         end      
         item
           Title.Caption = 'Odpowiedź D'
-          Width = 163
+          Width = 90
           FieldName = 'odp_4'
         end      
         item
           Alignment = taCenter
           Color = clMoneyGreen
           Title.Caption = 'Wł. Odp.'
-          Width = 70
+          Width = 76
           FieldName = 'c_odpowiedz'
         end      
         item
           Color = 12779519
           Title.Caption = 'Trudność'
-          Width = 70
+          Width = 76
           FieldName = 'trudnosc'
         end      
         item
           Title.Caption = 'Użyte'
-          Width = 140
+          Width = 152
           FieldName = 'uzyte'
         end      
         item
           ButtonStyle = cbsCheckboxColumn
           Color = 12105983
           Title.Caption = 'Ignoruj'
-          Width = 65
+          Width = 70
           FieldName = 'ignore'
         end>
       DataSource = ds_pytania
@@ -450,19 +450,18 @@ object FKonfiguracja: TFKonfiguracja
       ParentFont = False
       Scrollbars = ssVertical
       TabOrder = 0
-      AutoScaleCols = True
-      BlockAutoScaleCols = '6,7,8,9'
+      BlockAutoScaleCols = '0,6,7,8,9'
     end
   end
   object Panel3: TPanel
     Left = 0
     Height = 50
     Top = 0
-    Width = 1241
+    Width = 955
     Align = alTop
     BevelOuter = bvNone
     ClientHeight = 50
-    ClientWidth = 1241
+    ClientWidth = 955
     TabOrder = 2
     object HideUseing: TCheckBox
       Left = 14

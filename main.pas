@@ -8,7 +8,8 @@ interface
 uses
   Classes, SysUtils, DB, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, XMLPropStorage, ComCtrls, Menus, TplGaugeUnit, Presentation,
-  UOSEngine, UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled, pipes, Types;
+  UOSEngine, UOSPlayer, LiveTimer, NetSocket, ZDataset, lNet, ueled,
+  pipes, Types;
 
 type
 
@@ -870,8 +871,8 @@ begin
   finally
     res.Free;
   end;
-  player.Stop;
-  while player.Busy do application.ProcessMessages;
+  //player.Stop;
+  //while player.Busy do application.ProcessMessages;
   player.Start(mem);
 end;
 
@@ -913,10 +914,10 @@ begin
   if aLoop then
   begin
     Play2.Volume:=v;
-    Play2.Stop;
+    //Play2.Stop;
     Play2.Start(mem);
   end else begin
-    Play1.Stop;
+    //Play1.Stop;
     Play1.Start(mem);
   end;
 end;
@@ -1356,7 +1357,7 @@ end;
 
 procedure TFServer.ekran_pytanie(aNr: integer; aLp: integer);
 var
-  a,b,i,o: integer;
+  a,b,i,o,ile: integer;
   s,s1,s2,s3,s4: string;
 begin
   if aLp=-1 then

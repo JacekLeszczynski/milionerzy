@@ -227,6 +227,7 @@ begin
   randomize;
   ps.FileName:=MyConfDir('server.xml');
   ps.Active:=true;
+  ExtDBGrid1.AutoScaleCols:=true;
 end;
 
 procedure TFKonfiguracja.FormShow(Sender: TObject);
